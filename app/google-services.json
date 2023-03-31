@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "316499521592",
+    "project_id": "engage-now-333f2",
+    "storage_bucket": "engage-now-333f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316499521592:android:b8fb559231013dc130b6cd",
+        "android_client_info": {
+          "package_name": "edu.fandm.engagenow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316499521592-elfrf4ptj4jsi30iujjj227v3hodujmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjH4anaf7WzwHaBI0JY8u1hXlf1p5ppfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316499521592-elfrf4ptj4jsi30iujjj227v3hodujmm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
