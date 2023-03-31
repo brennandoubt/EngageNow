@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +35,8 @@ public class OrganizationChat extends AppCompatActivity {
     ArrayList<String> chatList = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
     String userName, selectedVolunteer, user_message_key;
+    FirebaseUser currentUser;
+
     final String TAG = "OrganizationChat";
     private DatabaseReference dbr;
 // Followed this chat app tutorial https://www.youtube.com/watch?v=oyTg0_k2AZU&t=27s
@@ -41,6 +45,8 @@ public class OrganizationChat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_chat);
 
+//        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        
         sendMessageButton = (Button) findViewById(R.id.send_button);
         messageEditText = (EditText) findViewById(R.id.message_et);
 
