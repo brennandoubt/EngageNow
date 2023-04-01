@@ -46,7 +46,7 @@ public class OrganizationChat extends AppCompatActivity {
         setContentView(R.layout.activity_organization_chat);
 
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        
+
         sendMessageButton = (Button) findViewById(R.id.send_button);
         messageEditText = (EditText) findViewById(R.id.message_et);
 

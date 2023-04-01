@@ -32,7 +32,7 @@ public class OrganizationMatchList extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     String userName;
     String TAG = "OrgMatchList";
-    // represents a particular locaiton in database and can be used for reading or writing data to that database location
+    // represents a particular location in database and can be used for reading or writing data to that database location
     private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
