@@ -59,7 +59,7 @@ public class OrganizationChat extends AppCompatActivity {
         selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
         setTitle("Volunteer: " + selectedVolunteer);
 
-        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("Messages").child(selectedVolunteer);
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child(selectedVolunteer);
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override

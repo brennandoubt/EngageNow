@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "SUCCESS");
             // User is signed in
 //                          access data from database https://www.youtube.com/watch?v=E9drbKeVG7Y
-            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("Account Type");
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
             dbr.child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, accountType);
 
                             Intent i;
-                            if (accountType.equals("Volunteer Account")) {
+                            if (accountType.equals("volunteer_account")) {
                                 i = new Intent(getApplicationContext(), VolunteerSwiping.class);
                             } else {
                                 i = new Intent(getApplicationContext(), OrganizationMatchList.class);

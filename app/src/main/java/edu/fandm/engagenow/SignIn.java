@@ -62,16 +62,16 @@ public class SignIn extends AppCompatActivity {
                             FirebaseUser user = auth.getCurrentUser();
 
 //                          access data from database https://www.youtube.com/watch?v=E9drbKeVG7Y
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("Account Type");
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             dbr.child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                     if (task.isSuccessful()) {
                                         if (task.getResult().exists()) {
-                                            String accountType = String.valueOf(task.getResult().child(user.getUid()).getValue());
+                                            String accountType = String.valueOf(task.getResult().getValue());
                                             Log.d(TAG, accountType);
 
-                                            if (accountType.equals("Volunteer Account")) {
+                                            if (accountType.equals("volunteer_account")) {
                                                 Intent i = new Intent(getApplicationContext(), VolunteerSwiping.class);
                                                 startActivity(i);
                                                 finish();

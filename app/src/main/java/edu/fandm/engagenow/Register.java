@@ -49,7 +49,8 @@ public class Register extends AppCompatActivity {
                 String email = ((EditText) findViewById(R.id.et_emailAddress)).getText().toString().trim();
                 String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
                 Spinner dropdownSelect = (Spinner) findViewById(R.id.account_type_select_spinner);
-                String accountType = dropdownSelect.getSelectedItem().toString();
+                String accountTypeSelection = dropdownSelect.getSelectedItem().toString();
+
                 if (email.equals("")) {
                     Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_LONG).show();
                     return;
@@ -62,9 +63,18 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Password must be 6 or more characters", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (accountType.equals("Select Account Type")) {
+                if (accountTypeSelection.equals("Select Account Type")) {
                     Toast.makeText(getApplicationContext(), "Select Account Type", Toast.LENGTH_LONG).show();
                     return;
+                }
+
+//                better formatting for database
+                String accountType;
+                if (accountTypeSelection.equals("Volunteer Account")) {
+                    accountType = "volunteer_account";
+                }
+                else {
+                    accountType = "organization_account";
                 }
                 Task s = fbAuth.createUserWithEmailAndPassword(email, password);
                 s.addOnCompleteListener(new OnCompleteListener() {
@@ -79,7 +89,7 @@ public class Register extends AppCompatActivity {
                             Map<String, Object> accountTypeMap = new HashMap<>();
                             accountTypeMap.put(userId, accountType);
 
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("Account Type");
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             dbr.updateChildren(accountTypeMap);
 
                             Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
