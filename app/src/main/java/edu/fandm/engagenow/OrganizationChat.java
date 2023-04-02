@@ -32,6 +32,7 @@ public class OrganizationChat extends AppCompatActivity {
     Button sendMessageButton;
     EditText messageEditText;
     ListView chatListView;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     ArrayList<String> chatList = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
     String userName, selectedVolunteer, user_message_key;
@@ -54,15 +55,20 @@ public class OrganizationChat extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, chatList);
         chatListView.setAdapter(arrayAdapter);
 
-        userName = getIntent().getExtras().get("user_name").toString();
+//        userName = getIntent().getExtras().get("user_name").toString();
         selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
         setTitle("Volunteer: " + selectedVolunteer);
 
-        dbr = FirebaseDatabase.getInstance().getReference().child(selectedVolunteer);
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("Messages").child(selectedVolunteer);
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String msg = messageEditText.getText().toString();
+                if (msg.equals("")) {
+                    return;
+                }
+                String email = user.getEmail();
                 Map<String, Object> map = new HashMap<String, Object>();
                 // unique key for each message sent and received
                 user_message_key = dbr.push().getKey();
@@ -70,8 +76,8 @@ public class OrganizationChat extends AppCompatActivity {
 
                 DatabaseReference dbr2 = dbr.child(user_message_key);
                 Map<String, Object> map2 = new HashMap<String, Object>();
-                map2.put("msg", messageEditText.getText().toString());
-                map2.put("user", userName);
+                map2.put("msg", msg);
+                map2.put("user", email);
                 dbr2.updateChildren(map2);
 
             }
@@ -108,7 +114,7 @@ public class OrganizationChat extends AppCompatActivity {
 
     public void updateConversation(DataSnapshot dataSnapshot) {
         String msg, user;
-        Iterator i =dataSnapshot. getChildren().iterator();
+        Iterator i = dataSnapshot.getChildren().iterator();
         while (i.hasNext()) {
             msg = (String) ((DataSnapshot) i.next()).getValue();
             user = (String) ((DataSnapshot) i.next()).getValue();

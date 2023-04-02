@@ -33,7 +33,7 @@ public class OrganizationMatchList extends AppCompatActivity {
     String userName;
     String TAG = "OrgMatchList";
     // represents a particular location in database and can be used for reading or writing data to that database location
-    private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot();
+    private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("Messages");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +43,6 @@ public class OrganizationMatchList extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
 
         matchesListView.setAdapter(arrayAdapter);
-
-        //need to get organization name so database can query matches with that name
-        getUserName();
 
         Log.d(TAG, dbr.toString());
         dbr.addValueEventListener(new ValueEventListener() {
