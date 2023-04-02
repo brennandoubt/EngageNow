@@ -49,6 +49,14 @@ public class SignIn extends AppCompatActivity {
             public void onClick(View view) {
                 String email = ((EditText) findViewById(R.id.et_emailAddress)).getText().toString().trim();
                 String password = ((EditText) findViewById(R.id.et_password)).getText().toString().trim();
+                if (email.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (password.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Enter password", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Log.d(TAG, email);
                 Log.d(TAG, password);
 //              sign user in  https://firebase.google.com/docs/auth/android/password-auth#java_2
