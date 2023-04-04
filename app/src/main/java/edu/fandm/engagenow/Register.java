@@ -92,10 +92,21 @@ public class Register extends AppCompatActivity {
                             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             dbr.updateChildren(accountTypeMap);
 
+                            // go into preferences activity
                             Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(getApplicationContext(), SignIn.class);
-                            startActivity(i);
-                            finish();
+
+                            //TODO: add another activity for organization account
+                            if (accountType.equals("volunteer_account")) {
+                                Intent i = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                                i.putExtra("user_id", userId);
+
+                                startActivity(i);
+                                finish();
+                            }
+
+                            //Intent i = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                            //startActivity(i);
+                            //finish();
                         }
                         else {
                             Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
