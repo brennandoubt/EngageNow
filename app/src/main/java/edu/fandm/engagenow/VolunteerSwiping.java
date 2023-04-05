@@ -53,7 +53,7 @@ public class VolunteerSwiping extends AppCompatActivity implements CardStackList
 //            super.onBackPressed();
 //        }
 //    }
-    //Adds to databse after swiping
+    //Adds to database after swiping
     public void addToDatabase(int position){
         if(position >= orgs.size()){
             return;
