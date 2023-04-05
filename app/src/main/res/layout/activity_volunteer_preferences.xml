@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VolunteerPreferences">
+
+    <TextView
+        android:id="@+id/instructions_preferences_tv"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:text="Please fill in the following fields to create your account."
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/name_preference_et"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="Full name"
+        app:layout_constraintTop_toBottomOf="@+id/instructions_preferences_tv"
+        app:layout_constraintLeft_toLeftOf="@+id/instructions_preferences_tv" />
+
+    <Button
+        android:id="@+id/update_preferences_button"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="Update Preferences"
+        app:layout_constraintTop_toBottomOf="@+id/name_preference_et"
+        app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv"
+        app:layout_constraintRight_toRightOf="@id/instructions_preferences_tv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
