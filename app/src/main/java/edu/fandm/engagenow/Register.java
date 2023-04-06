@@ -72,60 +72,26 @@ public class Register extends AppCompatActivity {
                 String accountType;
                 if (accountTypeSelection.equals("Volunteer Account")) {
                     accountType = "volunteer_account";
+
+                    Intent vi = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                    vi.putExtra("email", email);
+                    vi.putExtra("password", password);
+                    vi.putExtra("account_type", accountType);
+
+                    startActivity(vi);
+                    finish();
                 }
                 else {
                     accountType = "organization_account";
+
+                    Intent oi = new Intent(getApplicationContext(), OrganizationPreferences.class);
+                    oi.putExtra("email", email);
+                    oi.putExtra("password", password);
+                    oi.putExtra("account_type", accountType);
+
+                    startActivity(oi);
+                    finish();
                 }
-                Task s = fbAuth.createUserWithEmailAndPassword(email, password);
-                s.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-//                        FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = fbAuth.getCurrentUser();
-                            String userId = user.getUid();
-
-//                            in database, store the type of account that the user is
-                            Map<String, Object> accountTypeMap = new HashMap<>();
-                            accountTypeMap.put(userId, accountType);
-
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
-                            dbr.updateChildren(accountTypeMap);
-
-                            // go into preferences activity
-                            Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
-
-
-                            if (accountType.equals("volunteer_account")) {
-                                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
-                                HashMap<String, Object> m = new HashMap<>();
-                                m.put("email", email);
-                                dbr.updateChildren(m);
-                                Intent i = new Intent(getApplicationContext(), VolunteerPreferences.class);
-                                i.putExtra("user_id", userId);
-
-                                startActivity(i);
-                                finish();
-                            }
-                            //TODO: add another activity for organization account
-                            else {
-                                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                                HashMap<String, Object> m = new HashMap<>();
-                                m.put("email", email);
-                                dbr.updateChildren(m);
-                            }
-
-                            //Intent i = new Intent(getApplicationContext(), VolunteerPreferences.class);
-                            //startActivity(i);
-                            //finish();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-
-
             }
         });
 
