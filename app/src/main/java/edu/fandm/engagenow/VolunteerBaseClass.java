@@ -25,6 +25,16 @@ public class VolunteerBaseClass extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 i = new Intent(getApplicationContext(), SignIn.class);
                 startActivity(i);
+                finish();
+                break;
+            case R.id.chat:
+                // don't run if already on class
+//                Log.d("HERE",  this.getClass().getSimpleName());
+                if (this.getClass().getSimpleName().equals("VolunteerChatList")) {
+                    break;
+                }
+                i = new Intent(getApplicationContext(), VolunteerChatList.class);
+                startActivity(i);
                 break;
         }
         return true;

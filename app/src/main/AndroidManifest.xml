@@ -14,6 +14,9 @@
         android:theme="@style/Theme.EngageNow"
         tools:targetApi="31">
         <activity
+            android:name=".VolunteerChatList"
+            android:exported="false" />
+        <activity
             android:name=".OrganizationPotentialMatches"
             android:exported="false" />
         <activity
@@ -29,7 +32,7 @@
             android:name=".OrganizationChat"
             android:exported="false" />
         <activity
-            android:name=".OrganizationMatchList"
+            android:name=".OrganizationChatList"
             android:exported="false" />
         <activity
             android:name=".SignIn"

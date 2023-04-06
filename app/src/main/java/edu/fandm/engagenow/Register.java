@@ -95,7 +95,7 @@ public class Register extends AppCompatActivity {
                             // go into preferences activity
                             Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
 
-                            //TODO: add another activity for organization account
+
                             if (accountType.equals("volunteer_account")) {
                                 dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
                                 HashMap<String, Object> m = new HashMap<>();
@@ -107,8 +107,9 @@ public class Register extends AppCompatActivity {
                                 startActivity(i);
                                 finish();
                             }
+                            //TODO: add another activity for organization account
                             else {
-                                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts");
+                                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
                                 HashMap<String, Object> m = new HashMap<>();
                                 m.put("email", email);
                                 dbr.updateChildren(m);

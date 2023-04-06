@@ -85,7 +85,7 @@ public class SignIn extends AppCompatActivity {
                                                 finish();
                                             }
                                             else {
-                                                Intent i = new Intent(getApplicationContext(), OrganizationMatchList.class);
+                                                Intent i = new Intent(getApplicationContext(), OrganizationChatList.class);
                                                 startActivity(i);
                                                 finish();
                                             }

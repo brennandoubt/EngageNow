@@ -2,13 +2,11 @@ package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,12 +27,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class OrganizationMatchList extends OrganizationBaseClass {
+public class OrganizationChatList extends OrganizationBaseClass {
     ListView matchesListView;
     ArrayList<String> listOfMatches = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
     String userName;
-    String TAG = "OrgMatchList";
+    String TAG = "OrgChatList";
     static String uid;
     // represents a particular location in database and can be used for reading or writing data to that database location
     private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
