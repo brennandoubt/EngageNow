@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,24 +39,28 @@ public class VolunteerChatList extends VolunteerBaseClass {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
 
         matchesListView.setAdapter(arrayAdapter);
+        String userId = FirebaseAuth.getInstance().getUid();
 
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                  Set<String> set = new HashSet<>();
+                Set<String> set = new HashSet<>();
                 if (snapshot.exists()) {
+                    // for each organization
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Map<String, Object> m = (Map) ds.getValue();
-//                        Log.d("HERE", m.toString());
-                        if (m.containsKey("test2")) {
+                        Log.d("HERE", m.toString());
+                        if (m.containsKey(userId)) {
                             String orgId = ds.getKey();
                             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId).child("email");
-//                            Log.d("NOAH", dbr.toString());
+
                             dbr.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    // check if user in that organization chat
                                     if (snapshot.exists()) {
+                                        Log.d(TAG, snapshot.toString());
                                         String orgEmail = snapshot.getValue().toString();
 
 

@@ -52,7 +52,20 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                 // contains data from a firebase location.
                 Iterator i = snapshot.getChildren().iterator();
                 while(i.hasNext()) {
-                    set.add(( (DataSnapshot) i.next()).getKey());
+                    DataSnapshot potentialMatchOrgId = (DataSnapshot) i.next();
+                    // if potentialMatchOrgId.key() == orgId then iterate through and add all children to set
+                    if (potentialMatchOrgId.getKey().equals("test1")){
+                        // get the keys of the users that want to match
+                        for (DataSnapshot ds : potentialMatchOrgId.getChildren()) {
+                            // find that users name
+                            set.add(ds.getKey());
+                        }
+//                        Log.d(TAG, potentialMatchOrgId.getKey());
+//                        set.add(potentialMatchOrgId.getKey());
+
+                        break;
+                    }
+
                 }
 
                 arrayAdapter.clear();
