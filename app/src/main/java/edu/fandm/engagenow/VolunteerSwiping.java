@@ -1,11 +1,5 @@
 package edu.fandm.engagenow;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.DiffUtil;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +7,13 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DiffUtil;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -22,14 +23,18 @@ import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class VolunteerSwiping extends AppCompatActivity implements CardStackListener {
+public class VolunteerSwiping extends VolunteerBaseClass implements CardStackListener {
     private DrawerLayout drawerLayout;
 
     private CardStackLayoutManager manager;
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
+    List<Org> orgs = new ArrayList<>();
+    boolean swipedRight = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,19 @@ public class VolunteerSwiping extends AppCompatActivity implements CardStackList
 //            super.onBackPressed();
 //        }
 //    }
+    //Adds to database after swiping
+    public void addToDatabase(int position){
+        if(position >= orgs.size()){
+            return;
+        }
+        // store in the potentialMatches folder at the organization id
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID);
+        Map<String, Object> m = new HashMap<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        m.put(auth.getCurrentUser().getUid(), auth.getCurrentUser().getUid());
+        dbr.updateChildren(m);
+    }
+
 
     @Override
     public void onCardDragging(Direction direction, float ratio) {
@@ -56,10 +74,15 @@ public class VolunteerSwiping extends AppCompatActivity implements CardStackList
 
     @Override
     public void onCardSwiped(Direction direction) {
+        if(direction.equals(Direction.Right)){
+            addToDatabase(manager.getTopPosition() - 1);
+        }
+
         Log.d("CardStackView", "onCardSwiped: p = " + manager.getTopPosition() + ", d = " + direction);
         if (manager.getTopPosition() == adapter.getItemCount() - 5) {
             paginate();
         }
+
     }
 
     @Override
@@ -129,6 +152,7 @@ public class VolunteerSwiping extends AppCompatActivity implements CardStackList
                         .build();
                 manager.setSwipeAnimationSetting(setting);
                 cardStackView.swipe();
+                addToDatabase(manager.getTopPosition());
             }
         });
     }
@@ -240,12 +264,11 @@ public class VolunteerSwiping extends AppCompatActivity implements CardStackList
     }
 
     private List<Org> createOrgs() {
-        List<Org> orgs = new ArrayList<>();
-        orgs.add(new Org("Claire House", "Add description", ""));
-        orgs.add(new Org("YMCA", "Add description", ""));
-        orgs.add(new Org("Red Cross", "Add description", ""));
-        orgs.add(new Org("Ware institute", "Add description", ""));
-        orgs.add(new Org("Canine Search and Rescue", "New York", ""));
+        orgs.add(new Org("Claire House", "Add description", "", "test1"));
+        orgs.add(new Org("YMCA", "Add description", "", "test2"));
+        orgs.add(new Org("Red Cross", "Add description", "", "test3"));
+        orgs.add(new Org("Ware institute", "Add description", "", "test4"));
+        orgs.add(new Org("Canine Search and Rescue", "New York", "", "test5"));
         return orgs;
     }
 

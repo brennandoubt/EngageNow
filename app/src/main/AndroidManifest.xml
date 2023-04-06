@@ -17,6 +17,9 @@
             android:name=".OrganizationPotentialMatches"
             android:exported="false" />
         <activity
+            android:name=".VolunteerPreferences"
+            android:exported="false" />
+        <activity
             android:name=".VolunteerSwiping"
             android:exported="false" />
         <activity

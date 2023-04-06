@@ -14,7 +14,7 @@ public interface CardStackListener {
         @Override
         public void onCardDragging(Direction direction, float ratio) {}
         @Override
-        public void onCardSwiped(Direction direction) {}
+        public void onCardSwiped(Direction direction){}
         @Override
         public void onCardRewound() {}
         @Override

@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.security.cert.PKIXRevocationChecker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ import java.util.Map;
 // dependency for database
 //    implementation 'com.google.firebase:firebase-database:20.1.0'
 
-public class OrganizationChat extends AppCompatActivity {
+public class OrganizationChat extends OrganizationBaseClass {
     Button sendMessageButton;
     EditText messageEditText;
     ListView chatListView;
@@ -114,13 +115,13 @@ public class OrganizationChat extends AppCompatActivity {
 
 
     public void updateConversation(DataSnapshot dataSnapshot) {
-        String msg, user;
+        String msg, userName;
         Iterator i = dataSnapshot.getChildren().iterator();
         while (i.hasNext()) {
             msg = (String) ((DataSnapshot) i.next()).getValue();
-//            user = (String) ((DataSnapshot) i.next()).getValue();
+            userName = (String) ((DataSnapshot) i.next()).getValue();
 
-            arrayAdapter.add(msg);
+            arrayAdapter.add(userName + ": " + msg);
             arrayAdapter.notifyDataSetChanged();
         }
     }

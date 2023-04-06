@@ -92,10 +92,31 @@ public class Register extends AppCompatActivity {
                             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             dbr.updateChildren(accountTypeMap);
 
+                            // go into preferences activity
                             Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(getApplicationContext(), SignIn.class);
-                            startActivity(i);
-                            finish();
+
+                            //TODO: add another activity for organization account
+                            if (accountType.equals("volunteer_account")) {
+                                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                                HashMap<String, Object> m = new HashMap<>();
+                                m.put("email", email);
+                                dbr.updateChildren(m);
+                                Intent i = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                                i.putExtra("user_id", userId);
+
+                                startActivity(i);
+                                finish();
+                            }
+                            else {
+                                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts");
+                                HashMap<String, Object> m = new HashMap<>();
+                                m.put("email", email);
+                                dbr.updateChildren(m);
+                            }
+
+                            //Intent i = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                            //startActivity(i);
+                            //finish();
                         }
                         else {
                             Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();

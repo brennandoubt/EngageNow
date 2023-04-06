@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class OrganizationPotentialMatches extends AppCompatActivity {
+public class OrganizationPotentialMatches extends OrganizationBaseClass {
     ListView potMatchListView;
     ArrayList<String> listOfPotMatches = new ArrayList<>();
     ArrayAdapter arrayAdapter;

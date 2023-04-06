@@ -8,11 +8,14 @@ public class Org {
     public String descrip;
     public String url;
 
-    public Org(String name, String descrip, String url) {
+    public String userID;
+
+    public Org(String name, String descrip, String url, String userID) {
         this.id = counter++;
         this.name = name;
         this.descrip = descrip;
         //For images
         this.url = url;
+        this.userID = userID;
     }
 }

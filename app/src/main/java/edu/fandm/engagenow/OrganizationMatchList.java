@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class OrganizationMatchList extends AppCompatActivity {
+public class OrganizationMatchList extends OrganizationBaseClass {
     ListView matchesListView;
     ArrayList<String> listOfMatches = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
@@ -112,4 +113,5 @@ public class OrganizationMatchList extends AppCompatActivity {
         });
         builder.show();
     }
+
 }
