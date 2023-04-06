@@ -35,7 +35,7 @@ public class OrganizationChat extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     ArrayList<String> chatList = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
-    String userName, selectedVolunteer, user_message_key;
+    String userName, selectedVolunteer, user_message_key, uid;
     FirebaseUser currentUser;
 
     final String TAG = "OrganizationChat";
@@ -47,6 +47,7 @@ public class OrganizationChat extends AppCompatActivity {
         setContentView(R.layout.activity_organization_chat);
 
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        uid = FirebaseAuth.getInstance().getUid();
 
         sendMessageButton = (Button) findViewById(R.id.send_button);
         messageEditText = (EditText) findViewById(R.id.message_et);
@@ -58,8 +59,8 @@ public class OrganizationChat extends AppCompatActivity {
 //        userName = getIntent().getExtras().get("user_name").toString();
         selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
         setTitle("Volunteer: " + selectedVolunteer);
-
-        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child(selectedVolunteer);
+        Log.d(TAG, selectedVolunteer);
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(selectedVolunteer);
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +118,9 @@ public class OrganizationChat extends AppCompatActivity {
         Iterator i = dataSnapshot.getChildren().iterator();
         while (i.hasNext()) {
             msg = (String) ((DataSnapshot) i.next()).getValue();
-            user = (String) ((DataSnapshot) i.next()).getValue();
+//            user = (String) ((DataSnapshot) i.next()).getValue();
 
-            arrayAdapter.add(user + ": " + msg);
+            arrayAdapter.add(msg);
             arrayAdapter.notifyDataSetChanged();
         }
     }

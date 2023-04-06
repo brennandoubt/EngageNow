@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,13 +34,15 @@ public class OrganizationMatchList extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     String userName;
     String TAG = "OrgMatchList";
+    static String uid;
     // represents a particular location in database and can be used for reading or writing data to that database location
-    private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages");
+    private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_match_list);
-
+        uid = FirebaseAuth.getInstance().getUid();
+        dbr = dbr.child(uid);
         matchesListView = (ListView) findViewById(R.id.matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
 
@@ -77,6 +81,16 @@ public class OrganizationMatchList extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        Button potMatchButton = (Button) findViewById(R.id.pot_match_button);
+        potMatchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), OrganizationPotentialMatches.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     private void getUserName() {
