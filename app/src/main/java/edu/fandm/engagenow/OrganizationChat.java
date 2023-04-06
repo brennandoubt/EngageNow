@@ -82,7 +82,7 @@ public class OrganizationChat extends OrganizationBaseClass {
                 map2.put("msg", msg);
                 map2.put("user", email);
                 dbr2.updateChildren(map2);
-
+                messageEditText.setText("");
             }
         });
 

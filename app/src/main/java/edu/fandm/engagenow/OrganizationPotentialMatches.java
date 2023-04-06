@@ -1,6 +1,7 @@
 package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +37,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
     ListView potMatchListView;
     ArrayList<String> listOfPotMatches = new ArrayList<>();
     HashMap<String, String> emailIdMap = new HashMap<>();
+    HashMap<String, String> idEmailMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     static String uid;
     static String orgEmail;
@@ -64,13 +67,14 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                         // get the keys of the users that want to match
                             // find that users name
                     DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(potentialMatchVolunteerId.getKey()).child("email");
-                    userEmailDbr.addListenerForSingleValueEvent(new ValueEventListener() {
+                    userEmailDbr.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Log.d(TAG, "HERE: " + potentialMatchVolunteerId.getValue().toString());
                             String email = (String) snapshot.getValue();
                             set.add(email);
                             emailIdMap.put(email, potentialMatchVolunteerId.getValue().toString());
+                            idEmailMap.put(potentialMatchVolunteerId.getValue().toString(), email);
                             arrayAdapter.clear();
                             arrayAdapter.addAll(set);
                         }
@@ -84,10 +88,10 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 //
                 }
 
-
                 arrayAdapter.notifyDataSetChanged();
 //                Log.d(TAG, set.toArray().toString());
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -95,6 +99,62 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             }
         });
 
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid);
+        Log.d("HERE", dbr.toString());
+
+        dbr.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("TAG", "ADDED");
+                Set<String> set = new HashSet<>();
+                Log.d("TAG", snapshot.getValue().toString());
+                DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(snapshot.getValue().toString()).child("email");
+                userEmailDbr.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d(TAG, "HERE: " + snapshot.getValue().toString());
+                        String email = (String) snapshot.getValue();
+                        set.add(email);
+                        emailIdMap.put(email, snapshot.getValue().toString());
+                        idEmailMap.put(snapshot.getValue().toString(), email);
+                        arrayAdapter.clear();
+                        arrayAdapter.addAll(set);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                arrayAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("TAG", "CHANGED");
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Log.d("TAG", "REMOVED");
+                Log.d("TAG", snapshot.getKey().toString());
+                arrayAdapter.remove(idEmailMap.get(snapshot.getKey()));
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("TAG", "MOVED");
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("TAG", "CANCELED");
+
+            }
+        });
         potMatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -107,8 +167,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
     private void acceptVolunteerDialog(String volunteerEmail, String volunteerId) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(true);
-        dialog.setCancelable(false);
-
+        dialog.setTitle("Accept/Reject This Match");
         dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -126,6 +185,11 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                 m2.put("user", "Connected");
                 dbr2.updateChildren(m2);
                 dbr.child(volunteerId).updateChildren(m);
+                m = new HashMap<>();
+                m.put(volunteerId, null);
+                DatabaseReference d = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId);
+                d.removeValue();
+                Log.d("HERE", d.toString());
             }
         });
 
@@ -142,4 +206,50 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         dialog.show();
 
     }
+
+//    private void updateList() {
+//        arrayAdapter.remove(snapshot.key);
+//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMathes").child(uid);
+//        dbr.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Set<String> set = new HashSet<String>();
+//                // contains data from a firebase location.
+//                Iterator i = snapshot.getChildren().iterator();
+//                while (i.hasNext()) {
+//                    DataSnapshot potentialMatchVolunteerId = (DataSnapshot) i.next();
+//
+//                    // get the keys of the users that want to match
+//                    // find that users name
+//                    DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(potentialMatchVolunteerId.getKey()).child("email");
+//                    userEmailDbr.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            Log.d(TAG, "HERE: " + potentialMatchVolunteerId.getValue().toString());
+//                            String email = (String) snapshot.getValue();
+//                            set.add(email);
+//                            emailIdMap.put(email, potentialMatchVolunteerId.getValue().toString());
+//                            arrayAdapter.clear();
+//                            arrayAdapter.addAll(set);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+//
+////
+//                }
+//
+//                arrayAdapter.notifyDataSetChanged();
+////                Log.d(TAG, set.toArray().toString());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 }

@@ -63,7 +63,6 @@ public class OrganizationChatList extends OrganizationBaseClass {
                     volunteerAccDbr.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Log.d("YOU", snapshot.toString());
                             String volEmail = snapshot.getValue().toString();
                             set.add(volEmail);
                             volIdMap.put(volEmail, volunteerKey);
