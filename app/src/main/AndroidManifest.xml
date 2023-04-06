@@ -14,6 +14,9 @@
         android:theme="@style/Theme.EngageNow"
         tools:targetApi="31">
         <activity
+            android:name=".VolunteerChat"
+            android:exported="false" />
+        <activity
             android:name=".VolunteerChatList"
             android:exported="false" />
         <activity

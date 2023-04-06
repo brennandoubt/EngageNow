@@ -3,11 +3,15 @@ package edu.fandm.engagenow;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +30,8 @@ import java.util.Set;
 
 public class VolunteerChatList extends VolunteerBaseClass {
     ListView matchesListView;
-    ArrayList<String> listOfMatches = new ArrayList<String>();
+    ArrayList<String> listOfMatchesName = new ArrayList<String>();
+    HashMap<String, String> nameIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     String userName;
     String TAG = "VolunteerChatList";
@@ -36,7 +41,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
         setContentView(R.layout.activity_volunteer_chat_list);
 
         matchesListView = (ListView) findViewById(R.id.matches_lv);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatchesName);
 
         matchesListView.setAdapter(arrayAdapter);
         String userId = FirebaseAuth.getInstance().getUid();
@@ -45,7 +50,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Set<String> set = new HashSet<>();
+                Set<String> nameSet = new HashSet<>();
                 if (snapshot.exists()) {
                     // for each organization
                     for (DataSnapshot ds : snapshot.getChildren()) {
@@ -64,9 +69,11 @@ public class VolunteerChatList extends VolunteerBaseClass {
                                         String orgEmail = snapshot.getValue().toString();
 
 
-                                        set.add(orgEmail);
+                                        nameSet.add(orgEmail);
+
+                                        nameIdMap.put(orgEmail, orgId);
                                         arrayAdapter.clear();
-                                        arrayAdapter.addAll(set);
+                                        arrayAdapter.addAll(nameSet);
                                     }
                                 }
 
@@ -75,20 +82,35 @@ public class VolunteerChatList extends VolunteerBaseClass {
 
                                 }
                             });
-                            Log.d(TAG, set.toString());
+                            Log.d(TAG, nameSet.toString());
 
                         }
 
                     }
 
                     arrayAdapter.notifyDataSetChanged();
-                    Log.d("EXISTS", set.toString());
+                    Log.d("EXISTS", nameSet.toString());
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        ListView chatListView = (ListView) findViewById(R.id.matches_lv);
+        chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String email = adapterView.getItemAtPosition(position).toString();
+                Log.d(TAG, nameIdMap.get(email));
+                Intent i = new Intent(getApplicationContext(), VolunteerChat.class);
+                i.putExtra("organization_id", nameIdMap.get(email));
+                i.putExtra("organization_email", email);
+
+                //                i.putExtra("current_user_name", nameIdMap.get(email));
+                startActivity(i);
             }
         });
 
