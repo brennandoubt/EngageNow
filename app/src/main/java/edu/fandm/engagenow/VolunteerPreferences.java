@@ -1,5 +1,6 @@
 package edu.fandm.engagenow;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,7 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,15 +46,50 @@ public class VolunteerPreferences extends VolunteerBaseClass {
         update_preferenes_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // update user's data with the inputs given in each field (starting with user's name)
-                String name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
-                FirebaseUser user = fbAuth.getCurrentUser();
+                // get data from last Register activity
+                Intent i = getIntent();
+                String email = i.getStringExtra("email");
+                String password = i.getStringExtra("password");
+                String accountType = i.getStringExtra("account_type");
 
-                Map<String, Object> user_first_name_map = new HashMap<>();
-                user_first_name_map.put(user_id, name_inputted);
+                Task s = fbAuth.createUserWithEmailAndPassword(email, password);
+                s.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+//                        FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = fbAuth.getCurrentUser();
+                            String userId = user.getUid();
 
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_first_name");
-                dbr.updateChildren(user_first_name_map);
+                            // update user's data with the inputs given in each field (starting with user's name)
+                            String name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
+                            Map<String, Object> user_first_name_map = new HashMap<>();
+                            user_first_name_map.put(userId, name_inputted);
+
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_first_name");
+                            dbr.updateChildren(user_first_name_map);
+
+//                            in database, store the type of account that the user is
+                            Map<String, Object> accountTypeMap = new HashMap<>();
+                            accountTypeMap.put(userId, accountType);
+
+                            dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
+                            dbr.updateChildren(accountTypeMap);
+
+                            // go into preferences activity
+                            Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
+
+                            dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                            HashMap<String, Object> m = new HashMap<>();
+
+                            m.put("email", email);
+                            dbr.updateChildren(m);
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
