@@ -1,8 +1,11 @@
 package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -25,21 +28,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 public class OrganizationPotentialMatches extends OrganizationBaseClass {
     ListView potMatchListView;
     ArrayList<String> listOfPotMatches = new ArrayList<>();
+    HashMap<String, String> emailIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     static String uid;
+    static String orgEmail;
     String TAG = "OrgPotMatch";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_potential_matches);
         uid = FirebaseAuth.getInstance().getUid();
-
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches");
+        orgEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid);
+        Log.d(TAG, dbr.toString());
         potMatchListView = (ListView) findViewById(R.id.potential_matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfPotMatches);
         potMatchListView.setAdapter(arrayAdapter);
@@ -52,26 +59,34 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                 // contains data from a firebase location.
                 Iterator i = snapshot.getChildren().iterator();
                 while(i.hasNext()) {
-                    DataSnapshot potentialMatchOrgId = (DataSnapshot) i.next();
-                    // if potentialMatchOrgId.key() == orgId then iterate through and add all children to set
-                    if (potentialMatchOrgId.getKey().equals("test1")){
+                    DataSnapshot potentialMatchVolunteerId = (DataSnapshot) i.next();
+
                         // get the keys of the users that want to match
-                        for (DataSnapshot ds : potentialMatchOrgId.getChildren()) {
                             // find that users name
-                            set.add(ds.getKey());
+                    DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(potentialMatchVolunteerId.getKey()).child("email");
+                    userEmailDbr.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Log.d(TAG, "HERE: " + potentialMatchVolunteerId.getValue().toString());
+                            String email = (String) snapshot.getValue();
+                            set.add(email);
+                            emailIdMap.put(email, potentialMatchVolunteerId.getValue().toString());
+                            arrayAdapter.clear();
+                            arrayAdapter.addAll(set);
                         }
-//                        Log.d(TAG, potentialMatchOrgId.getKey());
-//                        set.add(potentialMatchOrgId.getKey());
 
-                        break;
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
+                        }
+                    });
+
+//
                 }
 
-                arrayAdapter.clear();
-                arrayAdapter.addAll(set);
+
                 arrayAdapter.notifyDataSetChanged();
-                Log.d(TAG, set.toArray().toString());
+//                Log.d(TAG, set.toArray().toString());
             }
 
             @Override
@@ -83,18 +98,48 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         potMatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                acceptVolunteer((String) adapterView.getItemAtPosition(position).toString());
+                String email = (String) adapterView.getItemAtPosition(position).toString();
+                acceptVolunteerDialog(email, emailIdMap.get(email));
             }
         });
     }
 
-    private void acceptVolunteer(String volunteerId) {
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid);
-        Log.d(TAG, dbr.toString());
-        Log.d(TAG, volunteerId);
-        HashMap<String, Object> m = new HashMap<>();
-        m.put("msg", "Organization: We are glad you would like to work with us");
-        dbr.child(volunteerId).updateChildren(m);
+    private void acceptVolunteerDialog(String volunteerEmail, String volunteerId) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setCancelable(true);
+        dialog.setCancelable(false);
+
+        dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
+                Log.d(TAG, dbr.toString());
+//                Log.d(TAG, emailIdMap.get(volunteerId));
+                HashMap<String, Object> m = new HashMap<>();
+
+                String user_message_key = dbr.push().getKey();
+                dbr.updateChildren(m);
+
+                DatabaseReference dbr2 = dbr.child(user_message_key);
+                Map<String, Object> m2 = new HashMap<String, Object>();
+                m2.put("msg", volunteerEmail + " and " + orgEmail + " have been connected!");
+                m2.put("user", "Connected");
+                dbr2.updateChildren(m2);
+                dbr.child(volunteerId).updateChildren(m);
+            }
+        });
+
+        dialog.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                HashMap<String, Object> m = new HashMap<>();
+                m.put(volunteerId, null);
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches");
+                dbr.updateChildren(m);
+            }
+        });
+
+        dialog.show();
 
     }
 }

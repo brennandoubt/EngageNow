@@ -59,9 +59,10 @@ public class OrganizationChat extends OrganizationBaseClass {
 
 //        userName = getIntent().getExtras().get("user_name").toString();
         selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
+        String volunteerId = getIntent().getExtras().get("volunteer_id").toString();
         setTitle("Volunteer: " + selectedVolunteer);
         Log.d(TAG, selectedVolunteer);
-        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(selectedVolunteer);
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override

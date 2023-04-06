@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -30,6 +31,7 @@ import java.util.Set;
 public class OrganizationChatList extends OrganizationBaseClass {
     ListView matchesListView;
     ArrayList<String> listOfMatches = new ArrayList<String>();
+    HashMap<String, String> volIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     String userName;
     String TAG = "OrgChatList";
@@ -55,11 +57,29 @@ public class OrganizationChatList extends OrganizationBaseClass {
                 // contains data from a firebase location.
                 Iterator i = snapshot.getChildren().iterator();
                 while(i.hasNext()) {
-                    set.add(( (DataSnapshot) i.next()).getKey());
+                    String volunteerKey = ( (DataSnapshot) i.next()).getKey();
+
+                    DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerKey).child("email");
+                    volunteerAccDbr.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Log.d("YOU", snapshot.toString());
+                            String volEmail = snapshot.getValue().toString();
+                            set.add(volEmail);
+                            volIdMap.put(volEmail, volunteerKey);
+                            arrayAdapter.clear();
+                            arrayAdapter.addAll(set);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
 
-                arrayAdapter.clear();
-                arrayAdapter.addAll(set);
+
                 arrayAdapter.notifyDataSetChanged();
                 Log.d(TAG, set.toArray().toString());
             }
@@ -75,8 +95,11 @@ public class OrganizationChatList extends OrganizationBaseClass {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent i = new Intent(getApplicationContext(), OrganizationChat.class);
-                i.putExtra("selected_volunteer", ((TextView)view).getText().toString());
+                userName = ((TextView)view).getText().toString();
+                i.putExtra("selected_volunteer", userName);
                 i.putExtra("user_name", userName);
+                Log.d("HERE", userName);
+                i.putExtra("volunteer_id", volIdMap.get(userName));
                 startActivity(i);
             }
         });
