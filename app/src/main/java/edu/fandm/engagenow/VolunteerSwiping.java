@@ -7,7 +7,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DiffUtil;
 
@@ -55,15 +54,15 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 //    }
     //Adds to database after swiping
     public void addToDatabase(int position){
-        if(position >= orgs.size()){
-            return;
+        if(position < orgs.size()){
+            // store in the potentialMatches folder at the organization id
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID);
+            Map<String, Object> m = new HashMap<>();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            m.put(auth.getCurrentUser().getUid(), auth.getCurrentUser().getUid());
+            dbr.updateChildren(m);
         }
-        // store in the potentialMatches folder at the organization id
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID);
-        Map<String, Object> m = new HashMap<>();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        m.put(auth.getCurrentUser().getUid(), auth.getCurrentUser().getUid());
-        dbr.updateChildren(m);
+
     }
 
 
