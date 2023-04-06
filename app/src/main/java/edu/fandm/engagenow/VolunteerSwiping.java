@@ -1,5 +1,6 @@
 package edu.fandm.engagenow;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -7,13 +8,16 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -24,6 +28,7 @@ import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,16 +60,17 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 //    }
     //Adds to database after swiping
     public void addToDatabase(int position){
-        if(position >= orgs.size()){
-            return;
+        if(position < orgs.size()){
+            // store in the potentialMatches folder at the organization id
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID);
+            Map<String, Object> m = new HashMap<>();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            m.put(auth.getCurrentUser().getUid(), auth.getCurrentUser().getUid());
+            dbr.updateChildren(m);
         }
-        // store in the potentialMatches folder at the organization id
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID);
-        Map<String, Object> m = new HashMap<>();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        m.put(auth.getCurrentUser().getUid(), auth.getCurrentUser().getUid());
-        dbr.updateChildren(m);
+
     }
+
 
 
     @Override
@@ -156,8 +162,28 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             }
         });
     }
-
+//Fetch data from database
     private void initialize() {
+        DatabaseReference organizationsRef = FirebaseDatabase.getInstance().getReference("organization_accounts");
+        organizationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Iterator i = snapshot.getChildren().iterator();
+                while(i.hasNext()){
+                    DataSnapshot OrgId = (DataSnapshot) i.next();
+                    HashMap<String, Object> map = (HashMap <String, Object>) OrgId.getValue();
+                    orgs.add(new Org((String)map.get("email"), "", "", OrgId.getKey()));
+                    Log.d("CPS",orgs.toString());
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         manager = new CardStackLayoutManager(this, this);
         manager.setStackFrom(StackFrom.None);
         manager.setVisibleCount(3);
@@ -168,7 +194,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
         manager.setDirections(Direction.HORIZONTAL);
         manager.setCanScrollHorizontal(true);
         manager.setCanScrollVertical(true);
-        adapter = new CardStackAdapter(this, createOrgs());
+        adapter = new CardStackAdapter(this, orgs);
         cardStackView = findViewById(R.id.card_stack_view);
         cardStackView.setLayoutManager(manager);
         cardStackView.setAdapter(adapter);
@@ -178,14 +204,14 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
         List<Org> oldList = adapter.getOrgs();
         List<Org> newList = new ArrayList<Org>() {{
             addAll(adapter.getOrgs());
-            addAll(createOrgs());
+            //addAll(createOrgs());
         }};
         SpotDiffCallback callback = new SpotDiffCallback(oldList, newList);
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
         adapter.setOrgs(newList);
         result.dispatchUpdatesTo(adapter);
     }
-
+    /**
     private void reload() {
         List<Org> oldList = adapter.getOrgs();
         List<Org> newList = createOrgs();
@@ -194,6 +220,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
         adapter.setOrgs(newList);
         result.dispatchUpdatesTo(adapter);
     }
+     */
 
     private void addFirst(final int size) {
         List<Org> oldList = adapter.getOrgs();
@@ -261,15 +288,6 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     private Org createOrg() {
         return null;
-    }
-
-    private List<Org> createOrgs() {
-        orgs.add(new Org("Claire House", "Add description", "", "test1"));
-        orgs.add(new Org("YMCA", "Add description", "", "test2"));
-        orgs.add(new Org("Red Cross", "Add description", "", "test3"));
-        orgs.add(new Org("Ware institute", "Add description", "", "test4"));
-        orgs.add(new Org("Canine Search and Rescue", "New York", "", "test5"));
-        return orgs;
     }
 
 

@@ -22,8 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VolunteerPreferences extends VolunteerBaseClass {
-    private final String TAG = "VOLUNTEER_PREFERENCES";
+public class OrganizationPreferences extends OrganizationBaseClass {
+    private final String TAG = "ORG_PREFERENCES";
 
     FirebaseAuth fbAuth;
 
@@ -77,16 +77,16 @@ public class VolunteerPreferences extends VolunteerBaseClass {
                             dbr.updateChildren(accountTypeMap);
 
                             // go into preferences activity
-                            Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
 
-                            dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                            dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
                             HashMap<String, Object> m = new HashMap<>();
 
                             m.put("email", email);
                             dbr.updateChildren(m);
                         }
                         else {
-                            Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Failed to create new organization user", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
