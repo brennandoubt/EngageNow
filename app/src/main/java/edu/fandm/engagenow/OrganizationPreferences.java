@@ -30,7 +30,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_preferences);
+        setContentView(R.layout.activity_organization_preferences);
 
         // get user ID from last activity
         Intent i = getIntent();
