@@ -19,8 +19,8 @@
             android:gravity="center">
 
             <TextView
-                android:textAlignment="center"
                 android:id="@+id/instructions_tv"
+                android:textAlignment="center"
                 android:layout_width="match_parent"
                 android:textSize="17sp"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
 
 
             <Button
-                android:id="@+id/upload_image__button"
+                android:id="@+id/upload_image_button"
                 android:layout_width="match_parent"
                 android:layout_margin ="20dp"
                 android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_margin ="5dp"
                 android:layout_height="30dp"
-                android:autofillHints="Time Commitment"
+                android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 />
 
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_margin ="5dp"
                 android:layout_height="30dp"
-                android:autofillHints="Time Commitment"
+                android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 />
 
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_margin ="5dp"
                 android:layout_height="30dp"
-                android:autofillHints="Time Commitment"
+                android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 />
 
@@ -117,18 +117,18 @@
                     android:text="FBI" />
 
                 <RadioButton
-                    android:id="@+id/radioButton1"
+                    android:id="@+id/child_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
                     android:text="Child" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/criminal_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:text="Criminal" />
+                    android:text="Criminal History" />
 
             </LinearLayout>
 
@@ -156,7 +156,7 @@
                 android:gravity="center">
 
                 <RadioButton
-                    android:id="@+id/labor_skill__rb"
+                    android:id="@+id/labor_skill_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
@@ -249,7 +249,7 @@
                 android:background="@android:color/darker_gray"/>
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/vehicle_cb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin ="10dp"
