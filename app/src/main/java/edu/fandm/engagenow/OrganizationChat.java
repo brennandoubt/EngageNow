@@ -82,6 +82,8 @@ public class OrganizationChat extends OrganizationBaseClass {
                 map2.put("user", email);
                 dbr2.updateChildren(map2);
                 messageEditText.setText("");
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("volunteer_read");
+                dbr.setValue(false);
             }
         });
 

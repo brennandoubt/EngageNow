@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +36,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
     ArrayList<String> listOfMatchesName = new ArrayList<String>();
     HashMap<String, String> nameIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
-    String userName;
+    String userName, userId;
     String TAG = "VolunteerChatList";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatchesName);
 
         matchesListView.setAdapter(arrayAdapter);
-        String userId = FirebaseAuth.getInstance().getUid();
+        userId = FirebaseAuth.getInstance().getUid();
 
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
         dbr.addValueEventListener(new ValueEventListener() {
@@ -74,6 +77,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
                                         nameIdMap.put(orgEmail, orgId);
                                         arrayAdapter.clear();
                                         arrayAdapter.addAll(nameSet);
+                                        setReadNotifications();
                                     }
                                 }
 
@@ -108,12 +112,38 @@ public class VolunteerChatList extends VolunteerBaseClass {
                 Intent i = new Intent(getApplicationContext(), VolunteerChat.class);
                 i.putExtra("organization_id", nameIdMap.get(email));
                 i.putExtra("organization_email", email);
-
+                String organizationId = nameIdMap.get(email);
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
+                dbr.setValue(true);
                 //                i.putExtra("current_user_name", nameIdMap.get(email));
                 startActivity(i);
             }
         });
 
 
+    }
+
+    private void setReadNotifications() {
+        for (int i = 0; i < matchesListView.getCount(); i++) {
+            String email = arrayAdapter.getItem(i).toString();
+            String organizationId = nameIdMap.get(email);
+            final int idx = i;
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
+            Task<DataSnapshot> ds = dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    boolean read = (boolean) task.getResult().getValue();
+                    View v = (View) matchesListView.getChildAt(idx);
+                    if (!read) {
+                        v.setBackgroundColor(Color.RED);
+                    } else {
+                        v.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    arrayAdapter.notifyDataSetChanged();
+
+                }
+            });
+
+        }
     }
 }

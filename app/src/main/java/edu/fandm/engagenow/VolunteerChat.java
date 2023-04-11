@@ -76,6 +76,9 @@ public class VolunteerChat extends VolunteerBaseClass {
                 dbr2.updateChildren(map2);
                 
                 messageEditText.setText("");
+
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("organization_read");
+                dbr.setValue(false);
             }
         });
 
