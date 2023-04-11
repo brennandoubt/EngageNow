@@ -16,4 +16,35 @@
         <item>Volunteer Account</item>
         <item>Organization Account</item>
     </string-array>
+
+    <string-array name="age_group_select">
+        <item>Select Age Group</item>
+        <item>13-18</item>
+        <item>18-21</item>
+        <item>21+</item>
+    </string-array>
+
+    <string-array name="time_commitment_select">
+        <item>Select Time Commitment</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+        <item>4 hours</item>
+        <item>5-8 hours</item>
+        <item>8+ hours</item>
+        <item>Ongoing commitment</item>
+    </string-array>
+
+    <string-array name="availability_select">
+        <item>Select Availability</item>
+        <item>Immediately</item>
+        <item>Within 24 hours</item>
+        <item>Within 48 hours</item>
+        <item>Within 72 hours</item>
+        <item>Within 1 wk</item>
+        <item>Within 2 wk</item>
+        <item>Ongoing commitment</item>
+    </string-array>
+
+
+
 </resources>
