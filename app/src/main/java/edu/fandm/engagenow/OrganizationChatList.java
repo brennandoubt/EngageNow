@@ -1,5 +1,6 @@
 package edu.fandm.engagenow;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
@@ -12,8 +13,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -80,6 +86,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
                             volIdMap.put(volEmail, volunteerKey);
                             arrayAdapter.clear();
                             arrayAdapter.addAll(set);
+                            setReadNotifications();
                         }
 
                         @Override
@@ -92,7 +99,6 @@ public class OrganizationChatList extends OrganizationBaseClass {
 
 
                 arrayAdapter.notifyDataSetChanged();
-                Log.d(TAG, set.toArray().toString());
             }
 
             @Override
@@ -124,6 +130,35 @@ public class OrganizationChatList extends OrganizationBaseClass {
             }
         });
 
+    }
+
+    private void setReadNotifications() {
+        for (int i = 0; i < matchesListView.getCount(); i++) {
+            String email = arrayAdapter.getItem(i).toString();
+            String volunteerId = volIdMap.get(email);
+            Log.d(email, volunteerId);
+            final int idx = i;
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+            Task<DataSnapshot> ds = dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    boolean read = (boolean) task.getResult().getValue();
+                    View v = (View) matchesListView.getChildAt(idx);
+                    if (!read) {
+                        v.setBackgroundColor(Color.RED);
+                    }
+                    else {
+                        v.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    arrayAdapter.notifyDataSetChanged();
+
+                }
+            });
+
+
+            Log.d(TAG, Integer.toString(arrayAdapter.getCount()));
+
+        }
     }
 
     private void getUserName() {
