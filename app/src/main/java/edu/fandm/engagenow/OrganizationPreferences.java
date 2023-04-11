@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -31,21 +32,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
 
     FirebaseAuth fbAuth;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_organization_preferences);
-
-        // get user ID from last activity
-        Intent i = getIntent();
-        String user_id = i.getStringExtra("user_id");
-
-        Log.d(TAG, "User ID retrieved for updating: " + user_id);
-
-        // initialize firebase app
-        FirebaseApp.initializeApp(this);
-        fbAuth = FirebaseAuth.getInstance();
-
+    private void populateSpinner(){
         //time commitment drop down
         Spinner timeDropDown = findViewById(R.id.time_commitment_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.time_commitment_select, android.R.layout.simple_spinner_item);
@@ -63,7 +50,26 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.availability_select, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(R.layout.custom_spinner_item);
         availabilityGroupDropDown.setAdapter(adapter2);
+    }
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_organization_preferences);
+
+        // get user ID from last activity
+        Intent i = getIntent();
+        String user_id = i.getStringExtra("user_id");
+
+        Log.d(TAG, "User ID retrieved for updating: " + user_id);
+
+        // initialize firebase app
+        FirebaseApp.initializeApp(this);
+        fbAuth = FirebaseAuth.getInstance();
+
+        //generate the items in spinner
+        populateSpinner();
 
 
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
@@ -85,7 +91,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             FirebaseUser user = fbAuth.getCurrentUser();
                             String userId = user.getUid();
 
-                            // Extract the data from the views first
+                            // Extract the data from the views
 
                             //EdiText
                             String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
@@ -110,6 +116,14 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
 
                             //Spinner
+                            Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
+                            Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
+                            Spinner availabilitySpinner =  (Spinner) findViewById(R.id.availability_spinner);
+
+                            String ageGroup = ageGroupSpinner.getSelectedItem().toString();
+                            String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
+                            String availability = availabilitySpinner.getSelectedItem().toString();
+
 
 
 
