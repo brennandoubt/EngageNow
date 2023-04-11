@@ -53,6 +53,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +71,10 @@ public class OrganizationPreferences extends OrganizationBaseClass {
 
         //generate the items in spinner
         populateSpinner();
+
+        //https://medium.com/javarevisited/lets-develop-an-android-app-to-upload-files-and-images-on-cloud-f9670d812060
+        //tutorial on how to upload image
+
 
 
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
@@ -110,7 +115,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             boolean hasSpanish = ((RadioButton) findViewById(R.id.spanish_language_rb)).isChecked();
                             boolean hasChinese = ((RadioButton) findViewById(R.id.chinese_language_rb)).isChecked();
                             boolean hasGerman = ((RadioButton) findViewById(R.id.german_language_rb)).isChecked();
-                            boolean hasOtherLanguageRB = ((RadioButton) findViewById(R.id.others_language_rb)).isChecked();
+                            boolean hasEnglish = ((RadioButton) findViewById(R.id.english_language_rb)).isChecked();
 
                             //CheckBox
                             boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
@@ -125,21 +130,30 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             String availability = availabilitySpinner.getSelectedItem().toString();
 
 
+                            Map<String, Object> orgDBHashmap = new HashMap<>();
+                            orgDBHashmap.put("name", name);
+                            orgDBHashmap.put("description", description);
+                            orgDBHashmap.put("other_info", otherLanguageET);
+
+                            orgDBHashmap.put("fbi_clearance", hasFbiClearance);
+                            orgDBHashmap.put("child_clearance", hasChildClearance);
+                            orgDBHashmap.put("criminal_clearance", hasCriminalClearance);
+                            orgDBHashmap.put("labor_skill", hasLaborSkill);
+                            orgDBHashmap.put("care_taking_skill", hasCareTakingSkill);
+                            orgDBHashmap.put("food_service_skill", hasFoodServiceSkill);
+                            orgDBHashmap.put("spanish", hasSpanish);
+                            orgDBHashmap.put("chinese", hasChinese);
+                            orgDBHashmap.put("german", hasGerman);
+                            orgDBHashmap.put("english", hasEnglish);
+                            orgDBHashmap.put("age_group", ageGroup);
+                            orgDBHashmap.put("time_commitment", timeCommitment);
+                            orgDBHashmap.put("availability", availability);
+                            orgDBHashmap.put("vehicle", hasVehicle);
+                            orgDBHashmap.put("email", email);
 
 
-
-
-
-
-
-
-
-
-                            Map<String, Object> user_first_name_map = new HashMap<>();
-                            user_first_name_map.put(userId, name);
-
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_first_name");
-                            dbr.updateChildren(user_first_name_map);
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+                            dbr.updateChildren(orgDBHashmap);
 
 //                            in database, store the type of account that the user is
                             Map<String, Object> accountTypeMap = new HashMap<>();
@@ -151,11 +165,6 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             // go into preferences activity
                             Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
 
-                            dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                            HashMap<String, Object> m = new HashMap<>();
-
-                            m.put("email", email);
-                            dbr.updateChildren(m);
                         }
                         else {
                             Toast.makeText(getApplicationContext(), "Failed to create new organization user", Toast.LENGTH_LONG).show();
