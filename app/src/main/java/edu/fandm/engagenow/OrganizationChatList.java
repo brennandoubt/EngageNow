@@ -2,9 +2,17 @@ package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +46,10 @@ public class OrganizationChatList extends OrganizationBaseClass {
     static String uid;
     // represents a particular location in database and can be used for reading or writing data to that database location
     private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
+
+    private String CHANNEL_ID_1 = "Channel1";
+    private final static String PERM = android.Manifest.permission.POST_NOTIFICATIONS;
+    private Context CTX;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +60,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
 
         matchesListView.setAdapter(arrayAdapter);
-
+        this.CTX = getApplicationContext();
         Log.d(TAG, dbr.toString());
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
@@ -132,6 +144,37 @@ public class OrganizationChatList extends OrganizationBaseClass {
             }
         });
         builder.show();
+    }
+
+    private void makeNotification() {
+        //create the notification and fill with content
+        NotificationCompat.Builder nb = new NotificationCompat.Builder(this, this.CHANNEL_ID_1);
+        nb.setSmallIcon(R.drawable.chat_foreground);
+        nb.setContentTitle("ENGAGE NOW");
+        nb.setContentText("Test notification");
+        nb.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        // create the channel, (necessary and only possible on newer versions of android)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel1";
+            String desc = "Main channel for this app.";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(this.CHANNEL_ID_1, name, importance);
+            channel.setDescription(desc);
+
+            NotificationManager nm = this.CTX.getSystemService(NotificationManager.class);
+            nm.createNotificationChannel(channel);
+        }
+
+        // check permission
+        if (ContextCompat.checkSelfPermission(this.CTX, this.PERM) == PackageManager.PERMISSION_GRANTED) {
+            // display notification
+            NotificationManagerCompat nmc = NotificationManagerCompat.from(this.CTX);
+            nmc.notify(0, nb.build());
+        }
+        else {
+            Log.d(this.TAG, "Could not send notification, permissions not granted");
+        }
     }
 
 }

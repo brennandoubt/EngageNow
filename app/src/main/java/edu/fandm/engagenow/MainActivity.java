@@ -1,13 +1,22 @@
 package edu.fandm.engagenow;
 
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,10 +29,27 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     final String TAG = "Main activity";
 
+    // notification variables
+    private String CHANNEL_ID_1 = "Channel1";
+    private final static String PERM = android.Manifest.permission.POST_NOTIFICATIONS;
+    private Context CTX;
+    private boolean canPostNotifications;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        // notification code
+        this.CTX = getApplicationContext();
+        int permStatus = ContextCompat.checkSelfPermission(this.CTX, this.PERM);
+        Log.d(TAG, Integer.toString(permStatus));
+        if (permStatus != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[] {this.PERM}, 0);
+            }
+        }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -63,4 +89,18 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        assert requestCode == 0;
+
+        if (permissions[0] == android.Manifest.permission.POST_NOTIFICATIONS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                this.canPostNotifications = true;
+            }
+        }
+    }
+
 }

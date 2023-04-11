@@ -171,20 +171,23 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
-                Log.d(TAG, dbr.toString());
+                DatabaseReference dbrMessageInfo = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
+                Log.d(TAG, dbrMessageInfo.toString());
 //                Log.d(TAG, emailIdMap.get(volunteerId));
+                HashMap<String, Object> readMap = new HashMap<>();
+                readMap.put("volunteer_read", false);
+                readMap.put("organization_read", false);
+                dbrMessageInfo.updateChildren(readMap);
                 HashMap<String, Object> m = new HashMap<>();
+                String user_message_key = dbrMessageInfo.push().getKey();
+                dbrMessageInfo.updateChildren(m);
 
-                String user_message_key = dbr.push().getKey();
-                dbr.updateChildren(m);
-
-                DatabaseReference dbr2 = dbr.child(user_message_key);
+                DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
                 Map<String, Object> m2 = new HashMap<String, Object>();
                 m2.put("msg", volunteerEmail + " and " + orgEmail + " have been connected!");
                 m2.put("user", "Connected");
                 dbr2.updateChildren(m2);
-                dbr.child(volunteerId).updateChildren(m);
+                dbrMessageInfo.child(volunteerId).updateChildren(m);
                 m = new HashMap<>();
                 m.put(volunteerId, null);
                 DatabaseReference d = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId);

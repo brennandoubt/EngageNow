@@ -46,7 +46,6 @@ public class OrganizationChat extends OrganizationBaseClass {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_chat);
-
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = FirebaseAuth.getInstance().getUid();
 
@@ -61,7 +60,7 @@ public class OrganizationChat extends OrganizationBaseClass {
         selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
         String volunteerId = getIntent().getExtras().get("volunteer_id").toString();
         setTitle("Volunteer: " + selectedVolunteer);
-        Log.d(TAG, selectedVolunteer);
+//        Log.d(TAG, selectedVolunteer);
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -116,13 +115,19 @@ public class OrganizationChat extends OrganizationBaseClass {
 
 
     public void updateConversation(DataSnapshot dataSnapshot) {
-        String msg, userName;
+        String userName;
+        Object msg;
         Iterator i = dataSnapshot.getChildren().iterator();
         while (i.hasNext()) {
-            msg = (String) ((DataSnapshot) i.next()).getValue();
-            userName = (String) ((DataSnapshot) i.next()).getValue();
+            msg = ((DataSnapshot) i.next()).getValue();
 
-            arrayAdapter.add(userName + ": " + msg);
+            userName = (String) ((DataSnapshot) i.next()).getValue();
+            if (userName.equals("volunteer_read") || userName.equals("organization_read")) {
+                Log.d(TAG, "break");
+                break;
+            }
+
+            arrayAdapter.add(userName + ": " + (String) msg);
             arrayAdapter.notifyDataSetChanged();
         }
     }
