@@ -113,6 +113,10 @@ public class OrganizationChatList extends OrganizationBaseClass {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent i = new Intent(getApplicationContext(), OrganizationChat.class);
                 userName = ((TextView)view).getText().toString();
+                String volunteerId = volIdMap.get(userName);
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+                dbr.setValue(true);
+
                 i.putExtra("selected_volunteer", userName);
                 i.putExtra("user_name", userName);
                 Log.d("HERE", userName);
