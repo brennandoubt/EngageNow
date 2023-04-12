@@ -121,6 +121,9 @@ public class VolunteerChat extends VolunteerBaseClass {
             arrayAdapter.add(userName + ": " + msg);
             arrayAdapter.notifyDataSetChanged();
         }
+
+//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("volunteer_read");
+//        dbr.setValue(true);
     }
 
 }

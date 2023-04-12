@@ -36,7 +36,7 @@ public class OrganizationChat extends OrganizationBaseClass {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     ArrayList<String> chatList = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
-    String userName, selectedVolunteer, user_message_key, uid;
+    String userName, selectedVolunteer, user_message_key, uid, volunteerId;
     FirebaseUser currentUser;
 
     final String TAG = "OrganizationChat";
@@ -58,7 +58,7 @@ public class OrganizationChat extends OrganizationBaseClass {
 
 //        userName = getIntent().getExtras().get("user_name").toString();
         selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
-        String volunteerId = getIntent().getExtras().get("volunteer_id").toString();
+        volunteerId = getIntent().getExtras().get("volunteer_id").toString();
         setTitle("Volunteer: " + selectedVolunteer);
 //        Log.d(TAG, selectedVolunteer);
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
@@ -132,5 +132,8 @@ public class OrganizationChat extends OrganizationBaseClass {
             arrayAdapter.add(userName + ": " + (String) msg);
             arrayAdapter.notifyDataSetChanged();
         }
+
+//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+//        dbr.setValue(true);
     }
 }
