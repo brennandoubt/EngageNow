@@ -61,29 +61,26 @@ public class VolunteerPreferences extends VolunteerBaseClass {
                             FirebaseUser user = fbAuth.getCurrentUser();
                             String userId = user.getUid();
 
-                            // update user's data with the inputs given in each field (starting with user's name)
+                            // get preferences typed by user in activity
                             String name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
-                            Map<String, Object> user_first_name_map = new HashMap<>();
-                            user_first_name_map.put(userId, name_inputted);
+                            String last_name_inputted = ((EditText) findViewById(R.id.last_name_preference_et)).getText().toString();
 
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_first_name");
-                            dbr.updateChildren(user_first_name_map);
-
-//                            in database, store the type of account that the user is
+                            // store account type under "account_type/" in Realtime Database
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             Map<String, Object> accountTypeMap = new HashMap<>();
                             accountTypeMap.put(userId, accountType);
-
-                            dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             dbr.updateChildren(accountTypeMap);
 
-                            // go into preferences activity
-                            Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
-
+                            // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
                             dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
                             HashMap<String, Object> m = new HashMap<>();
-
+                            m.put("account_type", accountType);
+                            m.put("first_name", name_inputted);
+                            m.put("last_name", last_name_inputted);
                             m.put("email", email);
                             dbr.updateChildren(m);
+
+                            Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
                         }
                         else {
                             Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();

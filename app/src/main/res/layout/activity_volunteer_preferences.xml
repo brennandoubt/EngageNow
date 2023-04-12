@@ -24,12 +24,20 @@
         app:layout_constraintTop_toBottomOf="@+id/instructions_preferences_tv"
         app:layout_constraintLeft_toLeftOf="@+id/instructions_preferences_tv" />
 
+    <EditText
+        android:id="@+id/last_name_preference_et"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="Last name"
+        app:layout_constraintTop_toBottomOf="@+id/name_preference_et"
+        app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv" />
+
     <Button
         android:id="@+id/update_preferences_button"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:text="Update Preferences"
-        app:layout_constraintTop_toBottomOf="@+id/name_preference_et"
+        app:layout_constraintTop_toBottomOf="@+id/last_name_preference_et"
         app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv"
         app:layout_constraintRight_toRightOf="@id/instructions_preferences_tv" />
 
