@@ -165,6 +165,8 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             // go into preferences activity
                             Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
 
+
+
                         }
                         else {
                             Toast.makeText(getApplicationContext(), "Failed to create new organization user", Toast.LENGTH_LONG).show();
