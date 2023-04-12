@@ -53,7 +53,6 @@ public class OrganizationPreferences extends OrganizationBaseClass {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,17 +90,24 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                 s.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-//                        FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                        //FirebaseAuthException e = (FirebaseAuthException )task.getException();
                         if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
                             FirebaseUser user = fbAuth.getCurrentUser();
                             String userId = user.getUid();
 
                             // Extract the data from the views
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+                            Map<String, Object> orgDBHashmap = new HashMap<>();
 
                             //EdiText
                             String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
                             String description = ((EditText) findViewById(R.id.description_et)).getText().toString();
                             String otherLanguageET = ((EditText) findViewById(R.id.other_specify_et)).getText().toString();
+
+                            orgDBHashmap.put("name", name);
+                            orgDBHashmap.put("description", description);
+                            orgDBHashmap.put("other_info", otherLanguageET);
 
                             //Radio Buttons
                             boolean hasFbiClearance = ((RadioButton) findViewById(R.id.fbi_rb)).isChecked();
@@ -117,24 +123,6 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             boolean hasGerman = ((RadioButton) findViewById(R.id.german_language_rb)).isChecked();
                             boolean hasEnglish = ((RadioButton) findViewById(R.id.english_language_rb)).isChecked();
 
-                            //CheckBox
-                            boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
-
-                            //Spinner
-                            Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
-                            Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
-                            Spinner availabilitySpinner =  (Spinner) findViewById(R.id.availability_spinner);
-
-                            String ageGroup = ageGroupSpinner.getSelectedItem().toString();
-                            String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
-                            String availability = availabilitySpinner.getSelectedItem().toString();
-
-
-                            Map<String, Object> orgDBHashmap = new HashMap<>();
-                            orgDBHashmap.put("name", name);
-                            orgDBHashmap.put("description", description);
-                            orgDBHashmap.put("other_info", otherLanguageET);
-
                             orgDBHashmap.put("fbi_clearance", hasFbiClearance);
                             orgDBHashmap.put("child_clearance", hasChildClearance);
                             orgDBHashmap.put("criminal_clearance", hasCriminalClearance);
@@ -145,27 +133,46 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             orgDBHashmap.put("chinese", hasChinese);
                             orgDBHashmap.put("german", hasGerman);
                             orgDBHashmap.put("english", hasEnglish);
+
+                            //CheckBox
+                            boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
+                            orgDBHashmap.put("vehicle", hasVehicle);
+
+
+                            //Spinner
+                            Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
+                            Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
+                            Spinner availabilitySpinner =  (Spinner) findViewById(R.id.availability_spinner);
+
+                            String ageGroup = ageGroupSpinner.getSelectedItem().toString();
+                            String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
+                            String availability = availabilitySpinner.getSelectedItem().toString();
+
                             orgDBHashmap.put("age_group", ageGroup);
                             orgDBHashmap.put("time_commitment", timeCommitment);
                             orgDBHashmap.put("availability", availability);
-                            orgDBHashmap.put("vehicle", hasVehicle);
                             orgDBHashmap.put("email", email);
 
-
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+                            //push the data to firebase
                             dbr.updateChildren(orgDBHashmap);
 
-//                            in database, store the type of account that the user is
+                            //in database, store the type of account that the user is
                             Map<String, Object> accountTypeMap = new HashMap<>();
                             accountTypeMap.put(userId, accountType);
-
                             dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             dbr.updateChildren(accountTypeMap);
 
-                            // go into preferences activity
-                            Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
 
 
+                            //Launch the organization chat activity
+                            Intent i = new Intent(getApplicationContext(), OrganizationChatList.class);
+                            startActivity(i);
+                            finish();
+<<<<<<< Updated upstream
+
+
+=======
+>>>>>>> Stashed changes
 
                         }
                         else {
