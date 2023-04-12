@@ -168,11 +168,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             Intent i = new Intent(getApplicationContext(), OrganizationChatList.class);
                             startActivity(i);
                             finish();
-<<<<<<< Updated upstream
 
-
-=======
->>>>>>> Stashed changes
 
                         }
                         else {
