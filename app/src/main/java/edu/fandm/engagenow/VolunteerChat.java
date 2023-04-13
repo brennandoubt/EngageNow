@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,30 @@ public class VolunteerChat extends VolunteerBaseClass {
         setContentView(R.layout.activity_volunteer_chat);
 
         uid = FirebaseAuth.getInstance().getUid();
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(uid).child("first_name");
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userName = snapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(uid).child("last_name");
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userName += " " + snapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         sendMessageButton = (Button) findViewById(R.id.send_button);
         messageEditText = (EditText) findViewById(R.id.message_et);
@@ -72,7 +97,7 @@ public class VolunteerChat extends VolunteerBaseClass {
                 DatabaseReference dbr2 = dbr.child(user_message_key);
                 Map<String, Object> map2 = new HashMap<String, Object>();
                 map2.put("msg", msg);
-                map2.put("user", email);
+                map2.put("user", userName);
                 dbr2.updateChildren(map2);
                 
                 messageEditText.setText("");

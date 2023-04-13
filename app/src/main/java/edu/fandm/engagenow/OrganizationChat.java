@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.cert.PKIXRevocationChecker;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class OrganizationChat extends OrganizationBaseClass {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     ArrayList<String> chatList = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
-    String userName, selectedVolunteer, user_message_key, uid, volunteerId;
+    String orgName, selectedVolunteer, user_message_key, uid, volunteerId;
     FirebaseUser currentUser;
 
     final String TAG = "OrganizationChat";
@@ -48,7 +49,20 @@ public class OrganizationChat extends OrganizationBaseClass {
         setContentView(R.layout.activity_organization_chat);
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = FirebaseAuth.getInstance().getUid();
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    orgName = snapshot.getValue().toString();
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         sendMessageButton = (Button) findViewById(R.id.send_button);
         messageEditText = (EditText) findViewById(R.id.message_et);
 
@@ -79,7 +93,7 @@ public class OrganizationChat extends OrganizationBaseClass {
                 DatabaseReference dbr2 = dbr.child(user_message_key);
                 Map<String, Object> map2 = new HashMap<String, Object>();
                 map2.put("msg", msg);
-                map2.put("user", email);
+                map2.put("user", orgName);
                 dbr2.updateChildren(map2);
                 messageEditText.setText("");
                 DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("volunteer_read");
