@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VolunteerPreferences extends AppCompatActivity {
+public class VolunteerPreferences extends VolunteerBaseClass {
     private final String TAG = "VOLUNTEER_PREFERENCES";
 
     static FirebaseAuth fbAuth;
