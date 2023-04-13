@@ -73,6 +73,14 @@ public class OrganizationPreferences extends OrganizationBaseClass {
 
         //https://medium.com/javarevisited/lets-develop-an-android-app-to-upload-files-and-images-on-cloud-f9670d812060
         //tutorial on how to upload image
+        Button uploadImageBtn = (Button) findViewById(R.id.upload_image_button);
+        uploadImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
 
 
@@ -109,19 +117,21 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             orgDBHashmap.put("description", description);
                             orgDBHashmap.put("other_info", otherLanguageET);
 
-                            //Radio Buttons
-                            boolean hasFbiClearance = ((RadioButton) findViewById(R.id.fbi_rb)).isChecked();
-                            boolean hasChildClearance = ((RadioButton) findViewById(R.id.child_rb)).isChecked();
-                            boolean hasCriminalClearance = ((RadioButton) findViewById(R.id.criminal_rb)).isChecked();
+                            //Checkboxes
+                            boolean hasFbiClearance = ((CheckBox) findViewById(R.id.fbi_cb)).isChecked();
+                            boolean hasChildClearance = ((CheckBox) findViewById(R.id.child_cb)).isChecked();
+                            boolean hasCriminalClearance = ((CheckBox) findViewById(R.id.criminal_rb)).isChecked();
 
-                            boolean hasLaborSkill = ((RadioButton) findViewById(R.id.labor_skill_rb)).isChecked();
-                            boolean hasCareTakingSkill = ((RadioButton) findViewById(R.id.careTaking_skill_rb)).isChecked();
-                            boolean hasFoodServiceSkill = ((RadioButton) findViewById(R.id.food_skill_rb)).isChecked();
+                            boolean hasLaborSkill = ((CheckBox) findViewById(R.id.labor_skill_cb)).isChecked();
+                            boolean hasCareTakingSkill = ((CheckBox) findViewById(R.id.careTaking_skill_cb)).isChecked();
+                            boolean hasFoodServiceSkill = ((CheckBox) findViewById(R.id.food_skill_cb)).isChecked();
 
                             boolean hasSpanish = ((RadioButton) findViewById(R.id.spanish_language_rb)).isChecked();
                             boolean hasChinese = ((RadioButton) findViewById(R.id.chinese_language_rb)).isChecked();
                             boolean hasGerman = ((RadioButton) findViewById(R.id.german_language_rb)).isChecked();
                             boolean hasEnglish = ((RadioButton) findViewById(R.id.english_language_rb)).isChecked();
+
+                            boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
 
                             orgDBHashmap.put("fbi_clearance", hasFbiClearance);
                             orgDBHashmap.put("child_clearance", hasChildClearance);
@@ -133,11 +143,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             orgDBHashmap.put("chinese", hasChinese);
                             orgDBHashmap.put("german", hasGerman);
                             orgDBHashmap.put("english", hasEnglish);
-
-                            //CheckBox
-                            boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
                             orgDBHashmap.put("vehicle", hasVehicle);
-
 
                             //Spinner
                             Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
