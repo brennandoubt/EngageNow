@@ -125,15 +125,6 @@ public class OrganizationChatList extends OrganizationBaseClass {
             }
         });
 
-        Button potMatchButton = (Button) findViewById(R.id.pot_match_button);
-        potMatchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), OrganizationPotentialMatches.class);
-                startActivity(i);
-            }
-        });
-
     }
 
     private void setReadNotifications() {
@@ -149,10 +140,14 @@ public class OrganizationChatList extends OrganizationBaseClass {
                     boolean read = (boolean) task.getResult().getValue();
                     View v = (View) matchesListView.getChildAt(idx);
                     if (!read) {
-                        v.setBackgroundColor(Color.RED);
+                        if (v != null) {
+                            v.setBackgroundColor(Color.RED);
+                        }
                     }
                     else {
-                        v.setBackgroundColor(Color.TRANSPARENT);
+                        if (v != null) {
+                            v.setBackgroundColor(Color.TRANSPARENT);
+                        }
                     }
                     arrayAdapter.notifyDataSetChanged();
 

@@ -1,7 +1,6 @@
 package edu.fandm.engagenow;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,7 +13,7 @@ public class OrganizationBaseClass extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu m) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, m);
+        inflater.inflate(R.menu.organizationmenu, m);
         return true;
     }
 
@@ -30,13 +29,19 @@ public class OrganizationBaseClass extends AppCompatActivity {
                 break;
             case R.id.chat:
                 // don't run if already on class
-//                Log.d("HERE",  this.getClass().getSimpleName());
                 if (this.getClass().getSimpleName().equals("OrganizationChatList")) {
                     break;
                 }
                 i = new Intent(getApplicationContext(), OrganizationChatList.class);
                 startActivity(i);
                 break;
+            case R.id.possible_matches:
+                // don't run if already on class
+                if (this.getClass().getSimpleName().equals("OrganizationPotentialMatches")) {
+                    break;
+                }
+                    i = new Intent(getApplicationContext(), OrganizationPotentialMatches.class);
+                startActivity(i);
         }
         return true;
     }

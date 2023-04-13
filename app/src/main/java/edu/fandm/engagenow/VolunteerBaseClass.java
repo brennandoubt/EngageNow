@@ -13,7 +13,8 @@ public class VolunteerBaseClass extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu m) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, m);
+        inflater.inflate(R.menu.volunteermenu, m);
+
         return true;
     }
 
