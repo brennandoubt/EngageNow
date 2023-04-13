@@ -11,4 +11,9 @@
         android:title="Chat"
         android:icon="@drawable/chat_foreground"/>
 
+    <item android:id="@+id/settings_mi"
+        app:showAsAction="always"
+        android:title="Settings"
+        android:icon="@drawable/settings_menu_button" />
+
 </menu>
