@@ -37,6 +37,12 @@ public class VolunteerBaseClass extends AppCompatActivity {
                 i = new Intent(getApplicationContext(), VolunteerChatList.class);
                 startActivity(i);
                 break;
+
+            case R.id.settings_mi:
+                VolunteerPreferences.fbAuth = FirebaseAuth.getInstance();
+                Intent vi = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                startActivity(vi);
+                break;
         }
         return true;
     }

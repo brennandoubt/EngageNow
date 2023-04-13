@@ -22,36 +22,55 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VolunteerPreferences extends VolunteerBaseClass {
+public class VolunteerPreferences extends AppCompatActivity {
     private final String TAG = "VOLUNTEER_PREFERENCES";
 
-    FirebaseAuth fbAuth;
+    static FirebaseAuth fbAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_preferences);
 
-        // get user ID from last activity
-        Intent i = getIntent();
-        String user_id = i.getStringExtra("user_id");
-
-        Log.d(TAG, "User ID retrieved for updating: " + user_id);
-
         // initialize firebase app
         FirebaseApp.initializeApp(this);
         fbAuth = FirebaseAuth.getInstance();
+
+        // get user ID from last activity
+        //Intent i = getIntent();
+        //String user_id = i.getStringExtra("user_id");
+        //Log.d(TAG, "User ID retrieved for updating: " + user_id);
 
         Button update_preferenes_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferenes_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get data from last Register activity
+                // user already logged-in with preferences
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    FirebaseUser user = fbAuth.getCurrentUser();
+                    String userId = user.getUid();
+
+                    // get preferences typed by user in activity
+                    String name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
+                    String last_name_inputted = ((EditText) findViewById(R.id.last_name_preference_et)).getText().toString();
+
+                    // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
+                    DatabaseReference dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                    HashMap<String, Object> m = new HashMap<>();
+                    m.put("first_name", name_inputted);
+                    m.put("last_name", last_name_inputted);
+                    dbr.updateChildren(m);
+
+                    Toast.makeText(getApplicationContext(), "User preferences updated!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // get data from last Register activity (if registering new user)
                 Intent i = getIntent();
                 String email = i.getStringExtra("email");
                 String password = i.getStringExtra("password");
-                String accountType = i.getStringExtra("account_type");
 
+                // registering new user with preferences
                 Task s = fbAuth.createUserWithEmailAndPassword(email, password);
                 s.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -68,13 +87,13 @@ public class VolunteerPreferences extends VolunteerBaseClass {
                             // store account type under "account_type/" in Realtime Database
                             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                             Map<String, Object> accountTypeMap = new HashMap<>();
-                            accountTypeMap.put(userId, accountType);
+                            accountTypeMap.put(userId, "volunteer_account");
                             dbr.updateChildren(accountTypeMap);
 
                             // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
                             dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
                             HashMap<String, Object> m = new HashMap<>();
-                            m.put("account_type", accountType);
+                            m.put("account_type", "volunteer_account");
                             m.put("first_name", name_inputted);
                             m.put("last_name", last_name_inputted);
                             m.put("email", email);
