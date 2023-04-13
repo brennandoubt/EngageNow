@@ -30,7 +30,6 @@ public class VolunteerBaseClass extends AppCompatActivity {
                 break;
             case R.id.chat:
                 // don't run if already on class
-//                Log.d("HERE",  this.getClass().getSimpleName());
                 if (this.getClass().getSimpleName().equals("VolunteerChatList")) {
                     break;
                 }

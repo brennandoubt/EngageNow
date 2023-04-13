@@ -56,10 +56,10 @@ public class OrganizationChat extends OrganizationBaseClass {
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, chatList);
         chatListView.setAdapter(arrayAdapter);
 
-//        userName = getIntent().getExtras().get("user_name").toString();
-        selectedVolunteer = getIntent().getExtras().get("selected_volunteer").toString();
+//        get information from intent
+        selectedVolunteer = getIntent().getExtras().get("selected_volunteer_name").toString();
         volunteerId = getIntent().getExtras().get("volunteer_id").toString();
-        setTitle("Volunteer: " + selectedVolunteer);
+        setTitle("Chat: " + selectedVolunteer);
 //        Log.d(TAG, selectedVolunteer);
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
 

@@ -66,15 +66,19 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 
                         // get the keys of the users that want to match
                             // find that users name
-                    DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(potentialMatchVolunteerId.getKey()).child("email");
+                    DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(potentialMatchVolunteerId.getKey());
                     userEmailDbr.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Log.d(TAG, "HERE: " + potentialMatchVolunteerId.getValue().toString());
-                            String email = (String) snapshot.getValue();
-                            set.add(email);
-                            emailIdMap.put(email, potentialMatchVolunteerId.getValue().toString());
-                            idEmailMap.put(potentialMatchVolunteerId.getValue().toString(), email);
+                            String volFirstName, volLastName, volEmail, displayName;
+                            HashMap<String, Object> volInfo = (HashMap<String, Object>) snapshot.getValue();
+                            volFirstName = (String) volInfo.get("first_name");
+                            volLastName = (String) volInfo.get("last_name");
+                            volEmail = (String) volInfo.get("email");
+                            displayName = volFirstName + " " + volLastName + ": " + volEmail;
+                            set.add(displayName);
+                            emailIdMap.put(volEmail, potentialMatchVolunteerId.getValue().toString());
+                            idEmailMap.put(potentialMatchVolunteerId.getValue().toString(), displayName);
                             arrayAdapter.clear();
                             arrayAdapter.addAll(set);
                         }
@@ -108,15 +112,20 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                 Log.d("TAG", "ADDED");
                 Set<String> set = new HashSet<>();
                 Log.d("TAG", snapshot.getValue().toString());
-                DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(snapshot.getValue().toString()).child("email");
-                userEmailDbr.addValueEventListener(new ValueEventListener() {
+                String volId = snapshot.getValue().toString();
+                DatabaseReference userInfoDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(volId);
+                userInfoDbr.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d(TAG, "HERE: " + snapshot.getValue().toString());
-                        String email = (String) snapshot.getValue();
-                        set.add(email);
-                        emailIdMap.put(email, snapshot.getValue().toString());
-                        idEmailMap.put(snapshot.getValue().toString(), email);
+                        String volFirstName, volLastName, volEmail;
+                        HashMap<String, Object> volInfo = (HashMap<String, Object>) snapshot.getValue();
+                        volFirstName = (String) volInfo.get("first_name");
+                        volLastName = (String) volInfo.get("last_name");
+                        volEmail = (String) volInfo.get("email");
+                        String displayName = volFirstName + " " + volLastName + ": " + volEmail;
+                        set.add(displayName);
+                        emailIdMap.put(volEmail, volId);
+                        idEmailMap.put(volId, displayName);
                         arrayAdapter.clear();
                         arrayAdapter.addAll(set);
                     }
@@ -139,6 +148,9 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 Log.d("TAG", "REMOVED");
                 Log.d("TAG", snapshot.getKey().toString());
+                Log.d(TAG, idEmailMap.get(snapshot.getKey().toString()));
+                Log.d(TAG, idEmailMap.toString());
+
                 arrayAdapter.remove(idEmailMap.get(snapshot.getKey()));
                 arrayAdapter.notifyDataSetChanged();
             }
@@ -158,19 +170,24 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         potMatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String email = (String) adapterView.getItemAtPosition(position).toString();
-                acceptVolunteerDialog(email, emailIdMap.get(email));
+                String[] nameEmail = ((TextView)view).getText().toString().split(":");
+                String name = nameEmail[0].trim();
+                String email = nameEmail[1].trim();
+                String volunteerId = emailIdMap.get(email);
+                Log.d(TAG, volunteerId);
+                acceptVolunteerDialog(name, email, volunteerId);
             }
         });
     }
 
-    private void acceptVolunteerDialog(String volunteerEmail, String volunteerId) {
+    private void acceptVolunteerDialog(String name, String volunteerEmail, String volunteerId) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(true);
         dialog.setTitle("Accept/Reject This Match");
         dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, volunteerId);
                 DatabaseReference dbrMessageInfo = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
                 Log.d(TAG, dbrMessageInfo.toString());
 //                Log.d(TAG, emailIdMap.get(volunteerId));
@@ -184,7 +201,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 
                 DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
                 Map<String, Object> m2 = new HashMap<String, Object>();
-                m2.put("msg", volunteerEmail + " and " + orgEmail + " have been connected!");
+                m2.put("msg", name + " and " + orgEmail + " have been connected!");
                 m2.put("user", "Connected");
                 dbr2.updateChildren(m2);
                 dbrMessageInfo.child(volunteerId).updateChildren(m);
@@ -201,7 +218,8 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             public void onClick(DialogInterface dialogInterface, int i) {
                 HashMap<String, Object> m = new HashMap<>();
                 m.put(volunteerId, null);
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches");
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid);
+                Log.d(TAG, dbr.toString());
                 dbr.updateChildren(m);
             }
         });

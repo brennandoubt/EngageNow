@@ -1,6 +1,5 @@
 -- Merging decision tree log ---
 manifest
-<<<<<<< HEAD
 ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
 INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
 INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
@@ -24,28 +23,3 @@ INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\m
 		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
-=======
-ADDED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
-	package
-		ADDED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:11-56
-		INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-	xmlns:android
-		ADDED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
-uses-sdk
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-	android:targetSdkVersion
-		INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-	android:minSdkVersion
-		INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
->>>>>>> 17bb8298362f51ed8518a3f5b436b089dbe5df86
