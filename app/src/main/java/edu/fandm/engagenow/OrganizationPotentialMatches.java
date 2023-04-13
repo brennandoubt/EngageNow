@@ -39,8 +39,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
     HashMap<String, String> emailIdMap = new HashMap<>();
     HashMap<String, String> idEmailMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
-    static String uid;
-    static String orgEmail;
+    static String orgEmail, uid, orgName;
     String TAG = "OrgPotMatch";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,19 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         setContentView(R.layout.activity_organization_potential_matches);
         uid = FirebaseAuth.getInstance().getUid();
         orgEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid);
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
+        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                orgName = snapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid);
         Log.d(TAG, dbr.toString());
         potMatchListView = (ListView) findViewById(R.id.potential_matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfPotMatches);
@@ -201,7 +212,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 
                 DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
                 Map<String, Object> m2 = new HashMap<String, Object>();
-                m2.put("msg", name + " and " + orgEmail + " have been connected!");
+                m2.put("msg", name + " and " + orgName + " have been connected!");
                 m2.put("user", "Connected");
                 dbr2.updateChildren(m2);
                 dbrMessageInfo.child(volunteerId).updateChildren(m);
