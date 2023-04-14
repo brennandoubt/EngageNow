@@ -45,6 +45,14 @@
         <item>Ongoing commitment</item>
     </string-array>
 
+    <string-array name="travel_distance_select">
+        <item>Select Travel Distance</item>
+        <item>Under 2 miles</item>
+        <item>2–4 miles</item>
+        <item>4–10 miles</item>
+        <item>10+ miles</item>
+    </string-array>
+
 
 
 </resources>
