@@ -44,8 +44,6 @@ public class OrganizationPreferences extends OrganizationBaseClass {
     FirebaseAuth fbAuth;
     private final String TAG = "OrganizationPreferences";
 
-    private Uri imageUri;
-
     private void populateSpinner(){
         //time commitment drop down
         Spinner timeDropDown = findViewById(R.id.time_commitment_spinner);
@@ -202,9 +200,9 @@ public class OrganizationPreferences extends OrganizationBaseClass {
             new ActivityResultCallback<Uri>() {
                 @Override
                 public void onActivityResult(Uri result) {
-                    imageUri = result;
                     ImageView v = (ImageView)findViewById(R.id.selectedImage);
                     v.setImageURI(result);
+
                 }
             });
 
@@ -214,15 +212,12 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         pickImageLauncher.launch("image/*");
     }
 
-//    private void uploadImage() {
-//        if(imageUri != null){
-//            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("images/"+ user_id);
-//
-//            //store the file
-//            dbr.putFile(imageUri).addOnCompleteListener
-//
-//        }
-//    }
+    private void uploadImage(){
+
+    }
+
+
+
 
 
 
