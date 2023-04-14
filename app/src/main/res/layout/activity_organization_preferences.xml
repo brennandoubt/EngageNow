@@ -49,12 +49,21 @@
                 android:maxLength="200"
                 />
 
+            <ImageView
+                android:id="@+id/selectedImage"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_add_24"
+                android:background="@drawable/custom_imageview_border"
+                />
+
             <Button
                 android:id="@+id/upload_image_button"
                 android:layout_width="match_parent"
                 android:layout_margin ="20dp"
                 android:layout_height="wrap_content"
-                android:text="Upload Image"
+                android:text="Select Image"
                 />
 
 

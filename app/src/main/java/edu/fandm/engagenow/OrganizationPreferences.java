@@ -1,22 +1,32 @@
 package edu.fandm.engagenow;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,11 +36,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class OrganizationPreferences extends OrganizationBaseClass {
-    private final String TAG = "ORG_PREFERENCES";
+
 
     FirebaseAuth fbAuth;
+    private final String TAG = "OrganizationPreferences";
+
+    private Uri imageUri;
 
     private void populateSpinner(){
         //time commitment drop down
@@ -51,7 +65,6 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         adapter2.setDropDownViewResource(R.layout.custom_spinner_item);
         availabilityGroupDropDown.setAdapter(adapter2);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +90,9 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         uploadImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                selectImage();
             }
         });
-
-
-
 
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferences_button.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +103,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                 String email = i.getStringExtra("email");
                 String password = i.getStringExtra("password");
                 String accountType = i.getStringExtra("account_type");
+
 
                 Task s = fbAuth.createUserWithEmailAndPassword(email, password);
                 s.addOnCompleteListener(new OnCompleteListener() {
@@ -185,4 +196,36 @@ public class OrganizationPreferences extends OrganizationBaseClass {
             }
         });
     }
+
+    private ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri result) {
+                    imageUri = result;
+                    ImageView v = (ImageView)findViewById(R.id.selectedImage);
+                    v.setImageURI(result);
+                }
+            });
+
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        pickImageLauncher.launch("image/*");
+    }
+
+//    private void uploadImage() {
+//        if(imageUri != null){
+//            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("images/"+ user_id);
+//
+//            //store the file
+//            dbr.putFile(imageUri).addOnCompleteListener
+//
+//        }
+//    }
+
+
+
+
+
 }
