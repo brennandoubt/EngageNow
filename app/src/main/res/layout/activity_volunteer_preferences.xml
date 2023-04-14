@@ -57,7 +57,7 @@
             <Spinner
                 android:id="@+id/time_commitment_volunteer_spinner"
                 android:layout_width="250dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:textAlignment="center"
                 android:spinnerMode="dropdown" />
 
@@ -65,7 +65,15 @@
             <Spinner
                 android:id="@+id/age_group_volunteer_spinner"
                 android:layout_width="250dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown" />
+
+            <!-- Need to set spinner's prompt before user clicks it -->
+            <Spinner
+                android:id="@+id/travel_distance_volunteer_spinner"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
                 android:textAlignment="center"
                 android:spinnerMode="dropdown" />
 
@@ -75,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="Select Clearances"
                 android:textAlignment="center" />
+
             <LinearLayout
                 android:id="@+id/clearances_volunteer_ll"
                 android:layout_width="250dp"
@@ -105,7 +114,7 @@
                 android:id="@+id/languages_volunteer_tv"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:text="Select your languages"
+                android:text="Languages Spoken"
                 android:textAlignment="center" />
             <LinearLayout
                 android:layout_width="wrap_content"
