@@ -32,7 +32,7 @@ public class VolunteerRegistration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_registration);
-
+        setTitle("Volunteer Registration");
         populate_spinners();
 
         // initialize firebase app
@@ -78,8 +78,8 @@ public class VolunteerRegistration extends AppCompatActivity {
         String password = i.getStringExtra("password");
 
         // get preferences typed by user in activity
-        String first_name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
-        String last_name_inputted = ((EditText) findViewById(R.id.last_name_preference_et)).getText().toString();
+        String first_name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString().trim();
+        String last_name_inputted = ((EditText) findViewById(R.id.last_name_preference_et)).getText().toString().trim();
         String time_commitment = ((Spinner) findViewById(R.id.time_commitment_volunteer_spinner)).getSelectedItem().toString();
         String age_group = ((Spinner) findViewById(R.id.age_group_volunteer_spinner)).getSelectedItem().toString();
         String travel_distance = ((Spinner) findViewById(R.id.travel_distance_volunteer_spinner)).getSelectedItem().toString();

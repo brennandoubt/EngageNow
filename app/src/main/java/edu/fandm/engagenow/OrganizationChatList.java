@@ -60,7 +60,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_match_list);
-
+        setTitle("Chats");
         uid = FirebaseAuth.getInstance().getUid();
         DatabaseReference nameDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
         nameDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

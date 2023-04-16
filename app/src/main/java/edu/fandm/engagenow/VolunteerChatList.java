@@ -42,7 +42,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_chat_list);
-
+        setTitle("Chats");
         matchesListView = (ListView) findViewById(R.id.matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatchesName);
 

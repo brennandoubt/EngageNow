@@ -119,9 +119,9 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             Map<String, Object> orgDBHashmap = new HashMap<>();
 
                             //EdiText
-                            String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
-                            String description = ((EditText) findViewById(R.id.description_et)).getText().toString();
-                            String otherLanguageET = ((EditText) findViewById(R.id.other_specify_et)).getText().toString();
+                            String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString().trim();
+                            String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
+                            String otherLanguageET = ((EditText) findViewById(R.id.other_specify_et)).getText().toString().trim();
 
                             orgDBHashmap.put("name", name);
                             orgDBHashmap.put("description", description);

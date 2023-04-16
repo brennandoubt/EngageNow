@@ -32,6 +32,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        setTitle("Register Account");
 
         FirebaseApp.initializeApp(this);
         fbAuth = FirebaseAuth.getInstance();
@@ -50,7 +51,6 @@ public class Register extends AppCompatActivity {
                 String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
                 Spinner dropdownSelect = findViewById(R.id.account_type_select_spinner);
                 String accountTypeSelection = dropdownSelect.getSelectedItem().toString();
-
                 if (email.equals("")) {
                     Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_LONG).show();
                     return;

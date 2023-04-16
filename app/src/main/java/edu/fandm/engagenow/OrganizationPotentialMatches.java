@@ -10,13 +10,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -40,11 +46,13 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
     HashMap<String, String> idEmailMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     static String orgEmail, uid, orgName;
+    HashMap<String, Object> volInfoMap;
     String TAG = "OrgPotMatch";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_potential_matches);
+        setTitle("Interested Volunteers");
         uid = FirebaseAuth.getInstance().getUid();
         orgEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
@@ -185,16 +193,33 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                 String name = nameEmail[0].trim();
                 String email = nameEmail[1].trim();
                 String volunteerId = emailIdMap.get(email);
-                Log.d(TAG, volunteerId);
-                acceptVolunteerDialog(name, email, volunteerId);
+
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerId);
+                dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        volInfoMap = (HashMap<String, Object>) task.getResult().getValue();
+                        Log.d(TAG, volInfoMap.toString());
+                        acceptVolunteerDialog(name, volunteerId);
+                    }
+                });
             }
         });
     }
 
-    private void acceptVolunteerDialog(String name, String volunteerEmail, String volunteerId) {
+    private void acceptVolunteerDialog(String volName, String volunteerId) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(true);
         dialog.setTitle("Accept/Reject This Match");
+
+        String volInfo = getVolInfo();
+        TextView name = new TextView(this);
+        name.setText(volInfo);
+        name.setTextSize(20);
+        name.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        name.setPadding(60, 5, 5, 5);
+        dialog.setView(name);
+
         dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -212,7 +237,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 
                 DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
                 Map<String, Object> m2 = new HashMap<String, Object>();
-                m2.put("msg", name + " and " + orgName + " have been connected!");
+                m2.put("msg", volName + " and " + orgName + " have been connected!");
                 m2.put("user", "Connected");
                 dbr2.updateChildren(m2);
                 dbrMessageInfo.child(volunteerId).updateChildren(m);
@@ -239,49 +264,20 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 
     }
 
-//    private void updateList() {
-//        arrayAdapter.remove(snapshot.key);
-//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMathes").child(uid);
-//        dbr.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                Set<String> set = new HashSet<String>();
-//                // contains data from a firebase location.
-//                Iterator i = snapshot.getChildren().iterator();
-//                while (i.hasNext()) {
-//                    DataSnapshot potentialMatchVolunteerId = (DataSnapshot) i.next();
-//
-//                    // get the keys of the users that want to match
-//                    // find that users name
-//                    DatabaseReference userEmailDbr = FirebaseDatabase.getInstance().getReference("volunteer_accounts").child(potentialMatchVolunteerId.getKey()).child("email");
-//                    userEmailDbr.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            Log.d(TAG, "HERE: " + potentialMatchVolunteerId.getValue().toString());
-//                            String email = (String) snapshot.getValue();
-//                            set.add(email);
-//                            emailIdMap.put(email, potentialMatchVolunteerId.getValue().toString());
-//                            arrayAdapter.clear();
-//                            arrayAdapter.addAll(set);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//
-////
-//                }
-//
-//                arrayAdapter.notifyDataSetChanged();
-////                Log.d(TAG, set.toArray().toString());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
+    private String getVolInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Name: " + volInfoMap.get("first_name") + " " + volInfoMap.get("last_name") + "\n");
+        sb.append("Time Commitment: " + volInfoMap.get("time_commitment") + "\n");
+        sb.append("Age: " + volInfoMap.get("age_group") + "\n");
+        sb.append("FBI Clearance: " + volInfoMap.get("fbi_clearance") + "\n");
+        sb.append("Child Clearance: " + volInfoMap.get("child_clearance") + "\n");
+        sb.append("Criminal History: " + volInfoMap.get("criminal_history") + "\n");
+        sb.append("English: " + volInfoMap.get("english") + "\n");
+        sb.append("Spanish: " + volInfoMap.get("spanish") + "\n");
+        sb.append("Chinese: " + volInfoMap.get("chinese") + "\n");
+        sb.append(" German: " + volInfoMap.get("german"));
+
+        return sb.toString();
+    }
+
 }

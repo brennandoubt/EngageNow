@@ -27,7 +27,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:text="Please fill in the following fields to set your account's preferences."
+                android:text="Please fill in the following fields to update your account's preferences."
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
@@ -45,13 +45,6 @@
                 android:hint="Last name"
                 app:layout_constraintTop_toBottomOf="@+id/name_preference_et"
                 app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv" />
-
-            <!-- Need to add code on this button's onClick -->
-            <Button
-                android:id="@+id/profile_photo_button"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:text="Upload Profile Photo" />
 
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
@@ -123,19 +116,23 @@
                 android:gravity="center"
                 >
 
-                <RadioButton
+                <CheckBox
+                    android:id="@+id/english"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="English" />
-                <RadioButton
+                <CheckBox
+                    android:id="@+id/spanish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Spanish" />
-                <RadioButton
+                <CheckBox
+                    android:id="@+id/german"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="German" />
-                <RadioButton
+                <CheckBox
+                    android:id="@+id/chinese"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chinese" />
@@ -144,10 +141,10 @@
 
 
             <Button
-                android:id="@+id/update_preferences_button"
+                android:id="@+id/update_account_button"
                 android:layout_width="250dp"
                 android:layout_height="50dp"
-                android:text="Update Preferences"
+                android:text="Update Account Info"
                 app:layout_constraintTop_toBottomOf="@+id/last_name_preference_et"
                 app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv"
                 app:layout_constraintRight_toRightOf="@id/instructions_preferences_tv" />

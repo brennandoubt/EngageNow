@@ -46,7 +46,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_registration);
-
+        setTitle("Organization Registration");
         // initialize firebase app
         FirebaseApp.initializeApp(this);
         fbAuth = FirebaseAuth.getInstance();
@@ -136,9 +136,9 @@ public class OrganizationRegistration extends AppCompatActivity {
     private void registerUser() {
 
         //extract data first
-        String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
-        String description = ((EditText) findViewById(R.id.description_et)).getText().toString();
-        String website = ((EditText) findViewById(R.id.website_link_et)).getText().toString();
+        String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString().trim();
+        String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
+        String website = ((EditText) findViewById(R.id.website_link_et)).getText().toString().trim();
 
         // verify all fields have been filled out
         if(!checkInput(name, description, website)){

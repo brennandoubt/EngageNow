@@ -267,7 +267,6 @@
                 android:text="Submit"
                 />
 
-
         </LinearLayout>
 
     </ScrollView>

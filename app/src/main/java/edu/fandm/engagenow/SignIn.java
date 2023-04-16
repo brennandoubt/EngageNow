@@ -42,7 +42,7 @@ public class SignIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
+        setTitle("Sign In");
         Button login = (Button) findViewById(R.id.logInBtn);
         login.setOnClickListener(new View.OnClickListener() {
             @Override

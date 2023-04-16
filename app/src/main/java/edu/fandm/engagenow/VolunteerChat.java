@@ -41,7 +41,6 @@ public class VolunteerChat extends VolunteerBaseClass {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_chat);
-
         uid = FirebaseAuth.getInstance().getUid();
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(uid).child("first_name");
         dbr.addListenerForSingleValueEvent(new ValueEventListener() {

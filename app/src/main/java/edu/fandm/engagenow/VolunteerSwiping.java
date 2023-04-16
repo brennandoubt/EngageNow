@@ -45,6 +45,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_swiping);
+        setTitle("Volunteer Events");
         setupCardStackView();
         setupButton();
     }
