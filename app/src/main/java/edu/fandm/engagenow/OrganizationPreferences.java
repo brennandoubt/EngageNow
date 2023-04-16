@@ -2,19 +2,15 @@ package edu.fandm.engagenow;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,23 +21,30 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class OrganizationPreferences extends OrganizationBaseClass {
 
-
     FirebaseAuth fbAuth;
+    Uri imageUri;
+    StorageReference storageReference;
+    private String userId;
+    private String email;
+    private String password;
+    private String accountType;
+
     private final String TAG = "OrganizationPreferences";
 
     private void populateSpinner(){
@@ -64,26 +67,31 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         availabilityGroupDropDown.setAdapter(adapter2);
     }
 
+    private void getRegistrationInfo(){
+        Intent i = getIntent();
+        email = i.getStringExtra("email");
+        password = i.getStringExtra("password");
+        accountType = i.getStringExtra("account_type");
+        userId = i.getStringExtra("user_id");
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_preferences);
 
-        // get user ID from last activity
-        Intent i = getIntent();
-        String user_id = i.getStringExtra("user_id");
-
-        Log.d(TAG, "User ID retrieved for updating: " + user_id);
-
         // initialize firebase app
         FirebaseApp.initializeApp(this);
         fbAuth = FirebaseAuth.getInstance();
 
-        //generate the items in spinner
+        getRegistrationInfo();
+
+        //Log.d(TAG, "User ID retrieved for updating: " + userId);
+
         populateSpinner();
 
-        //https://medium.com/javarevisited/lets-develop-an-android-app-to-upload-files-and-images-on-cloud-f9670d812060
-        //tutorial on how to upload image
         Button uploadImageBtn = (Button) findViewById(R.id.upload_image_button);
         uploadImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,13 +104,6 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         update_preferences_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get data from last Register activity
-                Intent i = getIntent();
-                String email = i.getStringExtra("email");
-                String password = i.getStringExtra("password");
-                String accountType = i.getStringExtra("account_type");
-
-
                 Task s = fbAuth.createUserWithEmailAndPassword(email, password);
                 s.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -111,7 +112,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
                             FirebaseUser user = fbAuth.getCurrentUser();
-                            String userId = user.getUid();
+                            userId = user.getUid();
 
                             // Extract the data from the views
                             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
@@ -178,6 +179,9 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                             dbr.updateChildren(accountTypeMap);
 
 
+                            uploadImage();
+
+
 
                             //Launch the organization chat activity
                             Intent i = new Intent(getApplicationContext(), OrganizationChatList.class);
@@ -202,6 +206,7 @@ public class OrganizationPreferences extends OrganizationBaseClass {
                 public void onActivityResult(Uri result) {
                     ImageView v = (ImageView)findViewById(R.id.selectedImage);
                     v.setImageURI(result);
+                    imageUri = result;
 
                 }
             });
@@ -212,7 +217,17 @@ public class OrganizationPreferences extends OrganizationBaseClass {
         pickImageLauncher.launch("image/*");
     }
 
-    private void uploadImage(){
+    private void uploadImage() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference().child("images");
+
+        UploadTask uploadTask = storageReference.child(userId).putFile(imageUri);
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "uploaded image successfully");
+
+        });
+
 
     }
 
