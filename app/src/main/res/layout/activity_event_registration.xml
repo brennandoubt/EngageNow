@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OrganizationPreferences"
+    tools:context=".EventRegistration"
     >
 
     <ScrollView
@@ -25,7 +24,7 @@
                 android:textSize="17sp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="20dp"
-                android:text="Fill in the following fields to create your account"
+                android:text="Fill in the following fields to create an event"
                  />
 
             <EditText
@@ -35,7 +34,7 @@
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:inputType="text"
-                android:hint="Organization Name"
+                android:hint="Event Name"
                 android:maxLength="30"
                 />
 
@@ -45,25 +44,8 @@
                 android:layout_margin ="15dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Organization Description"
+                android:hint="Event Description"
                 android:maxLength="200"
-                />
-
-            <ImageView
-                android:id="@+id/selectedImage"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/baseline_add_24"
-                android:background="@drawable/custom_imageview_border"
-                />
-
-            <Button
-                android:id="@+id/upload_image_button"
-                android:layout_width="match_parent"
-                android:layout_margin ="20dp"
-                android:layout_height="wrap_content"
-                android:text="Select Image"
                 />
 
 
@@ -210,28 +192,28 @@
                 android:orientation="horizontal"
                 android:gravity="center">
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/spanish_language_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="Spanish" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/german_language_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="German" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/chinese_language_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="Chinese" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/english_language_rb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -255,7 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin ="10dp"
-                android:text="Do you have a vehicle or transporation"
+                android:text="Does the volunteer need a vehicle?"
                 android:layout_gravity="center_horizontal"
                 />
 
@@ -270,6 +252,5 @@
         </LinearLayout>
 
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
