@@ -40,8 +40,16 @@ public class OrganizationBaseClass extends AppCompatActivity {
                 if (this.getClass().getSimpleName().equals("OrganizationPotentialMatches")) {
                     break;
                 }
-                    i = new Intent(getApplicationContext(), OrganizationPotentialMatches.class);
+                i = new Intent(getApplicationContext(), OrganizationPotentialMatches.class);
                 startActivity(i);
+            case R.id.create_event:
+                // don't run if already on class
+                if (this.getClass().getSimpleName().equals("EventRegistration")) {
+                    break;
+                }
+                i = new Intent(getApplicationContext(), EventRegistration.class);
+                startActivity(i);
+
         }
         return true;
     }

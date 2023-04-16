@@ -75,11 +75,11 @@ public class EventRegistration extends OrganizationBaseClass {
         }
     }
 
-    private void registerEvent(){
+    private boolean registerEvent(){
 
-        String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
+        String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
 
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child(name);
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
 
         Map<String, Object> orgDBHashmap = new HashMap<>();
 
@@ -95,8 +95,8 @@ public class EventRegistration extends OrganizationBaseClass {
         String availability = availabilitySpinner.getSelectedItem().toString();
 
         //If the input is invalid,  make the user fill it out
-        if(!checkInput(name, description, ageGroup, timeCommitment, availability)){
-            return;
+        if(!checkInput(event_name, description, ageGroup, timeCommitment, availability)){
+            return false;
         }
 
         String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString();
@@ -114,7 +114,7 @@ public class EventRegistration extends OrganizationBaseClass {
         boolean hasEnglish = ((CheckBox) findViewById(R.id.english_language_rb)).isChecked();
         boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
 
-        orgDBHashmap.put("name", name);
+        orgDBHashmap.put("event_name", event_name);
         orgDBHashmap.put("description", description);
         orgDBHashmap.put("other_info", otherInfo);
         orgDBHashmap.put("fbi_clearance", hasFbiClearance);
@@ -134,6 +134,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
         //push the data to firebase
         dbr.updateChildren(orgDBHashmap);
+        return true;
     }
 
     private void launchActivity() {
@@ -158,7 +159,9 @@ public class EventRegistration extends OrganizationBaseClass {
 
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferences_button.setOnClickListener(View -> {
-            registerEvent();
+            if (!registerEvent()) {
+                return;
+            }
             Toast.makeText(getApplicationContext(), "New event created", Toast.LENGTH_SHORT).show();
             launchActivity();
         });
