@@ -34,7 +34,7 @@ import java.util.Set;
 public class VolunteerChatList extends VolunteerBaseClass {
     ListView matchesListView;
     ArrayList<String> listOfMatchesName = new ArrayList<String>();
-    HashMap<String, String> nameIdMap = new HashMap<>();
+    HashMap<String, HashMap<String, String>> nameIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     String userName, userId;
     String TAG = "VolunteerChatList";
@@ -57,11 +57,12 @@ public class VolunteerChatList extends VolunteerBaseClass {
                 if (snapshot.exists()) {
                     // for each organization
                     for (DataSnapshot ds : snapshot.getChildren()) {
+                        Log.d(TAG, ds.getValue().toString());
                         Map<String, Object> m = (Map) ds.getValue();
                         Log.d("HERE", m.toString());
                         if (m.containsKey(userId)) {
                             String orgId = ds.getKey();
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId).child("email");
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
 
                             dbr.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -69,12 +70,16 @@ public class VolunteerChatList extends VolunteerBaseClass {
                                     // check if user in that organization chat
                                     if (snapshot.exists()) {
                                         Log.d(TAG, snapshot.toString());
-                                        String orgEmail = snapshot.getValue().toString();
+                                        HashMap<String, Object> orgInfo = (HashMap<String, Object>) snapshot.getValue();
+                                        String orgEmail = (String) orgInfo.get("email");
+                                        String orgName = (String) orgInfo.get("name");
 
 
-                                        nameSet.add(orgEmail);
-
-                                        nameIdMap.put(orgEmail, orgId);
+                                        nameSet.add(orgName + ": " + orgEmail);
+                                        HashMap<String, String> m = new HashMap<>();
+                                        m.put("id", orgId);
+                                        m.put("name", orgName);
+                                        nameIdMap.put(orgEmail, m);
                                         arrayAdapter.clear();
                                         arrayAdapter.addAll(nameSet);
                                         setReadNotifications();
@@ -107,12 +112,13 @@ public class VolunteerChatList extends VolunteerBaseClass {
         chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String email = adapterView.getItemAtPosition(position).toString();
-                Log.d(TAG, nameIdMap.get(email));
+                String[] nameEmail = adapterView.getItemAtPosition(position).toString().split(":");
+//                Log.d(TAG, nameIdMap.get(email));
                 Intent i = new Intent(getApplicationContext(), VolunteerChat.class);
-                i.putExtra("organization_id", nameIdMap.get(email));
-                i.putExtra("organization_email", email);
-                String organizationId = nameIdMap.get(email);
+                i.putExtra("organization_id", nameIdMap.get(nameEmail[1].trim()).get("id"));
+                i.putExtra("organization_email", nameEmail[1].trim());
+                i.putExtra("organization_name", nameIdMap.get(nameEmail[1].trim()).get("name"));
+                String organizationId = nameIdMap.get(nameEmail[1].trim()).get("id");
                 DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
                 dbr.setValue(true);
                 //                i.putExtra("current_user_name", nameIdMap.get(email));
@@ -125,8 +131,9 @@ public class VolunteerChatList extends VolunteerBaseClass {
 
     private void setReadNotifications() {
         for (int i = 0; i < matchesListView.getCount(); i++) {
-            String email = arrayAdapter.getItem(i).toString();
-            String organizationId = nameIdMap.get(email);
+            String email = arrayAdapter.getItem(i).toString().split(":")[1].trim();
+
+            String organizationId = nameIdMap.get(email).get("id");
             final int idx = i;
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
             Task<DataSnapshot> ds = dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
