@@ -32,7 +32,7 @@ public class VolunteerChat extends VolunteerBaseClass {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     ArrayList<String> chatList = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
-    String userName, organizationId, organizationEmail, user_message_key, uid;
+    String userName, organizationId, organizationEmail, organizationName, user_message_key, uid;
     FirebaseUser currentUser;
 
     final String TAG = "VolunteerChat";
@@ -77,7 +77,8 @@ public class VolunteerChat extends VolunteerBaseClass {
 
         organizationId = getIntent().getExtras().get("organization_id").toString();
         organizationEmail = getIntent().getExtras().get("organization_email").toString();
-        setTitle("Organization: " + organizationEmail);
+        organizationName = getIntent().getExtras().get("organization_name").toString();
+        setTitle("Chat: " + organizationName);
 
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid);
 

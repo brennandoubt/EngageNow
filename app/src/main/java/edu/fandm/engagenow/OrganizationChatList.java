@@ -49,7 +49,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
     ArrayAdapter arrayAdapter;
     String userName;
     String TAG = "OrgChatList";
-    static String uid;
+    static String uid, orgName;
     // represents a particular location in database and can be used for reading or writing data to that database location
     private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
 
@@ -60,7 +60,16 @@ public class OrganizationChatList extends OrganizationBaseClass {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_match_list);
+
         uid = FirebaseAuth.getInstance().getUid();
+        DatabaseReference nameDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
+        nameDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                orgName = task.getResult().getValue().toString();
+            }
+        });
+
         dbr = dbr.child(uid);
         matchesListView = (ListView) findViewById(R.id.matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
@@ -131,6 +140,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
 
                 i.putExtra("selected_volunteer_name", name);
                 i.putExtra("volunteer_id", volunteerId);
+                i.putExtra("org_name", orgName);
                 startActivity(i);
             }
         });
@@ -199,5 +209,12 @@ public class OrganizationChatList extends OrganizationBaseClass {
             Log.d(this.TAG, "Could not send notification, permissions not granted");
         }
     }
+
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        startService(new Intent(this, NotificationService.class));
+//        Log.d("HERE", "ONSTOP");
+//    }
 
 }

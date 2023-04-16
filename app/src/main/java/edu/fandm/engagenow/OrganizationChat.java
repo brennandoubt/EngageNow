@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -22,7 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.cert.PKIXRevocationChecker;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,6 +45,7 @@ public class OrganizationChat extends OrganizationBaseClass {
     String orgName, selectedVolunteer, user_message_key, uid, volunteerId;
     FirebaseUser currentUser;
 
+
     final String TAG = "OrganizationChat";
     private DatabaseReference dbr;
 // Followed this chat app tutorial https://www.youtube.com/watch?v=oyTg0_k2AZU&t=27s
@@ -50,19 +56,13 @@ public class OrganizationChat extends OrganizationBaseClass {
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         uid = FirebaseAuth.getInstance().getUid();
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
-        dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    orgName = snapshot.getValue().toString();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                orgName = task.getResult().getValue().toString();
             }
         });
+
         sendMessageButton = (Button) findViewById(R.id.send_button);
         messageEditText = (EditText) findViewById(R.id.message_et);
 
@@ -110,6 +110,7 @@ public class OrganizationChat extends OrganizationBaseClass {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 updateConversation(snapshot);
+
             }
 
             @Override
@@ -129,7 +130,6 @@ public class OrganizationChat extends OrganizationBaseClass {
         });
     }
 
-
     public void updateConversation(DataSnapshot dataSnapshot) {
         String userName;
         Object msg;
@@ -146,8 +146,30 @@ public class OrganizationChat extends OrganizationBaseClass {
             arrayAdapter.add(userName + ": " + (String) msg);
             arrayAdapter.notifyDataSetChanged();
         }
-
+//        colorText();
 //        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
 //        dbr.setValue(true);
     }
+
+    public void colorText() {
+        for (int i = 0; i < arrayAdapter.getCount(); i++) {
+            View v = chatListView.getChildAt(i);
+            String name = ((String) chatListView.getItemAtPosition(i)).split(":")[0];
+//            Log.d(TAG, name + " : " + orgName);
+
+            if (v != null && name.equals(orgName)) {
+//                Log.d(TAG, arrayAdapter.getItem(i).toString() + " - " + name);
+//                Log.d(TAG, chatListView.getItemAtPosition(i).toString());
+//                Log.d(TAG, "");
+                v.setBackgroundColor(Color.GREEN);
+            }
+            else if (v != null) {
+//                Log.d(TAG, "ELSE " + chatListView.getItemAtPosition(i).toString());
+                v.setBackgroundColor(Color.RED);
+            }
+        }
+        arrayAdapter.notifyDataSetChanged();
+    }
+
+
 }
