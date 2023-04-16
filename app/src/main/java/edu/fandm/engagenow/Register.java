@@ -48,7 +48,7 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 String email = ((EditText) findViewById(R.id.et_emailAddress)).getText().toString().trim();
                 String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
-                Spinner dropdownSelect = (Spinner) findViewById(R.id.account_type_select_spinner);
+                Spinner dropdownSelect = findViewById(R.id.account_type_select_spinner);
                 String accountTypeSelection = dropdownSelect.getSelectedItem().toString();
 
                 if (email.equals("")) {
