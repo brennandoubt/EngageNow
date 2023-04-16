@@ -73,24 +73,22 @@ public class Register extends AppCompatActivity {
                 if (accountTypeSelection.equals("Volunteer Account")) {
                     accountType = "volunteer_account";
 
-                    Intent vi = new Intent(getApplicationContext(), VolunteerPreferences.class);
+                    Intent vi = new Intent(getApplicationContext(), VolunteerRegistration.class);
                     vi.putExtra("email", email);
                     vi.putExtra("password", password);
                     vi.putExtra("account_type", accountType);
 
                     startActivity(vi);
-                    finish();
                 }
                 else {
                     accountType = "organization_account";
 
-                    Intent oi = new Intent(getApplicationContext(), OrganizationPreferences.class);
+                    Intent oi = new Intent(getApplicationContext(), OrganizationRegistration.class);
                     oi.putExtra("email", email);
                     oi.putExtra("password", password);
                     oi.putExtra("account_type", accountType);
 
                     startActivity(oi);
-                    finish();
                 }
             }
         });

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VolunteerPreferences">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/instructions_preferences_tv"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Please fill in the following fields to set your account's preferences."
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+            <EditText
+                android:id="@+id/name_preference_et"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:hint="Full name"
+                app:layout_constraintTop_toBottomOf="@+id/instructions_preferences_tv"
+                app:layout_constraintLeft_toLeftOf="@+id/instructions_preferences_tv" />
+            <EditText
+                android:id="@+id/last_name_preference_et"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:hint="Last name"
+                app:layout_constraintTop_toBottomOf="@+id/name_preference_et"
+                app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv" />
+
+            <!-- Need to add code on this button's onClick -->
+            <Button
+                android:id="@+id/profile_photo_button"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="Upload Profile Photo" />
+
+            <!-- Need to set spinner's prompt before user clicks it -->
+            <Spinner
+                android:id="@+id/time_commitment_volunteer_spinner"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown" />
+
+            <!-- Need to set spinner's prompt before user clicks it -->
+            <Spinner
+                android:id="@+id/age_group_volunteer_spinner"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown" />
+
+            <!-- Need to set spinner's prompt before user clicks it -->
+            <Spinner
+                android:id="@+id/travel_distance_volunteer_spinner"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/clearances_volunteer_tv"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="Select Clearances"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:id="@+id/clearances_volunteer_ll"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:textAlignment="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <CheckBox
+                    android:id="@+id/fbi_vcb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FBI" />
+                <CheckBox
+                    android:id="@+id/child_vcb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Child" />
+                <CheckBox
+                    android:id="@+id/criminal_vcb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Criminal History" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/languages_volunteer_tv"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="Languages Spoken"
+                android:textAlignment="center" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Spanish" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="German" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chinese" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/register_account_button"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:text="Register Account"
+                app:layout_constraintTop_toBottomOf="@+id/last_name_preference_et"
+                app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv"
+                app:layout_constraintRight_toRightOf="@id/instructions_preferences_tv" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
