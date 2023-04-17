@@ -138,7 +138,7 @@ public class EventRegistration extends OrganizationBaseClass {
     }
 
     private void launchActivity() {
-        Intent i = new Intent(getApplicationContext(), OrganizationChatList.class);
+        Intent i = new Intent(getApplicationContext(), EventDashboard.class);
         startActivity(i);
         finish();
     }

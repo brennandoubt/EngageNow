@@ -49,8 +49,6 @@ public class VolunteerPreferences extends VolunteerBaseClass {
                 String userId = user.getUid();
 
                 // get preferences typed by user in activity
-                String first_name_inputted = ((EditText) findViewById(R.id.name_preference_et)).getText().toString().trim();
-                String last_name_inputted = ((EditText) findViewById(R.id.last_name_preference_et)).getText().toString().trim();
                 String time_commitment = ((Spinner) findViewById(R.id.time_commitment_volunteer_spinner)).getSelectedItem().toString();
                 String age_group = ((Spinner) findViewById(R.id.age_group_volunteer_spinner)).getSelectedItem().toString();
                 String travel_distance = ((Spinner) findViewById(R.id.travel_distance_volunteer_spinner)).getSelectedItem().toString();
@@ -64,15 +62,13 @@ public class VolunteerPreferences extends VolunteerBaseClass {
 
                 // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
 
-                if (first_name_inputted.equals("") || last_name_inputted.equals("") || time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
+                if (time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
                     Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required For Update!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 DatabaseReference dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
                 HashMap<String, Object> m = new HashMap<>();
                 m.put("account_type", "volunteer_account");
-                m.put("first_name", first_name_inputted);
-                m.put("last_name", last_name_inputted);
                 m.put("time_commitment", time_commitment);
                 m.put("age_group", age_group);
                 m.put("travel_distance", travel_distance);

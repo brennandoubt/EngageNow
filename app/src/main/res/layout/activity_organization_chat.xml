@@ -8,8 +8,10 @@
 
     <ListView
         android:id="@+id/chat_lv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/message_et"
         app:layout_constraintLeft_toLeftOf="parent"

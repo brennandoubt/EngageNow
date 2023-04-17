@@ -19,6 +19,8 @@
 
     <string-array name="age_group_select">
         <item>Select Age Group</item>
+        <item>All Ages</item>
+        <item>Under 13</item>
         <item>13-18</item>
         <item>18-21</item>
         <item>21+</item>
@@ -26,6 +28,7 @@
 
     <string-array name="time_commitment_select">
         <item>Select Time Commitment</item>
+        <item>1 hour</item>
         <item>2 hours</item>
         <item>3 hours</item>
         <item>4 hours</item>
@@ -41,7 +44,7 @@
         <item>Within 48 hours</item>
         <item>Within 72 hours</item>
         <item>Within 1 wk</item>
-        <item>Within 2 wk</item>
+        <item>Within 2 wks</item>
         <item>Ongoing commitment</item>
     </string-array>
 

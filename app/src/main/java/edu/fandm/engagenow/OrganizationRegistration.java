@@ -110,7 +110,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     }
 
     private void launchActivity(){
-        Intent i = new Intent(getApplicationContext(), OrganizationChatList.class);
+        Intent i = new Intent(getApplicationContext(), OrganizationRegistration.class);
         startActivity(i);
         finish();
     }

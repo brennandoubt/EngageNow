@@ -1,10 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/log_out"
-        android:title="Log Out"
-        android:icon="@drawable/log_out_foreground" />
-
     <item android:id="@+id/chat"
         app:showAsAction="ifRoom"
         android:title="Chat"
@@ -15,4 +11,8 @@
         android:title="Settings"
         android:icon="@drawable/settings_menu_button" />
 
+    <item android:id="@+id/log_out"
+        app:showAsAction="ifRoom"
+        android:title="Log Out"
+        android:icon="@drawable/log_out_foreground" />
 </menu>

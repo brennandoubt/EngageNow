@@ -35,16 +35,19 @@ public class VolunteerBaseClass extends AppCompatActivity {
                 }
                 i = new Intent(getApplicationContext(), VolunteerChatList.class);
                 startActivity(i);
+                finish();
                 break;
 
             case R.id.settings_mi:
                 // don't run if already on class
                 if (this.getClass().getSimpleName().equals("VolunteerPreferences")) {
+                    finish();
                     break;
                 }
                 VolunteerPreferences.fbAuth = FirebaseAuth.getInstance();
                 Intent vi = new Intent(getApplicationContext(), VolunteerPreferences.class);
                 startActivity(vi);
+                finish();
                 break;
         }
         return true;

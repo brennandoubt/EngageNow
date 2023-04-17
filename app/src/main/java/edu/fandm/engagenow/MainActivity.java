@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                             if (accountType.equals("volunteer_account")) {
                                 i = new Intent(getApplicationContext(), VolunteerSwiping.class);
                             } else {
-                                i = new Intent(getApplicationContext(), OrganizationChatList.class);
+                                i = new Intent(getApplicationContext(), EventDashboard.class);
                             }
 
                             Toast.makeText(MainActivity.this, "Logged in as, " + user.getEmail(), Toast.LENGTH_SHORT).show();

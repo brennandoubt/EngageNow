@@ -27,24 +27,11 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:text="Please fill in the following fields to update your account's preferences."
+                android:text="Please fill in the following fields to update your account's preferences. Be sure to make selections for all fields."
+                android:textAlignment="center"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
-            <EditText
-                android:id="@+id/name_preference_et"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:hint="Full name"
-                app:layout_constraintTop_toBottomOf="@+id/instructions_preferences_tv"
-                app:layout_constraintLeft_toLeftOf="@+id/instructions_preferences_tv" />
-            <EditText
-                android:id="@+id/last_name_preference_et"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:hint="Last name"
-                app:layout_constraintTop_toBottomOf="@+id/name_preference_et"
-                app:layout_constraintLeft_toLeftOf="@id/instructions_preferences_tv" />
 
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
