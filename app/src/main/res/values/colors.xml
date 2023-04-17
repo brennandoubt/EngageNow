@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="storm_cloud">#4F6367</color>
+    <color name="weldon_blue">#7A9E9F</color>
+    <color name="columbia_blue">#B8D8D8</color>
+    <color name="beige">#EEF5DB</color>
+    <color name="sunset_orange">#FE5F55</color>
 </resources>

@@ -10,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="40dp"
         >
 
         <LinearLayout
@@ -26,7 +26,7 @@
                 android:id="@+id/instructions_preferences_tv"
                 android:layout_width="325dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginBottom="20dp"
                 android:text="Please fill in the following fields to update your account's preferences. Be sure to make selections for all fields."
                 android:textAlignment="center"
                 android:textSize="20dp"

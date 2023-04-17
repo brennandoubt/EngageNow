@@ -4,26 +4,27 @@
 
 
     <item android:id="@+id/chat"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="Chat"
         android:icon="@drawable/chat_foreground"/>
 
-    <item android:id="@+id/log_out"
-        app:showAsAction="ifRoom"
-        android:title="Log Out"
-        android:icon="@drawable/log_out_foreground" />
+    <item android:id="@+id/event_dashboard"
+        app:showAsAction="always"
+        android:title="Event Dashboard"
+        android:icon="@drawable/event_dashboard_foreground"/>
 
     <item android:id="@+id/possible_matches"
-        app:showAsAction="withText"
-        android:title="Interested Volunteers"/>
+        app:showAsAction="always"
+        android:title="Interested Volunteers"
+        android:icon="@drawable/interested_volunteers_foreground"/>
 
     <item android:id="@+id/create_event"
         app:showAsAction="withText"
         android:title="Create Event"/>
 
-    <item android:id="@+id/event_dashboard"
-        app:showAsAction="withText"
-        android:title="Event Dashboard"/>
-
+    <item android:id="@+id/log_out"
+        app:showAsAction="ifRoom"
+        android:title="Log Out"
+        android:icon="@drawable/log_out_foreground" />
 
 </menu>

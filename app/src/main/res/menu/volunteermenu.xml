@@ -1,13 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/swiping"
+        app:showAsAction="always"
+        android:title="Swiping"
+        android:icon="@drawable/swiping_foreground"/>
     <item android:id="@+id/chat"
         app:showAsAction="ifRoom"
         android:title="Chat"
         android:icon="@drawable/chat_foreground"/>
 
     <item android:id="@+id/settings_mi"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="Settings"
         android:icon="@drawable/settings_menu_button" />
 

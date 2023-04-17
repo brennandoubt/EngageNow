@@ -147,6 +147,7 @@ public class EventRegistration extends OrganizationBaseClass {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_registration);
+        setTitle("Create Event");
 
         // initialize firebase app
         FirebaseApp.initializeApp(this);

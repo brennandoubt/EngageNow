@@ -22,6 +22,15 @@ public class VolunteerBaseClass extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch(item.getItemId()) {
+            case R.id.swiping:
+                // don't run if already on class
+                if (this.getClass().getSimpleName().equals("VolunteerSwiping")) {
+                    break;
+                }
+                i = new Intent(getApplicationContext(), VolunteerSwiping.class);
+                startActivity(i);
+                finish();
+                break;
             case R.id.log_out:
                 FirebaseAuth.getInstance().signOut();
                 i = new Intent(getApplicationContext(), SignIn.class);
