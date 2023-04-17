@@ -80,9 +80,13 @@ public class EventDashboard extends OrganizationBaseClass {
                     }
                     Log.d(TAG, eventNames.toString());
                     arrayAdapter.addAll(eventNames);
+                    TextView instructions = findViewById(R.id.description);
+                    instructions.setText("These are your events. Tap to view. Long click to delete.");
                 }
                 else {
                     arrayAdapter.clear();
+                    TextView instructions = findViewById(R.id.description);
+                    instructions.setText("You have no active events. Create events and they will be shown below.");
                 }
                 arrayAdapter.notifyDataSetChanged();
             }
