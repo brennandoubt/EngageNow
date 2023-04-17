@@ -122,7 +122,7 @@ public class EventDashboard extends OrganizationBaseClass {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("events").child(event).removeValue();
-                Toast.makeText(getApplicationContext(), event + " has been deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), event + " event has been deleted", Toast.LENGTH_SHORT).show();
                 populateEvents();
             }
         });

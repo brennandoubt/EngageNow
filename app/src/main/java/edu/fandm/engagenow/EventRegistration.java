@@ -119,7 +119,7 @@ public class EventRegistration extends OrganizationBaseClass {
         orgDBHashmap.put("other_info", otherInfo);
         orgDBHashmap.put("fbi_clearance", hasFbiClearance);
         orgDBHashmap.put("child_clearance", hasChildClearance);
-        orgDBHashmap.put("criminal_clearance", hasCriminalClearance);
+        orgDBHashmap.put("criminal_history", hasCriminalClearance);
         orgDBHashmap.put("labor_skill", hasLaborSkill);
         orgDBHashmap.put("care_taking_skill", hasCareTakingSkill);
         orgDBHashmap.put("food_service_skill", hasFoodServiceSkill);
