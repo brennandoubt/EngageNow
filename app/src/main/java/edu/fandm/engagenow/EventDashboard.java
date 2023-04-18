@@ -106,6 +106,20 @@ public class EventDashboard extends OrganizationBaseClass {
         info.setPadding(60, 5, 5, 5);
         dialog.setView(info);
 
+        // edit button inside of dialog to edit organization's event
+        dialog.setPositiveButton(R.string.org_edit_event_dialog, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
         dialog.show();
     }
 
