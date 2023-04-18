@@ -48,6 +48,18 @@
                 android:maxLength="200"
                 />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date"/>
+
+            <DatePicker
+                android:id="@+id/start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                />
 
             <Spinner
                 android:id="@+id/time_commitment_spinner"

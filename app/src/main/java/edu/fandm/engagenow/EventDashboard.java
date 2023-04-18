@@ -148,6 +148,8 @@ public class EventDashboard extends OrganizationBaseClass {
 
         sb.append("Description: " + eventInfo.get("description") + "\n");
 
+        sb.append("Start Date: " + eventInfo.get("start_date") + "\n");
+
         sb.append("Time Commitment: " + eventInfo.get("time_commitment") + "\n");
 
         sb.append("Age Group: " + eventInfo.get("age_group") + "\n");
@@ -175,6 +177,8 @@ public class EventDashboard extends OrganizationBaseClass {
         sb.append("German: " + eventInfo.get("german") + "\n");
 
         sb.append("Vehicle: " + eventInfo.get("vehicle") + "\n");
+
+        sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
 
         return sb.toString();
     }

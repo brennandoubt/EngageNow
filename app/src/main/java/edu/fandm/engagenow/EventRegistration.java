@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,7 +132,10 @@ public class EventRegistration extends OrganizationBaseClass {
             return;
         }
 
+        Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.start_date)).getMonth()) + ((DatePicker) findViewById(R.id.start_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.start_date)).getYear());
 
+        DatePicker datePicker = ((DatePicker) findViewById(R.id.start_date));
+        String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
         String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString();
         boolean hasFbiClearance = ((CheckBox) findViewById(R.id.fbi_cb)).isChecked();
         boolean hasChildClearance = ((CheckBox) findViewById(R.id.child_cb)).isChecked();
@@ -147,6 +153,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
         orgDBHashmap.put("event_name", event_name);
         orgDBHashmap.put("description", description);
+        orgDBHashmap.put("start_date", date);
         orgDBHashmap.put("other_info", otherInfo);
         orgDBHashmap.put("fbi_clearance", hasFbiClearance);
         orgDBHashmap.put("child_clearance", hasChildClearance);
@@ -162,6 +169,7 @@ public class EventRegistration extends OrganizationBaseClass {
         orgDBHashmap.put("age_group", ageGroup);
         orgDBHashmap.put("time_commitment", timeCommitment);
         orgDBHashmap.put("availability", availability);
+        orgDBHashmap.put("other_info", otherInfo);
 
         //push the data to firebase
         dbr.updateChildren(orgDBHashmap);
@@ -190,7 +198,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
         //Generate the UI
         populateSpinner();
-
+        ((DatePicker) findViewById(R.id.start_date)).setMinDate(System.currentTimeMillis());
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferences_button.setOnClickListener(View -> {
             registerEvent();
