@@ -177,7 +177,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                     if(map.containsKey("events")) {
                         HashMap<String, HashMap<String, String>> events = (HashMap <String,HashMap<String, String>>) map.get("events");
                         for(Map.Entry<String, HashMap<String, String>> entry: events.entrySet()){
-                            orgs.add(new Org( entry.getKey(), events.get(entry.getKey()).get("description"), "", OrgId.getKey()));
+                            orgs.add(new Org(map.get("name") +" - " + entry.getKey(), events.get(entry.getKey()).get("description"), "", OrgId.getKey()));
                         }
                     }
 
