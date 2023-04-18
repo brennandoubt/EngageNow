@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -139,7 +140,12 @@ public class VolunteerRegistration extends AppCompatActivity {
                     finish();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                        Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

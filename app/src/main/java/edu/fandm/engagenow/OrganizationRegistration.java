@@ -110,7 +110,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     }
 
     private void launchActivity(){
-        Intent i = new Intent(getApplicationContext(), OrganizationRegistration.class);
+        Intent i = new Intent(getApplicationContext(), EventDashboard.class);
         startActivity(i);
         finish();
     }
@@ -176,8 +176,12 @@ public class OrganizationRegistration extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Failed to create new organization user", Toast.LENGTH_LONG).show();
-                }
+                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                        Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                    }                }
             }
         });
 

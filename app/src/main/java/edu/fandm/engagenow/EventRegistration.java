@@ -3,6 +3,7 @@ package edu.fandm.engagenow;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -10,11 +11,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +31,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
     FirebaseAuth fbAuth;
     private String userId;
+    final String TAG = "EventRegistration";
 
     private void populateSpinner(){
         //time commitment drop down
@@ -75,7 +84,28 @@ public class EventRegistration extends OrganizationBaseClass {
         }
     }
 
-    private boolean registerEvent(){
+    private void registerEvent(){
+
+        String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
+
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
+        dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.getResult().exists()) {
+                    addEvent();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "An event with this name already exists", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
+    }
+
+    private void addEvent() {
 
         String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
 
@@ -88,16 +118,17 @@ public class EventRegistration extends OrganizationBaseClass {
 
         Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
         Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
-        Spinner availabilitySpinner =  (Spinner) findViewById(R.id.availability_spinner);
+        Spinner availabilitySpinner = (Spinner) findViewById(R.id.availability_spinner);
 
         String ageGroup = ageGroupSpinner.getSelectedItem().toString();
         String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
         String availability = availabilitySpinner.getSelectedItem().toString();
 
         //If the input is invalid,  make the user fill it out
-        if(!checkInput(event_name, description, ageGroup, timeCommitment, availability)){
-            return false;
+        if (!checkInput(event_name, description, ageGroup, timeCommitment, availability)) {
+            return;
         }
+
 
         String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString();
         boolean hasFbiClearance = ((CheckBox) findViewById(R.id.fbi_cb)).isChecked();
@@ -112,7 +143,7 @@ public class EventRegistration extends OrganizationBaseClass {
         boolean hasChinese = ((CheckBox) findViewById(R.id.chinese_language_rb)).isChecked();
         boolean hasGerman = ((CheckBox) findViewById(R.id.german_language_rb)).isChecked();
         boolean hasEnglish = ((CheckBox) findViewById(R.id.english_language_rb)).isChecked();
-        boolean hasVehicle = ((CheckBox)findViewById(R.id.vehicle_cb)).isChecked();
+        boolean hasVehicle = ((CheckBox) findViewById(R.id.vehicle_cb)).isChecked();
 
         orgDBHashmap.put("event_name", event_name);
         orgDBHashmap.put("description", description);
@@ -134,7 +165,9 @@ public class EventRegistration extends OrganizationBaseClass {
 
         //push the data to firebase
         dbr.updateChildren(orgDBHashmap);
-        return true;
+
+        Toast.makeText(getApplicationContext(), "New event created", Toast.LENGTH_SHORT).show();
+        launchActivity();
     }
 
     private void launchActivity() {
@@ -160,11 +193,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferences_button.setOnClickListener(View -> {
-            if (!registerEvent()) {
-                return;
-            }
-            Toast.makeText(getApplicationContext(), "New event created", Toast.LENGTH_SHORT).show();
-            launchActivity();
+            registerEvent();
         });
     }
 }
