@@ -91,6 +91,10 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
         }
 
     }
+    public void onCardClicked(View view, int position){
+
+    }
+
 
     @Override
     public void onCardRewound() {
@@ -175,9 +179,10 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                     DataSnapshot OrgId = (DataSnapshot) i.next();
                     HashMap<String, Object> map = (HashMap <String, Object>) OrgId.getValue();
                     if(map.containsKey("events")) {
-                        HashMap<String, HashMap<String, String>> events = (HashMap <String,HashMap<String, String>>) map.get("events");
-                        for(Map.Entry<String, HashMap<String, String>> entry: events.entrySet()){
-                            orgs.add(new Org(map.get("name") +" - " + entry.getKey(), events.get(entry.getKey()).get("description"), "", OrgId.getKey()));
+                        HashMap<String, HashMap<String, Object>> events = (HashMap <String,HashMap<String, Object>>) map.get("events");
+                        for(Map.Entry<String, HashMap<String, Object>> entry: events.entrySet()){
+                            orgs.add(new Org(map.get("name") +" - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
+                                    events.get(entry.getKey())));
                         }
                     }
 

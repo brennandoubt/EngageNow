@@ -9,6 +9,7 @@ public interface CardStackListener {
     void onCardCanceled();
     void onCardAppeared(View view, int position);
     void onCardDisappeared(View view, int position);
+    void onCardClicked(View view, int position);
 
     CardStackListener DEFAULT = new CardStackListener() {
         @Override
@@ -23,5 +24,12 @@ public interface CardStackListener {
         public void onCardAppeared(View view, int position) {}
         @Override
         public void onCardDisappeared(View view, int position) {}
+
+        @Override
+        public void onCardClicked(View view, int position){}
+
+
+
     };
+
 }
