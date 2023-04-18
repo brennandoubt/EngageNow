@@ -20,13 +20,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,7 +99,7 @@ public class EventRegistration extends OrganizationBaseClass {
                     addEvent();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "An event with this name already exists", Toast.LENGTH_LONG).show();
+                    showToast("An event with this name already exists");
                 }
 
             }
@@ -179,7 +175,7 @@ public class EventRegistration extends OrganizationBaseClass {
         //push the data to firebase
         dbr.updateChildren(orgDBHashmap);
 
-        Toast.makeText(getApplicationContext(), "New event created", Toast.LENGTH_SHORT).show();
+        showToast("New event created");
         launchActivity();
     }
 
