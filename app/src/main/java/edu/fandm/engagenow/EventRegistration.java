@@ -60,7 +60,7 @@ public class EventRegistration extends OrganizationBaseClass {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean checkInput(String name, String description, String ageGroup, String timeCommitment, String availability){
+    private boolean checkInput(String name, String description, String ageGroup, String timeCommitment, String availability, String locationAndStartTIme){
 
         if(name.equals("")) {
             showToast("Event Name Cannot Be Empty");
@@ -68,6 +68,10 @@ public class EventRegistration extends OrganizationBaseClass {
         }
         else if(description.equals("")){
             showToast("Event Description Cannot Be Empty");
+            return false;
+        }
+        else if(locationAndStartTIme.equals("")){
+            showToast("Location and Start Time Cannot Be Empty");
             return false;
         }
         else if(ageGroup.equals("Select Age Group")){
@@ -117,8 +121,8 @@ public class EventRegistration extends OrganizationBaseClass {
         Map<String, Object> orgDBHashmap = new HashMap<>();
 
         //extract data
-        String description = ((EditText) findViewById(R.id.description_et)).getText().toString();
-
+        String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
+        String locationAndStartTime = ((EditText) findViewById(R.id.location_et)).getText().toString().trim();
         Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
         Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
         Spinner availabilitySpinner = (Spinner) findViewById(R.id.availability_spinner);
@@ -128,7 +132,7 @@ public class EventRegistration extends OrganizationBaseClass {
         String availability = availabilitySpinner.getSelectedItem().toString();
 
         //If the input is invalid,  make the user fill it out
-        if (!checkInput(event_name, description, ageGroup, timeCommitment, availability)) {
+        if (!checkInput(event_name, description, ageGroup, timeCommitment, availability, locationAndStartTime)) {
             return;
         }
 
@@ -136,7 +140,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
         DatePicker datePicker = ((DatePicker) findViewById(R.id.start_date));
         String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
-        String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString();
+        String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString().trim();
         boolean hasFbiClearance = ((CheckBox) findViewById(R.id.fbi_cb)).isChecked();
         boolean hasChildClearance = ((CheckBox) findViewById(R.id.child_cb)).isChecked();
         boolean hasCriminalClearance = ((CheckBox) findViewById(R.id.criminal_rb)).isChecked();
@@ -153,6 +157,7 @@ public class EventRegistration extends OrganizationBaseClass {
 
         orgDBHashmap.put("event_name", event_name);
         orgDBHashmap.put("description", description);
+        orgDBHashmap.put("location_start_time", locationAndStartTime);
         orgDBHashmap.put("start_date", date);
         orgDBHashmap.put("other_info", otherInfo);
         orgDBHashmap.put("fbi_clearance", hasFbiClearance);

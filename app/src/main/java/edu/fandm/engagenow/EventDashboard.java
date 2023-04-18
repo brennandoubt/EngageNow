@@ -148,6 +148,8 @@ public class EventDashboard extends OrganizationBaseClass {
 
         sb.append("Description: " + eventInfo.get("description") + "\n");
 
+        sb.append("Location/Start Time: " + eventInfo.get("location_start_time") + "\n");
+
         sb.append("Start Date: " + eventInfo.get("start_date") + "\n");
 
         sb.append("Time Commitment: " + eventInfo.get("time_commitment") + "\n");
