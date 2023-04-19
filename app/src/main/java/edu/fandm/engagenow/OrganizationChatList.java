@@ -164,6 +164,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
 
     private void setReadNotifications() {
         for (int i = 0; i < matchesListView.getCount(); i++) {
+            Log.d("ERROR", arrayAdapter.getItem(i).toString());
             String email = arrayAdapter.getItem(i).toString().split(":")[1].trim();
             String volunteerId = volIdMap.get(email).get("id");
 

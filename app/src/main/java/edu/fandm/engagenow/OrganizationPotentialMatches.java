@@ -113,12 +113,14 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     for (String key2 : potentialMatchesMap.get(key1).keySet()) {
                         HashMap<String, Object> m = (HashMap<String, Object>) task.getResult().getValue();
-                        Log.d(TAG, m.toString());
-                        String volName = (String) m.get("first_name") + " " + m.get("last_name");
-                        String volEmail = (String) m.get("email");
-                        idEmailMap.put(key1, volEmail);
-                        emailIdMap.put(volEmail, key1);
-                        arrayAdapter.add(volName + ", " + volEmail + " - " + potentialMatchesMap.get(key1).get(key2));
+                        if (m != null) {
+                            Log.d(TAG, m.toString());
+                            String volName = (String) m.get("first_name") + " " + m.get("last_name");
+                            String volEmail = (String) m.get("email");
+                            idEmailMap.put(key1, volEmail);
+                            emailIdMap.put(volEmail, key1);
+                            arrayAdapter.add(volName + ", " + volEmail + " - " + potentialMatchesMap.get(key1).get(key2));
+                        }
                     }
                 }
             });
@@ -156,8 +158,8 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
 
                 DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
                 Map<String, Object> m2 = new HashMap<String, Object>();
-                m2.put("msg", volName + " and " + orgName + " have been connected!");
-                m2.put("user", "Connected");
+                m2.put("msg", volName + " and " + orgName + " have been connected!. " + volName + " is interested in the '" + eventName + "' event.");
+                m2.put("user", "MATCHED");
                 dbr2.updateChildren(m2);
                 dbrMessageInfo.child(volunteerId).updateChildren(m);
                 m = new HashMap<>();
