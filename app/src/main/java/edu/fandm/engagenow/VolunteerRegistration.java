@@ -21,12 +21,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class VolunteerRegistration extends AppCompatActivity {
     private final String TAG = "VOLUNTEER_REGISTRATION";
+    private String notificationToken;
     static FirebaseAuth fbAuth;
 
     @Override
@@ -72,6 +74,22 @@ public class VolunteerRegistration extends AppCompatActivity {
         travel_distance_spinner.setAdapter(travel_distance_aa);
     }
 
+    private void getNotificationToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token that is associated with the device
+                notificationToken = task.getResult();
+                Log.d("GENERATE TOKEN", notificationToken);
+            }
+        });
+    }
+
     private void registerAccount() {
         // get data from last Register activity (if registering new user)
         Intent i = getIntent();
@@ -106,6 +124,9 @@ public class VolunteerRegistration extends AppCompatActivity {
                     FirebaseUser user = fbAuth.getCurrentUser();
                     String userId = user.getUid();
 
+                    //generate the notification token
+                    getNotificationToken();
+
                     // store account type under "account_type/" in Realtime Database
                     DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
                     Map<String, Object> accountTypeMap = new HashMap<>();
@@ -129,6 +150,7 @@ public class VolunteerRegistration extends AppCompatActivity {
                     m.put("spanish", spanish);
                     m.put("german", german);
                     m.put("chinese", chinese);
+                    m.put("notification", notificationToken);
 
                     dbr.updateChildren(m);
 
