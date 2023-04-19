@@ -30,7 +30,7 @@
     </string-array>
 
     <string-array name="age_select">
-        <item>Select Age Group</item>
+        <item>Select Age</item>
         <item>Under 13</item>
         <item>13-18</item>
         <item>18-21</item>
