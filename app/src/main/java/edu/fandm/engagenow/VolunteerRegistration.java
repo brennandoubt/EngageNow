@@ -61,7 +61,7 @@ public class VolunteerRegistration extends AppCompatActivity {
         // populate age group volunteer spinner
         Spinner age_spinner = (Spinner) findViewById(R.id.age_group_volunteer_spinner);
         ArrayAdapter<CharSequence> age_aa = ArrayAdapter.createFromResource(this,
-                R.array.age_group_select, android.R.layout.simple_spinner_item);
+                R.array.age_select, android.R.layout.simple_spinner_item);
         age_aa.setDropDownViewResource(android.R.layout.simple_spinner_item);
         age_spinner.setAdapter(age_aa);
 

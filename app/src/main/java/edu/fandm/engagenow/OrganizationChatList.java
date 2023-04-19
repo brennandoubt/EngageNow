@@ -110,49 +110,50 @@ public class OrganizationChatList extends OrganizationBaseClass {
                 arrayAdapter.clear();
                 HashMap<String, Boolean> chatsHashmap = new HashMap<>();
                 // contains data from a firebase location.
-                for (String key : chatsMap.keySet()) {
+                if (chatsMap != null) {
+                    for (String key : chatsMap.keySet()) {
 
-                    HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(key);
-                    Log.d(TAG, "YOOO " + volChat);
-                    String volId = key;
+                        HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(key);
+                        Log.d(TAG, "YOOO " + volChat);
+                        String volId = key;
 
-                    DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volId);
-                    volunteerAccDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            HashMap<String, String> volInfo = (HashMap<String, String>) task.getResult().getValue();
+                        DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volId);
+                        volunteerAccDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                HashMap<String, String> volInfo = (HashMap<String, String>) task.getResult().getValue();
 
-                            String volFirstName = (String) volInfo.get("first_name");
-                            String volLastName = (String) volInfo.get("last_name");
-                            String volEmail = (String) volInfo.get("email");
-                            Boolean readChat = (Boolean) volChat.get("organization_read");
+                                String volFirstName = (String) volInfo.get("first_name");
+                                String volLastName = (String) volInfo.get("last_name");
+                                String volEmail = (String) volInfo.get("email");
+                                Boolean readChat = (Boolean) volChat.get("organization_read");
 
-                            chatsHashmap.put(volFirstName + " " + volLastName + ": " + volEmail, readChat);
+                                chatsHashmap.put(volFirstName + " " + volLastName + ": " + volEmail, readChat);
 
-                            volInfo.put("id", volId);
-                            volInfo.put("id", volId);
-                            volInfo.put("last_name", volLastName);
-                            volInfo.put("first_name", volFirstName);
-                            volIdMap.put(volEmail, volInfo);
-                            arrayAdapter.clear();
-                            for (String key : chatsHashmap.keySet()) {
-                                if (!chatsHashmap.get(key)) {
-                                    arrayAdapter.insert(key, 0);
+                                volInfo.put("id", volId);
+                                volInfo.put("id", volId);
+                                volInfo.put("last_name", volLastName);
+                                volInfo.put("first_name", volFirstName);
+                                volIdMap.put(volEmail, volInfo);
+                                arrayAdapter.clear();
+                                for (String key : chatsHashmap.keySet()) {
+                                    if (!chatsHashmap.get(key)) {
+                                        arrayAdapter.insert(key, 0);
+                                    } else {
+                                        arrayAdapter.add(key);
+                                    }
                                 }
-                                else {
-                                    arrayAdapter.add(key);
-                                }
-                            }
 //                            arrayAdapter.addAll(chatsHashmap.keySet());
-                            setReadNotifications();
-                            Log.d(TAG, "CHATMAP: " + chatsHashmap.toString());
+                                setReadNotifications();
+                                Log.d(TAG, "CHATMAP: " + chatsHashmap.toString());
 
-                        }
-                    });
+                            }
+                        });
 
+                    }
+
+                    arrayAdapter.notifyDataSetChanged();
                 }
-
-                arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
