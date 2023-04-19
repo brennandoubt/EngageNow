@@ -1,12 +1,10 @@
 package edu.fandm.engagenow;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -15,21 +13,11 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
-
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
-    //generate the noti
-    //attach with custom
-    //show the noti
-
     private String TAG = "FirebaseMessagingService";
-
-    //https://www.youtube.com/watch?v=If2eDphtutI
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -88,4 +76,18 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
+//    @Override
+//    public void onNewToken(@NonNull String token) {
+//        Log.d(TAG, "Refreshed token: " + token);
+//
+//        FirebaseUser user = fbAuth.getCurrentUser();
+//        userId = user.getUid();
+//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+//        Map<String, Object> orgDBHashmap = new HashMap<>();
+//
+//        // If you want to send messages to this application instance or
+//        // manage this apps subscriptions on the server side, send the
+//        // FCM registration token to your app server.
+//        sendRegistrationToServer(token);
+//    }
 }
