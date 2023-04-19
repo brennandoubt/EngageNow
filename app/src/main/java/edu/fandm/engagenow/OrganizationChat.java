@@ -2,7 +2,7 @@ package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,10 +22,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
-import java.security.cert.PKIXRevocationChecker;
-import java.sql.Array;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -80,24 +80,8 @@ public class OrganizationChat extends OrganizationBaseClass {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String msg = messageEditText.getText().toString();
-                if (msg.equals("")) {
-                    return;
-                }
-                String email = user.getEmail();
-                Map<String, Object> map = new HashMap<String, Object>();
-                // unique key for each message sent and received
-                user_message_key = dbr.push().getKey();
-                dbr.updateChildren(map);
-
-                DatabaseReference dbr2 = dbr.child(user_message_key);
-                Map<String, Object> map2 = new HashMap<String, Object>();
-                map2.put("msg", msg);
-                map2.put("user", orgName);
-                dbr2.updateChildren(map2);
-                messageEditText.setText("");
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("volunteer_read");
-                dbr.setValue(false);
+                storeMessage();
+                sendNotification();
             }
         });
 
@@ -128,6 +112,31 @@ public class OrganizationChat extends OrganizationBaseClass {
 
             }
         });
+    }
+
+    private void sendNotification() {
+
+    }
+
+    private void storeMessage() {
+        String msg = messageEditText.getText().toString();
+        if (msg.equals("")) {
+            return;
+        }
+        String email = user.getEmail();
+        Map<String, Object> map = new HashMap<String, Object>();
+        // unique key for each message sent and received
+        user_message_key = dbr.push().getKey();
+        dbr.updateChildren(map);
+
+        DatabaseReference dbr2 = dbr.child(user_message_key);
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        map2.put("msg", msg);
+        map2.put("user", orgName);
+        dbr2.updateChildren(map2);
+        messageEditText.setText("");
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("volunteer_read");
+        dbr.setValue(false);
     }
 
     public void updateConversation(DataSnapshot dataSnapshot) {

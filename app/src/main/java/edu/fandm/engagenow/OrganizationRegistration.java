@@ -141,7 +141,7 @@ public class OrganizationRegistration extends AppCompatActivity {
                     return;
                 }
 
-                // Get new FCM registration token
+                // Get new FCM registration token that is associated with the device
                 notificationToken = task.getResult();
                 Log.d("GENERATE TOKEN", notificationToken);
             }
