@@ -171,5 +171,20 @@ public class OrganizationChat extends OrganizationBaseClass {
         arrayAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+        dbr.setValue(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();  // Always call the superclass method first
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+        dbr.setValue(true);
+    }
+
+
 
 }
