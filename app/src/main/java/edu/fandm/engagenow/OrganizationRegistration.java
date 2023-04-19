@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,6 +40,8 @@ public class OrganizationRegistration extends AppCompatActivity {
     private String email;
     private String password;
     private String accountType;
+
+    private String notificationToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +132,24 @@ public class OrganizationRegistration extends AppCompatActivity {
         dbr.updateChildren(accountTypeMap);
     }
 
+    private void getNotificationToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token
+                notificationToken = task.getResult();
+                Log.d("GENERATE TOKEN", notificationToken);
+            }
+        });
+    }
+
+
+
 
     private void registerUser() {
 
@@ -158,6 +179,10 @@ public class OrganizationRegistration extends AppCompatActivity {
                     DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
                     Map<String, Object> orgDBHashmap = new HashMap<>();
 
+                    //get device token needed to send and recieve notification
+                    getNotificationToken();
+
+                    orgDBHashmap.put("notification", notificationToken);
                     orgDBHashmap.put("name", name);
                     orgDBHashmap.put("description", description);
                     orgDBHashmap.put("email", email);
