@@ -41,7 +41,6 @@ public class OrganizationRegistration extends AppCompatActivity {
     private String password;
     private String accountType;
 
-    private String notificationToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,8 +141,13 @@ public class OrganizationRegistration extends AppCompatActivity {
                 }
 
                 // Get new FCM registration token that is associated with the device
-                notificationToken = task.getResult();
+                String notificationToken = task.getResult();
                 Log.d("GENERATE TOKEN", notificationToken);
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+                Map<String, Object> orgDBHashmap = new HashMap<>();
+                orgDBHashmap.put("notification", notificationToken);
+                dbr.updateChildren(orgDBHashmap);
+
             }
         });
     }
@@ -179,10 +183,9 @@ public class OrganizationRegistration extends AppCompatActivity {
                     DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
                     Map<String, Object> orgDBHashmap = new HashMap<>();
 
-                    //get device token needed to send and recieve notification
+                    //get device token needed to send and receive notification
                     getNotificationToken();
 
-                    orgDBHashmap.put("notification", notificationToken);
                     orgDBHashmap.put("name", name);
                     orgDBHashmap.put("description", description);
                     orgDBHashmap.put("email", email);

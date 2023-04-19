@@ -1,5 +1,7 @@
 package edu.fandm.engagenow;
 
+import static edu.fandm.engagenow.FcmHttpRequest.sendFcmMessage;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -31,6 +34,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 // dependency for database
 //    implementation 'com.google.firebase:firebase-database:20.1.0'
@@ -80,8 +85,8 @@ public class OrganizationChat extends OrganizationBaseClass {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                storeMessage();
                 sendNotification();
+                storeMessage();
             }
         });
 
@@ -115,6 +120,33 @@ public class OrganizationChat extends OrganizationBaseClass {
     }
 
     private void sendNotification() {
+        DatabaseReference db;
+        db = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerId).child("notification");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + value);
+                String body = "You have a new message!";
+                String title = "Engage Now";
+
+                Executor executor = Executors.newSingleThreadExecutor();
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "SUCCESS");
+                        sendFcmMessage(value, title, body);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
 
     }
 
@@ -138,6 +170,10 @@ public class OrganizationChat extends OrganizationBaseClass {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("volunteer_read");
         dbr.setValue(false);
     }
+
+    //need to access the notification token stored in volunteers ID
+
+
 
     public void updateConversation(DataSnapshot dataSnapshot) {
         String userName;

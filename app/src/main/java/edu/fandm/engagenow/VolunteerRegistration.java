@@ -28,7 +28,6 @@ import java.util.Map;
 
 public class VolunteerRegistration extends AppCompatActivity {
     private final String TAG = "VOLUNTEER_REGISTRATION";
-    private String notificationToken;
     static FirebaseAuth fbAuth;
 
     @Override
@@ -74,7 +73,7 @@ public class VolunteerRegistration extends AppCompatActivity {
         travel_distance_spinner.setAdapter(travel_distance_aa);
     }
 
-    private void getNotificationToken(){
+    private void getNotificationToken(String userId){
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -84,8 +83,13 @@ public class VolunteerRegistration extends AppCompatActivity {
                 }
 
                 // Get new FCM registration token that is associated with the device
-                notificationToken = task.getResult();
+
+                String notificationToken = task.getResult();
                 Log.d("GENERATE TOKEN", notificationToken);
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                Map<String, Object> orgDBHashmap = new HashMap<>();
+                orgDBHashmap.put("notification", notificationToken);
+                dbr.updateChildren(orgDBHashmap);
             }
         });
     }
@@ -125,7 +129,7 @@ public class VolunteerRegistration extends AppCompatActivity {
                     String userId = user.getUid();
 
                     //generate the notification token
-                    getNotificationToken();
+                    getNotificationToken(userId);
 
                     // store account type under "account_type/" in Realtime Database
                     DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
@@ -150,7 +154,6 @@ public class VolunteerRegistration extends AppCompatActivity {
                     m.put("spanish", spanish);
                     m.put("german", german);
                     m.put("chinese", chinese);
-                    m.put("notification", notificationToken);
 
                     dbr.updateChildren(m);
 
