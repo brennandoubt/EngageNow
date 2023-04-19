@@ -6,12 +6,41 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
+<<<<<<< HEAD
+            <type value="SERIAL_NUMBER" />
+            <value value="0A191FDD4003WQ" />
+=======
             <type value="VIRTUAL_DEVICE_PATH" />
             <value value="$USER_HOME$/.android/avd/Pixel_6_API_30_2.avd" />
+>>>>>>> 50b7ac0a5a68786f7b955e17b46f94b7b548d416
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
+<<<<<<< HEAD
+    <timeTargetWasSelectedWithDropDown value="2023-04-19T01:32:57.785455600Z" />
+    <runningDeviceTargetsSelectedWithDialog>
+      <Target>
+        <type value="RUNNING_DEVICE_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\noahf\.android\avd\Pixel_6_API_30.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+      <Target>
+        <type value="RUNNING_DEVICE_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="SERIAL_NUMBER" />
+            <value value="0A191FDD4003WQ" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </runningDeviceTargetsSelectedWithDialog>
+=======
     <timeTargetWasSelectedWithDropDown value="2023-04-19T00:13:56.606196Z" />
+>>>>>>> 50b7ac0a5a68786f7b955e17b46f94b7b548d416
   </component>
 </project>

@@ -12,8 +12,9 @@ public class Org {
 
     public String userID;
     public HashMap<String, Object> m;
+    public String event;
 
-    public Org(String name, String descrip, String url, String userID, HashMap<String, Object> m) {
+    public Org(String name, String descrip, String url, String userID, HashMap<String, Object> m, String event) {
         this.id = counter++;
         this.name = name;
         this.descrip = descrip;
@@ -21,5 +22,6 @@ public class Org {
         this.url = url;
         this.userID = userID;
         this.m = m;
+        this.event = event;
     }
 }
