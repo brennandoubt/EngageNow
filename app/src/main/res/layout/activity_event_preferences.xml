@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EventPreferences">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/pinstructions_tv"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:textSize="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin ="40dp"
+                android:text="Fill in the following fields to update your event"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Start Date"/>
+
+            <DatePicker
+                android:id="@+id/pstart_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                />
+
+            <Spinner
+                android:id="@+id/ptime_commitment_spinner"
+                android:layout_width="wrap_content"
+                android:layout_margin ="5dp"
+                android:layout_height="30dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown"
+                />
+
+
+            <Spinner
+                android:id="@+id/page_group_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:spinnerMode="dropdown"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/pavailability_spinner"
+                android:layout_width="wrap_content"
+                android:layout_margin ="5dp"
+                android:layout_height="30dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/pclearances_tv"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
+                android:text="Clearances"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/pfbi_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="FBI" />
+
+                <CheckBox
+                    android:id="@+id/pchild_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Child" />
+
+                <CheckBox
+                    android:id="@+id/pcriminal_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Criminal History" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/pskills_tv"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
+                android:text="Skills"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/plabor_skill_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Labor" />
+
+                <CheckBox
+                    android:id="@+id/pcareTaking_skill_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Care Taking" />
+
+                <CheckBox
+                    android:id="@+id/pfood_skill_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Food Service" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/planguages_tv"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
+                android:text="Languages"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/penglish_language_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="English" />
+
+                <CheckBox
+                    android:id="@+id/pspanish_language_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Spanish" />
+
+                <CheckBox
+                    android:id="@+id/pgerman_language_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="German" />
+
+                <CheckBox
+                    android:id="@+id/pchinese_language_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Chinese" />
+
+
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/pother_specify_et"
+                android:layout_width="match_parent"
+                android:layout_margin ="20dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="If other, please specify"
+                />
+
+
+            <CheckBox
+                android:id="@+id/pvehicle_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin ="10dp"
+                android:text="Does the volunteer need a vehicle?"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <Button
+                android:id="@+id/pupdate_preferences_button"
+                android:layout_width="match_parent"
+                android:layout_margin ="20dp"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -88,6 +88,11 @@ public class VolunteerChat extends VolunteerBaseClass {
                 if (msg.equals("")) {
                     return;
                 }
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid);
+                HashMap<String, Object> m = new HashMap<>();
+                m.put("organization_read", false);
+                dbr.updateChildren(m);
+
                 String email = user.getEmail();
                 Map<String, Object> map = new HashMap<String, Object>();
                 // unique key for each message sent and received
@@ -102,8 +107,7 @@ public class VolunteerChat extends VolunteerBaseClass {
                 
                 messageEditText.setText("");
 
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("organization_read");
-                dbr.setValue(false);
+
             }
         });
 

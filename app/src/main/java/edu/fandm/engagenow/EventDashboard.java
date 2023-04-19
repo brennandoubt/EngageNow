@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -105,6 +106,24 @@ public class EventDashboard extends OrganizationBaseClass {
         info.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         info.setPadding(60, 5, 5, 5);
         dialog.setView(info);
+
+        // edit button inside of dialog to edit organization's event
+        dialog.setPositiveButton(R.string.org_edit_event_dialog, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent epi = new Intent(getApplicationContext(), EventPreferences.class);
+                        String event_name = (String) eventsMap.get(event).get("event_name");
+                        epi.putExtra("event_name", event_name);
+                        startActivity(epi);
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
 
         dialog.show();
     }
