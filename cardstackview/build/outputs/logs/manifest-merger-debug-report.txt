@@ -1,5 +1,6 @@
 -- Merging decision tree log ---
 manifest
+<<<<<<< HEAD
 ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
 INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
 INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
@@ -9,17 +10,28 @@ INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/ma
 		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
+=======
+ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+	package
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:11-56
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+>>>>>>> 9d9d2d30f603db3f0c931fc887d8d49575560b98
 uses-sdk
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
