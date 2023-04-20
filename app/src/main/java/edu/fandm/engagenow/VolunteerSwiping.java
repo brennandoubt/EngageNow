@@ -40,7 +40,6 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     private CardStackView cardStackView;
     List<Org> orgs = new ArrayList<>();
     boolean swipedRight = false;
-    private final String TAG = "Volunteer_Swiping";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +66,8 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             FirebaseAuth auth = FirebaseAuth.getInstance();
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID).child(auth.getCurrentUser().getUid());
             Map<String, Object> m = new HashMap<>();
-            Log.d(TAG, orgs.get(position).event);
-            m.put(orgs.get(position).event, orgs.get(position).event);
+            //True meaning they are a potential match
+            m.put(orgs.get(position).event, true);
             dbr.updateChildren(m);
         }
 
@@ -78,7 +77,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardDragging(Direction direction, float ratio) {
-//        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
+        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
     }
 
     @Override
@@ -172,25 +171,44 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 //Fetch data from database
     private void initialize() {
         DatabaseReference organizationsRef = FirebaseDatabase.getInstance().getReference("organization_accounts");
-        DatabaseReference matches = FirebaseDatabase.getInstance().getReference("potentialMatches");
+
         organizationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterator i = snapshot.getChildren().iterator();
-                while(i.hasNext()){
+                while (i.hasNext()) {
                     DataSnapshot OrgId = (DataSnapshot) i.next();
-                    HashMap<String, Object> map = (HashMap <String, Object>) OrgId.getValue();
-                    if(map.containsKey("events")) {
-                        HashMap<String, HashMap<String, Object>> events = (HashMap <String,HashMap<String, Object>>) map.get("events");
-                        for(Map.Entry<String, HashMap<String, Object>> entry: events.entrySet()){
-                            orgs.add(new Org(map.get("name") +" - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
-                                    events.get(entry.getKey()), entry.getKey()));
+                    Log.d("CPS", OrgId.toString());
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                   String userID = auth.getCurrentUser().getUid();
+                   DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(OrgId.getKey());
+                   dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            HashMap<String, Object> map = (HashMap<String, Object>) OrgId.getValue();
+                            Log.d("CPS", String.valueOf(snapshot.hasChild(userID)));
+                            if (map.containsKey("events")) {
+                                HashMap<String, HashMap<String, Object>> events = (HashMap<String, HashMap<String, Object>>) map.get("events");
+                                for (Map.Entry<String, HashMap<String, Object>> entry : events.entrySet()) {
+
+                                    orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
+                                            events.get(entry.getKey()), entry.getKey()));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
                         }
-                    }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
 
                 }
-                adapter.notifyDataSetChanged();
             }
 
             @Override

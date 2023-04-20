@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class FcmHttpRequest {
-    private static final String FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
+    private static final String FCM_API_URL = "https://fcm.googleapis.com/v1/projects/myproject-b5ae1/messages:send";
     private static final String FCM_SERVER_KEY = "AIzaSyBjH4anaf7WzwHaBI0JY8u1hXlf1p5ppfY";
     private static final String FCM_CONTENT_TYPE = "application/json";
 

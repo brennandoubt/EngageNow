@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -59,6 +60,7 @@ public class OrganizationChat extends OrganizationBaseClass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_chat);
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         uid = FirebaseAuth.getInstance().getUid();
         dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
         dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -120,8 +122,9 @@ public class OrganizationChat extends OrganizationBaseClass {
     }
 
     private void sendNotification() {
-        DatabaseReference db;
-        db = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerId).child("notification");
+
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerId).child("notification");
+
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -130,14 +133,26 @@ public class OrganizationChat extends OrganizationBaseClass {
                 String body = "You have a new message!";
                 String title = "Engage Now";
 
-                Executor executor = Executors.newSingleThreadExecutor();
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "SUCCESS");
-                        sendFcmMessage(value, title, body);
-                    }
-                });
+//                Message message = Message.builder()
+//                        .putData("score", "850")
+//                        .putData("time", "2:45")
+//                        .setToken(registrationToken)
+//                        .build();
+//
+//// Send a message to the device corresponding to the provided
+//// registration token.
+//                String response = FirebaseMessaging.getInstance().send(message);
+
+//                Executor executor = Executors.newSingleThreadExecutor();
+//                executor.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//
+//                        Log.d(TAG, "SUCCESS");
+//                        sendFcmMessage(value, title, body);
+//                    }
+//                });
 
 
             }
