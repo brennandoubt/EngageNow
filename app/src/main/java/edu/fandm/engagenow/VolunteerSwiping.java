@@ -170,6 +170,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 //Fetch data from database
     private void initialize() {
         DatabaseReference organizationsRef = FirebaseDatabase.getInstance().getReference("organization_accounts");
+        DatabaseReference matches = FirebaseDatabase.getInstance().getReference("potentialMatches");
         organizationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
