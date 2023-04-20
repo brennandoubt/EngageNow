@@ -51,7 +51,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
     String TAG = "OrgChatList";
     static String uid, orgName;
     // represents a particular location in database and can be used for reading or writing data to that database location
-    private DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
+    private DatabaseReference dbr;
 
     private String CHANNEL_ID_1 = "Channel1";
     private final static String PERM = android.Manifest.permission.POST_NOTIFICATIONS;
@@ -61,6 +61,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_match_list);
         setTitle("Chats");
+
         uid = FirebaseAuth.getInstance().getUid();
         DatabaseReference nameDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("name");
         nameDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -70,63 +71,16 @@ public class OrganizationChatList extends OrganizationBaseClass {
             }
         });
 
-        dbr = dbr.child(uid);
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid);
+
         matchesListView = (ListView) findViewById(R.id.matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
 
         matchesListView.setAdapter(arrayAdapter);
         this.CTX = getApplicationContext();
         Log.d(TAG, dbr.toString());
-        dbr.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Set<String> set = new HashSet<String>();
-                // contains data from a firebase location.
-                Iterator i = snapshot.getChildren().iterator();
-                while(i.hasNext()) {
-                    String volunteerId = ( (DataSnapshot) i.next()).getKey();
 
-                    DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerId);
-                    volunteerAccDbr.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String volFirstName, volLastName, volEmail;
-                            HashMap<String, Object> volInfo = (HashMap<String, Object>) snapshot.getValue();
-                            volFirstName = (String) volInfo.get("first_name");
-                            volLastName = (String) volInfo.get("last_name");
-                            volEmail = (String) volInfo.get("email");
-
-                            set.add(volFirstName + " " + volLastName + ": " + volEmail);
-                            HashMap<String, String> volInfoMap = new HashMap<>();
-                            volInfoMap.put("id", volunteerId);
-                            volInfoMap.put("last_name", volLastName);
-                            volInfoMap.put("first_name", volFirstName);
-                            volIdMap.put(volEmail, volInfoMap);
-                            Log.d(TAG, volIdMap.toString() + "HERE");
-                            arrayAdapter.clear();
-                            arrayAdapter.addAll(set);
-                            setReadNotifications();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                }
-
-
-                arrayAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, "FAIL");
-            }
-        });
-
-
+        populateChats();
         matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -146,30 +100,93 @@ public class OrganizationChatList extends OrganizationBaseClass {
         });
 
     }
+
+    private void populateChats() {
+        dbr.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashMap<String, Object> chatsMap = (HashMap<String, Object>) snapshot.getValue();
+                Set<String> set = new HashSet<String>();
+                arrayAdapter.clear();
+                HashMap<String, Boolean> chatsHashmap = new HashMap<>();
+                // contains data from a firebase location.
+                if (chatsMap != null) {
+                    for (String key : chatsMap.keySet()) {
+
+                        HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(key);
+                        Log.d(TAG, "YOOO " + volChat);
+                        String volId = key;
+
+                        DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volId);
+                        volunteerAccDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                HashMap<String, String> volInfo = (HashMap<String, String>) task.getResult().getValue();
+
+                                String volFirstName = (String) volInfo.get("first_name");
+                                String volLastName = (String) volInfo.get("last_name");
+                                String volEmail = (String) volInfo.get("email");
+                                Boolean readChat = (Boolean) volChat.get("organization_read");
+
+                                chatsHashmap.put(volFirstName + " " + volLastName + ": " + volEmail, readChat);
+
+                                volInfo.put("id", volId);
+                                volInfo.put("id", volId);
+                                volInfo.put("last_name", volLastName);
+                                volInfo.put("first_name", volFirstName);
+                                volIdMap.put(volEmail, volInfo);
+                                arrayAdapter.clear();
+                                for (String key : chatsHashmap.keySet()) {
+                                    if (!chatsHashmap.get(key)) {
+                                        arrayAdapter.insert(key, 0);
+                                    } else {
+                                        arrayAdapter.add(key);
+                                    }
+                                }
+//                            arrayAdapter.addAll(chatsHashmap.keySet());
+                                setReadNotifications();
+                                Log.d(TAG, "CHATMAP: " + chatsHashmap.toString());
+
+                            }
+                        });
+
+                    }
+
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "FAIL");
+            }
+        });
+    }
+
     private void setReadNotifications() {
         for (int i = 0; i < matchesListView.getCount(); i++) {
+            Log.d("ERROR", arrayAdapter.getItem(i).toString());
             String email = arrayAdapter.getItem(i).toString().split(":")[1].trim();
             String volunteerId = volIdMap.get(email).get("id");
-            Log.d(email, volunteerId);
+
             final int idx = i;
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
-            Task<DataSnapshot> ds = dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     boolean read = (boolean) task.getResult().getValue();
                     View v = (View) matchesListView.getChildAt(idx);
-                    if (!read) {
-                        if (v != null) {
+                    if (v != null) {
+                        if (!read) {
                             v.setBackgroundColor(Color.RED);
-                        }
-                    }
-                    else {
-                        if (v != null) {
+                            arrayAdapter.remove(v);
+                            arrayAdapter.notifyDataSetChanged();
+
+
+                        } else {
                             v.setBackgroundColor(Color.TRANSPARENT);
                         }
                     }
-                    arrayAdapter.notifyDataSetChanged();
-
                 }
             });
 
@@ -177,6 +194,9 @@ public class OrganizationChatList extends OrganizationBaseClass {
             Log.d(TAG, Integer.toString(arrayAdapter.getCount()));
 
         }
+
+        arrayAdapter.notifyDataSetChanged();
+
     }
 
     private void makeNotification() {
@@ -209,12 +229,5 @@ public class OrganizationChatList extends OrganizationBaseClass {
             Log.d(this.TAG, "Could not send notification, permissions not granted");
         }
     }
-
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        startService(new Intent(this, NotificationService.class));
-//        Log.d("HERE", "ONSTOP");
-//    }
 
 }

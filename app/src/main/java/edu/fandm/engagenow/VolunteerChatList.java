@@ -38,6 +38,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
     ArrayAdapter arrayAdapter;
     String userName, userId;
     String TAG = "VolunteerChatList";
+    HashMap<String, HashMap<String, Object>> orgAccountsMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,64 +50,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
         matchesListView.setAdapter(arrayAdapter);
         userId = FirebaseAuth.getInstance().getUid();
 
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
-        dbr.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Set<String> nameSet = new HashSet<>();
-                if (snapshot.exists()) {
-                    // for each organization
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        Log.d(TAG, ds.getValue().toString());
-                        Map<String, Object> m = (Map) ds.getValue();
-                        Log.d("HERE", m.toString());
-                        if (m.containsKey(userId)) {
-                            String orgId = ds.getKey();
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
-
-                            dbr.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    // check if user in that organization chat
-                                    if (snapshot.exists()) {
-                                        Log.d(TAG, snapshot.toString());
-                                        HashMap<String, Object> orgInfo = (HashMap<String, Object>) snapshot.getValue();
-                                        String orgEmail = (String) orgInfo.get("email");
-                                        String orgName = (String) orgInfo.get("name");
-
-
-                                        nameSet.add(orgName + ": " + orgEmail);
-                                        HashMap<String, String> m = new HashMap<>();
-                                        m.put("id", orgId);
-                                        m.put("name", orgName);
-                                        nameIdMap.put(orgEmail, m);
-                                        arrayAdapter.clear();
-                                        arrayAdapter.addAll(nameSet);
-                                        setReadNotifications();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                            Log.d(TAG, nameSet.toString());
-
-                        }
-
-                    }
-
-                    arrayAdapter.notifyDataSetChanged();
-                    Log.d("EXISTS", nameSet.toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        populateChats();
 
         ListView chatListView = (ListView) findViewById(R.id.matches_lv);
         chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,6 +71,66 @@ public class VolunteerChatList extends VolunteerBaseClass {
         });
 
 
+    }
+
+    private void populateChats() {
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id");
+        dbr.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("HERE", " HERE "+ snapshot.getValue().toString());
+                HashMap<String, Boolean> chatMap = new HashMap<>();
+
+                if (snapshot.exists()) {
+                    // for each organization
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Log.d(TAG, ds.getValue().toString());
+                        Map<String, Object> m = (Map) ds.getValue();
+                        Log.d("HERE", m.toString());
+                        if (m.containsKey(userId)) {
+                            String orgId = ds.getKey();
+                            Log.d("MEEE", ds.getValue().toString());
+                            Boolean read = (Boolean) ((HashMap<String, HashMap<String, Object>>) ds.getValue()).get(userId).get("volunteer_read");
+                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
+
+                            dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    HashMap<String, Object> orgInfo = (HashMap<String, Object>) ((DataSnapshot) task.getResult()).getValue();
+                                    String orgEmail = (String) orgInfo.get("email");
+                                    String orgName = (String) orgInfo.get("name");
+
+                                    chatMap.put(orgName + ": " + orgEmail, read);
+                                    HashMap<String, String> m = new HashMap<>();
+                                    m.put("id", orgId);
+                                    m.put("name", orgName);
+                                    nameIdMap.put(orgEmail, m);
+                                    arrayAdapter.clear();
+                                    for (String key : chatMap.keySet()) {
+                                        if (!chatMap.get(key)) {
+                                            arrayAdapter.insert(key, 0);
+                                        }
+                                        else {
+                                            arrayAdapter.add(key);
+                                        }
+                                    }
+                                    setReadNotifications();
+                                }
+                            });
+                        }
+
+                    }
+
+                    arrayAdapter.notifyDataSetChanged();
+//                    Log.d("EXISTS", nameSet.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void setReadNotifications() {

@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class VolunteerRegistration extends AppCompatActivity {
         // populate age group volunteer spinner
         Spinner age_spinner = (Spinner) findViewById(R.id.age_group_volunteer_spinner);
         ArrayAdapter<CharSequence> age_aa = ArrayAdapter.createFromResource(this,
-                R.array.age_group_select, android.R.layout.simple_spinner_item);
+                R.array.age_select, android.R.layout.simple_spinner_item);
         age_aa.setDropDownViewResource(android.R.layout.simple_spinner_item);
         age_spinner.setAdapter(age_aa);
 
@@ -70,6 +71,27 @@ public class VolunteerRegistration extends AppCompatActivity {
                 R.array.travel_distance_select, android.R.layout.simple_spinner_item);
         travel_distance_aa.setDropDownViewResource(android.R.layout.simple_spinner_item);
         travel_distance_spinner.setAdapter(travel_distance_aa);
+    }
+
+    private void getNotificationToken(String userId){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token that is associated with the device
+
+                String notificationToken = task.getResult();
+                Log.d("GENERATE TOKEN", notificationToken);
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                Map<String, Object> orgDBHashmap = new HashMap<>();
+                orgDBHashmap.put("notification", notificationToken);
+                dbr.updateChildren(orgDBHashmap);
+            }
+        });
     }
 
     private void registerAccount() {
@@ -105,6 +127,9 @@ public class VolunteerRegistration extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser user = fbAuth.getCurrentUser();
                     String userId = user.getUid();
+
+                    //generate the notification token
+                    getNotificationToken(userId);
 
                     // store account type under "account_type/" in Realtime Database
                     DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");

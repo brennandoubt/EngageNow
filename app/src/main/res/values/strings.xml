@@ -29,6 +29,14 @@
         <item>21+</item>
     </string-array>
 
+    <string-array name="age_select">
+        <item>Select Age</item>
+        <item>Under 13</item>
+        <item>13-18</item>
+        <item>18-21</item>
+        <item>21+</item>
+    </string-array>
+
     <string-array name="time_commitment_select">
         <item>Select Time Commitment</item>
         <item>1 hour</item>

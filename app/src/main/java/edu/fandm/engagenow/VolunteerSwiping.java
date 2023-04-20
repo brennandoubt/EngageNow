@@ -40,6 +40,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     private CardStackView cardStackView;
     List<Org> orgs = new ArrayList<>();
     boolean swipedRight = false;
+    private final String TAG = "Volunteer_Swiping";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +64,11 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     public void addToDatabase(int position){
         if(position < orgs.size()){
             // store in the potentialMatches folder at the organization id
-            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID);
-            Map<String, Object> m = new HashMap<>();
             FirebaseAuth auth = FirebaseAuth.getInstance();
-            m.put(auth.getCurrentUser().getUid(), auth.getCurrentUser().getUid());
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID).child(auth.getCurrentUser().getUid());
+            Map<String, Object> m = new HashMap<>();
+            Log.d(TAG, orgs.get(position).event);
+            m.put(orgs.get(position).event, orgs.get(position).event);
             dbr.updateChildren(m);
         }
 
@@ -76,7 +78,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardDragging(Direction direction, float ratio) {
-        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
+//        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
     }
 
     @Override
@@ -183,7 +185,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                         HashMap<String, HashMap<String, Object>> events = (HashMap <String,HashMap<String, Object>>) map.get("events");
                         for(Map.Entry<String, HashMap<String, Object>> entry: events.entrySet()){
                             orgs.add(new Org(map.get("name") +" - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
-                                    events.get(entry.getKey())));
+                                    events.get(entry.getKey()), entry.getKey()));
                         }
                     }
 

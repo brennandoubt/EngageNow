@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -88,6 +89,11 @@ public class VolunteerChat extends VolunteerBaseClass {
                 if (msg.equals("")) {
                     return;
                 }
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid);
+                HashMap<String, Object> m = new HashMap<>();
+                m.put("organization_read", false);
+                dbr.updateChildren(m);
+
                 String email = user.getEmail();
                 Map<String, Object> map = new HashMap<String, Object>();
                 // unique key for each message sent and received
@@ -102,8 +108,7 @@ public class VolunteerChat extends VolunteerBaseClass {
                 
                 messageEditText.setText("");
 
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("organization_read");
-                dbr.setValue(false);
+
             }
         });
 
@@ -146,9 +151,20 @@ public class VolunteerChat extends VolunteerBaseClass {
             arrayAdapter.add(userName + ": " + msg);
             arrayAdapter.notifyDataSetChanged();
         }
-
-//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("volunteer_read");
-//        dbr.setValue(true);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "ONPAUSE");
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("volunteer_read");
+        dbr.setValue(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();  // Always call the superclass method first
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("volunteer_read");
+        dbr.setValue(true);
+    }
 }
