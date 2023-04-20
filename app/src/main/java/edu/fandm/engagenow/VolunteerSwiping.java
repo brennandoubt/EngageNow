@@ -183,18 +183,18 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                     Log.d("CPS", OrgId.toString());
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                    String userID = auth.getCurrentUser().getUid();
-                   DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(OrgId.getKey());
+                   DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(OrgId.getKey()).child(userID);
                    dbr.addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                             HashMap<String, Object> map = (HashMap<String, Object>) OrgId.getValue();
-                            Log.d("CPS", String.valueOf(snapshot.hasChild(userID)));
                             if (map.containsKey("events")) {
                                 HashMap<String, HashMap<String, Object>> events = (HashMap<String, HashMap<String, Object>>) map.get("events");
                                 for (Map.Entry<String, HashMap<String, Object>> entry : events.entrySet()) {
-
-                                    orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
-                                            events.get(entry.getKey()), entry.getKey()));
+                                    if(!snapshot.hasChild(entry.getKey())) {
+                                        orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
+                                                events.get(entry.getKey()), entry.getKey()));
+                                    }
                                 }
                             }
                             adapter.notifyDataSetChanged();
