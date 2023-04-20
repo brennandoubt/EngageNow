@@ -49,6 +49,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
     HashMap<String, Object> volInfoMap;
     String TAG = "OrgPotMatch";
     HashMap<String, HashMap<String, Object>> potentialMatchesMap = new HashMap<>();
+    HashMap<String, HashMap<String, Object>> eventsHashmap = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +65,14 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             }
         });
 
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("events");
+        dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                eventsHashmap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
+                Log.d(TAG, eventsHashmap.toString());
+            }
+        });
 
         potMatchListView = (ListView) findViewById(R.id.potential_matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfPotMatches);
@@ -75,7 +84,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.getResult().getValue() != null) {
                     potentialMatchesMap = (HashMap<String, HashMap<String, Object>>) ((DataSnapshot) task.getResult()).getValue();
-                    Log.d(TAG, potentialMatchesMap.toString());
+//                    Log.d(TAG, potentialMatchesMap.toString());
                     populatePotentialMatches();
                 }
             }
@@ -114,7 +123,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                     for (String key2 : potentialMatchesMap.get(key1).keySet()) {
                         HashMap<String, Object> m = (HashMap<String, Object>) task.getResult().getValue();
                         if (m != null) {
-                            Log.d(TAG, m.toString());
+//                            Log.d(TAG, m.toString());
                             String volName = (String) m.get("first_name") + " " + m.get("last_name");
                             String volEmail = (String) m.get("email");
                             idEmailMap.put(key1, volEmail);
@@ -133,8 +142,9 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         dialog.setCancelable(true);
         dialog.setTitle("Accept/Reject This Match");
 
-        String volInfo = getVolInfo();
+        String volInfo = getVolInfo(eventName);
         TextView name = new TextView(this);
+//        name.set
         name.setText(volInfo);
         name.setTextSize(20);
         name.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
@@ -146,7 +156,6 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 DatabaseReference dbrMessageInfo = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
-
 
                 HashMap<String, Object> readMap = new HashMap<>();
                 readMap.put("volunteer_read", false);
@@ -188,22 +197,25 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         if (potentialMatchesMap.get(volunteerId).size() == 0) {
             potentialMatchesMap.remove(volunteerId);
         }
-        Log.d(TAG, potentialMatchesMap.toString());
+//        Log.d(TAG, potentialMatchesMap.toString());
         populatePotentialMatches();
     }
 
-    private String getVolInfo() {
+    private String getVolInfo(String eventName) {
         StringBuilder sb = new StringBuilder();
+        sb.append("Volunteer Info / Event Info \n");
         sb.append("Name: " + volInfoMap.get("first_name") + " " + volInfoMap.get("last_name") + "\n");
-        sb.append("Time Commitment: " + volInfoMap.get("time_commitment") + "\n");
-        sb.append("Age: " + volInfoMap.get("age_group") + "\n");
-        sb.append("FBI Clearance: " + volInfoMap.get("fbi_clearance") + "\n");
-        sb.append("Child Clearance: " + volInfoMap.get("child_clearance") + "\n");
-        sb.append("Criminal History: " + volInfoMap.get("criminal_history") + "\n");
-        sb.append("English: " + volInfoMap.get("english") + "\n");
-        sb.append("Spanish: " + volInfoMap.get("spanish") + "\n");
-        sb.append("Chinese: " + volInfoMap.get("chinese") + "\n");
-        sb.append(" German: " + volInfoMap.get("german"));
+        Log.d(TAG + " HERE", eventsHashmap.toString());
+        Log.d(TAG, eventName);
+        sb.append("Time Commitment: " + volInfoMap.get("time_commitment") + " / " + eventsHashmap.get(eventName).get("time_commitment") + "\n");
+        sb.append("Age: " + volInfoMap.get("age_group") + " / " + eventsHashmap.get(eventName).get("age_group") +  "\n");
+        sb.append("FBI Clearance: " + volInfoMap.get("fbi_clearance")  + " / " + eventsHashmap.get(eventName).get("fbi_clearance") + "\n");
+        sb.append("Child Clearance: " + volInfoMap.get("child_clearance")  + " / " + eventsHashmap.get(eventName).get("child_clearance") + "\n");
+        sb.append("Criminal History: " + volInfoMap.get("criminal_history")  + " / " + eventsHashmap.get(eventName).get("criminal_history") + "\n");
+        sb.append("English: " + volInfoMap.get("english")  + " / " + eventsHashmap.get(eventName).get("english") + "\n");
+        sb.append("Spanish: " + volInfoMap.get("spanish")  + " / " + eventsHashmap.get(eventName).get("spanish") + "\n");
+        sb.append("Chinese: " + volInfoMap.get("chinese")  + " / " + eventsHashmap.get(eventName).get("chinese") + "\n");
+        sb.append("German: " + volInfoMap.get("german")  + " / " + eventsHashmap.get(eventName).get("german"));
 
         return sb.toString();
     }
