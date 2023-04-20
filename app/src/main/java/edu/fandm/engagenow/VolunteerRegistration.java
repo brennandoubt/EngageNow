@@ -118,6 +118,14 @@ public class VolunteerRegistration extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required!", Toast.LENGTH_LONG).show();
             return;
         }
+        else if (first_name_inputted.indexOf('/') != -1 || last_name_inputted.indexOf('/') != -1) {
+            Toast.makeText(getApplicationContext(), "Name Cannot Contain '/'", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else if (first_name_inputted.indexOf(',') != -1 || last_name_inputted.indexOf(',') != -1) {
+            Toast.makeText(getApplicationContext(), "Name Cannot Contain ','", Toast.LENGTH_LONG).show();
+            return;
+        }
         // registering new user with preferences
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
         s.addOnCompleteListener(new OnCompleteListener() {

@@ -77,7 +77,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         potMatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String[] nameEmailAndEvent = ((TextView)view).getText().toString().split(" - ");
+                String[] nameEmailAndEvent = ((TextView)view).getText().toString().split(" / ");
                 String[] nameEmail = nameEmailAndEvent[0].split(", ");
                 String name = nameEmail[0].trim();
                 String email = nameEmail[1].trim();
@@ -112,7 +112,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
                             String volEmail = (String) m.get("email");
                             idEmailMap.put(key1, volEmail);
                             emailIdMap.put(volEmail, key1);
-                            arrayAdapter.add(volName + ", " + volEmail + " - " + key2);
+                            arrayAdapter.add(volName + ", " + volEmail + " / " + key2);
                         }
                     }
                 }

@@ -62,6 +62,10 @@ public class EventRegistration extends OrganizationBaseClass {
             showToast("Event Name Cannot Be Empty");
             return false;
         }
+        if (name.indexOf('/') != -1) {
+            showToast("Event Name Cannot Have '/'");
+            return false;
+        }
         else if(description.equals("")){
             showToast("Event Description Cannot Be Empty");
             return false;

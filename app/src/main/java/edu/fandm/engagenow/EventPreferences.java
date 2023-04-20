@@ -56,12 +56,13 @@ public class EventPreferences extends OrganizationBaseClass {
     }
 
     private boolean checkInput(String ageGroup, String timeCommitment, String availability){
-        if(ageGroup.equals("Select Age Group")){
-            showToast("Must Select Age Group");
+
+       if(timeCommitment.equals("Select Time Commitment")){
+            showToast("Must Select Time Commitment");
             return false;
         }
-        else if(timeCommitment.equals("Select Time Commitment")){
-            showToast("Must Select Time Commitment");
+        else if(ageGroup.equals("Select Age Group")){
+            showToast("Must Select Age Group");
             return false;
         }
         else if(availability.equals("Select Availability")){
