@@ -1,26 +1,14 @@
 -- Merging decision tree log ---
 manifest
-<<<<<<< HEAD
-ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-13
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-13
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-13
+ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
+INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
+INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
 	package
+		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:11-56
 		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-13
 		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-13
-=======
-ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
-INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
-INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
-	package
-		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:11-56
-		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
-	xmlns:android
-		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
->>>>>>> 414e33d7bdaec97fb2d16a789d17b87e099af129
+		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
 uses-sdk
 INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
