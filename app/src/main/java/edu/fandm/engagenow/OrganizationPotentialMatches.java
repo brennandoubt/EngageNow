@@ -124,8 +124,7 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
     private void acceptVolunteerDialog(String volName, String volunteerId, String eventName) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(true);
-        dialog.setTitle("Accept/Reject This Match");
-
+        dialog.setTitle("Accept/Reject " + volName + "\n" + "Event: " + eventName);
         String volInfo = getVolInfo(eventName);
         TextView name = new TextView(this);
 //        name.set
