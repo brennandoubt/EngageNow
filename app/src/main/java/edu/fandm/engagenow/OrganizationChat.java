@@ -4,8 +4,10 @@ import static edu.fandm.engagenow.FcmHttpRequest.sendFcmMessage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,6 +53,8 @@ public class OrganizationChat extends OrganizationBaseClass {
     ArrayAdapter arrayAdapter;
     String orgName, selectedVolunteer, user_message_key, uid, volunteerId;
     FirebaseUser currentUser;
+    boolean deleted = false;
+    android.content.Context context = this;
 
 
     final String TAG = "OrganizationChat";
@@ -106,7 +111,26 @@ public class OrganizationChat extends OrganizationBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                deleted = true;
 
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setCancelable(false);
+                dialog.setTitle("Disconnected");
+                TextView notice = new TextView(context);
+                notice.setText("The Volunteer has unmatched with you. You will not longer be matched with the volunteer. The chat messages will be deleted. The volunteer can match with your organization in the future.");
+                notice.setTextSize(20);
+                notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                notice.setPadding(60, 5, 5, 5);
+                dialog.setView(notice);
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+
+                dialog.show();
             }
 
             @Override
@@ -234,15 +258,19 @@ public class OrganizationChat extends OrganizationBaseClass {
     @Override
     protected void onPause() {
         super.onPause();
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
-        dbr.setValue(true);
+        if (!deleted) {
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+            dbr.setValue(true);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();  // Always call the superclass method first
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
-        dbr.setValue(true);
+        if (!deleted) {
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+            dbr.setValue(true);
+        }
     }
 
 

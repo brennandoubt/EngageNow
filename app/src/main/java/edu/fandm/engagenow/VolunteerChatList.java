@@ -1,8 +1,10 @@
 package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,7 +38,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
     ArrayList<String> listOfMatchesName = new ArrayList<String>();
     HashMap<String, HashMap<String, String>> nameIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
-    String userName, userId;
+    String userId;
     String TAG = "VolunteerChatList";
     HashMap<String, HashMap<String, Object>> orgAccountsMap;
     @Override
@@ -52,8 +54,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
 
         populateChats();
 
-        ListView chatListView = (ListView) findViewById(R.id.matches_lv);
-        chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String[] nameEmail = adapterView.getItemAtPosition(position).toString().split(":");
@@ -70,7 +71,55 @@ public class VolunteerChatList extends VolunteerBaseClass {
             }
         });
 
+        matchesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                deleteConversation(view, i);
+                return true;
+            }
+        });
 
+
+
+    }
+
+    private void deleteConversation(View view, int idx) {
+        String[] nameEmail = arrayAdapter.getItem(idx).toString().split(":");
+        String orgName = nameEmail[0].trim();
+        String orgEmail = nameEmail[1].trim();
+
+        String orgId = nameIdMap.get(orgEmail).get("id");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("DANGER: Remove Match");
+        TextView description = new TextView(this);
+        description.setText("Are you sure you would like to disconnect with " + orgName + "? This will PERMANENTLY remove your conversation with the organization. You can match with the organization again in the future if you wish.");
+        description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        description.setTextSize(15);
+        description.setPadding(20, 10, 20, 10);
+        builder.setView(description);
+
+        builder.setPositiveButton("DISCONNECT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DatabaseReference dbr1 = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(orgId).child(userId);
+                dbr1.removeValue();
+
+                // refresh the page to remove deleted chat
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        builder.show();
     }
 
     private void populateChats() {
@@ -78,51 +127,52 @@ public class VolunteerChatList extends VolunteerBaseClass {
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("HERE", " HERE "+ snapshot.getValue().toString());
-                HashMap<String, Boolean> chatMap = new HashMap<>();
-
                 if (snapshot.exists()) {
-                    // for each organization
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        Log.d(TAG, ds.getValue().toString());
-                        Map<String, Object> m = (Map) ds.getValue();
-                        Log.d("HERE", m.toString());
-                        if (m.containsKey(userId)) {
-                            String orgId = ds.getKey();
-                            Log.d("MEEE", ds.getValue().toString());
-                            Boolean read = (Boolean) ((HashMap<String, HashMap<String, Object>>) ds.getValue()).get(userId).get("volunteer_read");
-                            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
+//                    Log.d("HERE", " HERE " + snapshot.getValue().toString());
+                    HashMap<String, Boolean> chatMap = new HashMap<>();
 
-                            dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                    HashMap<String, Object> orgInfo = (HashMap<String, Object>) ((DataSnapshot) task.getResult()).getValue();
-                                    String orgEmail = (String) orgInfo.get("email");
-                                    String orgName = (String) orgInfo.get("name");
+                    if (snapshot.exists()) {
+                        // for each organization
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            Log.d(TAG, ds.getValue().toString());
+                            Map<String, Object> m = (Map) ds.getValue();
+                            Log.d("HERE", m.toString());
+                            if (m.containsKey(userId)) {
+                                String orgId = ds.getKey();
+                                Log.d("MEEE", ds.getValue().toString());
+                                Boolean read = (Boolean) ((HashMap<String, HashMap<String, Object>>) ds.getValue()).get(userId).get("volunteer_read");
+                                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
 
-                                    chatMap.put(orgName + ": " + orgEmail, read);
-                                    HashMap<String, String> m = new HashMap<>();
-                                    m.put("id", orgId);
-                                    m.put("name", orgName);
-                                    nameIdMap.put(orgEmail, m);
-                                    arrayAdapter.clear();
-                                    for (String key : chatMap.keySet()) {
-                                        if (!chatMap.get(key)) {
-                                            arrayAdapter.insert(key, 0);
+                                dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        HashMap<String, Object> orgInfo = (HashMap<String, Object>) ((DataSnapshot) task.getResult()).getValue();
+                                        String orgEmail = (String) orgInfo.get("email");
+                                        String orgName = (String) orgInfo.get("name");
+
+                                        chatMap.put(orgName + ": " + orgEmail, read);
+                                        HashMap<String, String> m = new HashMap<>();
+                                        m.put("id", orgId);
+                                        m.put("name", orgName);
+                                        nameIdMap.put(orgEmail, m);
+                                        arrayAdapter.clear();
+                                        for (String key : chatMap.keySet()) {
+                                            if (chatMap.get(key) != null && !chatMap.get(key)) {
+                                                arrayAdapter.insert(key, 0);
+                                            } else {
+                                                arrayAdapter.add(key);
+                                            }
                                         }
-                                        else {
-                                            arrayAdapter.add(key);
-                                        }
+                                        setReadNotifications();
                                     }
-                                    setReadNotifications();
-                                }
-                            });
+                                });
+                            }
+
                         }
 
-                    }
-
-                    arrayAdapter.notifyDataSetChanged();
+                        arrayAdapter.notifyDataSetChanged();
 //                    Log.d("EXISTS", nameSet.toString());
+                    }
                 }
             }
 
@@ -143,15 +193,16 @@ public class VolunteerChatList extends VolunteerBaseClass {
             Task<DataSnapshot> ds = dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    boolean read = (boolean) task.getResult().getValue();
-                    View v = (View) matchesListView.getChildAt(idx);
-                    if (!read) {
-                        v.setBackgroundColor(Color.RED);
-                    } else {
-                        v.setBackgroundColor(Color.TRANSPARENT);
+                    if (task.getResult().exists()) {
+                        boolean read = (boolean) task.getResult().getValue();
+                        View v = (View) matchesListView.getChildAt(idx);
+                        if (!read) {
+                            v.setBackgroundColor(Color.RED);
+                        } else {
+                            v.setBackgroundColor(Color.TRANSPARENT);
+                        }
+                        arrayAdapter.notifyDataSetChanged();
                     }
-                    arrayAdapter.notifyDataSetChanged();
-
                 }
             });
 

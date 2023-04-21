@@ -146,7 +146,7 @@ public class EventPreferences extends OrganizationBaseClass {
         //push the data to firebase
         dbr.updateChildren(orgDBHashmap);
 
-        showToast("New event created");
+        showToast("Event Updated: " + event_name);
         launchActivity();
     }
 
