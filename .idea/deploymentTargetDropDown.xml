@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
+<<<<<<< HEAD
     <targetSelectedWithDropDown>
+=======
+    <runningDeviceTargetSelectedWithDropDown>
+>>>>>>> 71da386cb70fb54f725910172c21b68ef1e468c9
       <Target>
         <type value="QUICK_BOOT_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\noahf\.android\avd\Pixel_6_API_30.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="0A151FDD4001J4" />
           </Key>
         </deviceKey>
       </Target>
+<<<<<<< HEAD
     </targetSelectedWithDropDown>
     <timeTargetWasSelectedWithDropDown value="2023-04-21T21:23:41.321675200Z" />
+=======
+    </runningDeviceTargetSelectedWithDropDown>
+    <timeTargetWasSelectedWithDropDown value="2023-04-21T19:39:07.214951Z" />
+>>>>>>> 71da386cb70fb54f725910172c21b68ef1e468c9
   </component>
 </project>

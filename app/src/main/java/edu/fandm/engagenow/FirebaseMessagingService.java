@@ -17,6 +17,33 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
+
+    /*
+    This is the implementation of the firebase messaging service which you can using the firebase console to send a message to a
+    target android device using the registration token stored inside real time database under each account.
+
+    To make the automatic notification work, google cloud function would be needed to listen to changes to the database and triggers the
+    notification request to the firebase cloud messaging.
+
+    You will probably needs to put this token code somewhere in the app on the sign in to generate a new taken if the user
+    signs into a different android device or deleted the app's data and reinstalled. You can look this up on the firebase cloud
+    messaging documentation.
+
+    //    @Override
+//    public void onNewToken(@NonNull String token) {
+//        Log.d(TAG, "Refreshed token: " + token);
+//
+//        FirebaseUser user = fbAuth.getCurrentUser();
+//        userId = user.getUid();
+//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+//        Map<String, Object> orgDBHashmap = new HashMap<>();
+//
+//        // If you want to send messages to this application instance or
+//        // manage this apps subscriptions on the server side, send the
+//        // FCM registration token to your app server.
+//        sendRegistrationToServer(token);
+//    }
+     */
     private String TAG = "FirebaseMessagingService";
 
     @Override
@@ -76,18 +103,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
-//    @Override
-//    public void onNewToken(@NonNull String token) {
-//        Log.d(TAG, "Refreshed token: " + token);
-//
-//        FirebaseUser user = fbAuth.getCurrentUser();
-//        userId = user.getUid();
-//        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-//        Map<String, Object> orgDBHashmap = new HashMap<>();
-//
-//        // If you want to send messages to this application instance or
-//        // manage this apps subscriptions on the server side, send the
-//        // FCM registration token to your app server.
-//        sendRegistrationToServer(token);
-//    }
+
+
+
 }
