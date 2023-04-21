@@ -69,6 +69,8 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
         sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
 
+        sb.append("Website: " + eventInfo.get("website") + "\n");
+
         return sb.toString();
     }
     @Override
