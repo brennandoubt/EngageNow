@@ -39,6 +39,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     private String email;
     private String password;
     private String accountType;
+    private long lastClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,17 @@ public class OrganizationRegistration extends AppCompatActivity {
         uploadImageBtn.setOnClickListener(v -> selectImage());
 
         Button update_preferences_button = (Button) findViewById(R.id.register_account_button);
-        update_preferences_button.setOnClickListener(view -> registerUser());
+        update_preferences_button.setOnClickListener(view -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 1000) {
+                registerUser();
+            }
+            lastClickTime = currentTime;
+        });
+                
+                
+
+           
 
     }
 

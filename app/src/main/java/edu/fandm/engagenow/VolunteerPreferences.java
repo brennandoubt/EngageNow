@@ -28,6 +28,7 @@ import java.util.Map;
 public class VolunteerPreferences extends VolunteerBaseClass {
     private final String TAG = "VOLUNTEER_PREFERENCES";
     static FirebaseAuth fbAuth;
+    private long lastClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,56 +42,61 @@ public class VolunteerPreferences extends VolunteerBaseClass {
         fbAuth = FirebaseAuth.getInstance();
 
         Button update_preferences_button = (Button) findViewById(R.id.update_account_button);
-        update_preferences_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // user already logged-in with preferences
-                FirebaseUser user = fbAuth.getCurrentUser();
-                String userId = user.getUid();
+        update_preferences_button.setOnClickListener(view -> {
+            
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 1000) {
+                updateVolunteerPreferences();
+            }
+            lastClickTime = currentTime;
 
-                // get preferences typed by user in activity
-                String time_commitment = ((Spinner) findViewById(R.id.time_commitment_volunteer_spinner)).getSelectedItem().toString();
-                String age_group = ((Spinner) findViewById(R.id.age_group_volunteer_spinner)).getSelectedItem().toString();
-                String travel_distance = ((Spinner) findViewById(R.id.travel_distance_volunteer_spinner)).getSelectedItem().toString();
-                boolean fbi_certification = ((CheckBox) findViewById(R.id.fbi_vcb)).isChecked();
-                boolean child_certification = ((CheckBox) findViewById(R.id.child_vcb)).isChecked();
-                boolean criminal_history = ((CheckBox) findViewById(R.id.criminal_vcb)).isChecked();
-                boolean english = ((CheckBox) findViewById(R.id.english)).isChecked();
-                boolean spanish = ((CheckBox) findViewById(R.id.spanish)).isChecked();
-                boolean german = ((CheckBox) findViewById(R.id.german)).isChecked();
-                boolean chinese = ((CheckBox) findViewById(R.id.chinese)).isChecked();
+        });
+    }
 
-                // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
+    private void updateVolunteerPreferences() {
+        FirebaseUser user = fbAuth.getCurrentUser();
+        String userId = user.getUid();
 
-                if (time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
-                    Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required For Update!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                DatabaseReference dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
-                HashMap<String, Object> m = new HashMap<>();
-                m.put("account_type", "volunteer_account");
-                m.put("time_commitment", time_commitment);
-                m.put("age_group", age_group);
-                m.put("travel_distance", travel_distance);
-                m.put("fbi_clearance", fbi_certification);
-                m.put("child_clearance", child_certification);
-                m.put("criminal_history", criminal_history);
-                m.put("english", english);
-                m.put("spanish", spanish);
-                m.put("german", german);
-                m.put("chinese", chinese);
+        // get preferences typed by user in activity
+        String time_commitment = ((Spinner) findViewById(R.id.time_commitment_volunteer_spinner)).getSelectedItem().toString();
+        String age_group = ((Spinner) findViewById(R.id.age_group_volunteer_spinner)).getSelectedItem().toString();
+        String travel_distance = ((Spinner) findViewById(R.id.travel_distance_volunteer_spinner)).getSelectedItem().toString();
+        boolean fbi_certification = ((CheckBox) findViewById(R.id.fbi_vcb)).isChecked();
+        boolean child_certification = ((CheckBox) findViewById(R.id.child_vcb)).isChecked();
+        boolean criminal_history = ((CheckBox) findViewById(R.id.criminal_vcb)).isChecked();
+        boolean english = ((CheckBox) findViewById(R.id.english)).isChecked();
+        boolean spanish = ((CheckBox) findViewById(R.id.spanish)).isChecked();
+        boolean german = ((CheckBox) findViewById(R.id.german)).isChecked();
+        boolean chinese = ((CheckBox) findViewById(R.id.chinese)).isChecked();
 
-                dbr.updateChildren(m);
+        // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
 
-                Toast.makeText(getApplicationContext(), "User preferences updated!", Toast.LENGTH_LONG).show();
+        if (time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
+            Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required For Update!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        DatabaseReference dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+        HashMap<String, Object> m = new HashMap<>();
+        m.put("account_type", "volunteer_account");
+        m.put("time_commitment", time_commitment);
+        m.put("age_group", age_group);
+        m.put("travel_distance", travel_distance);
+        m.put("fbi_clearance", fbi_certification);
+        m.put("child_clearance", child_certification);
+        m.put("criminal_history", criminal_history);
+        m.put("english", english);
+        m.put("spanish", spanish);
+        m.put("german", german);
+        m.put("chinese", chinese);
 
-                // moving to volunteer swiping activity after user's preferences are updated
+        dbr.updateChildren(m);
+
+        Toast.makeText(getApplicationContext(), "User preferences updated!", Toast.LENGTH_LONG).show();
+
+        // moving to volunteer swiping activity after user's preferences are updated
 //                Intent vsi = new Intent(getApplicationContext(), VolunteerSwiping.class);
 //                startActivity(vsi);
 //                finish();
-
-            }
-        });
     }
 
     private void populate_spinners() {

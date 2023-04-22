@@ -27,6 +27,7 @@ public class EventRegistration extends OrganizationBaseClass {
     FirebaseAuth fbAuth;
     private String userId;
     final String TAG = "EventRegistration";
+    private long lastClickTime;
 
     private void populateSpinner(){
         //time commitment drop down
@@ -213,7 +214,13 @@ public class EventRegistration extends OrganizationBaseClass {
         ((DatePicker) findViewById(R.id.start_date)).setMinDate(System.currentTimeMillis());
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferences_button.setOnClickListener(View -> {
-            registerEvent();
+            
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 1000) {
+                registerEvent();
+            }
+            lastClickTime = currentTime;
+            
         });
     }
 }

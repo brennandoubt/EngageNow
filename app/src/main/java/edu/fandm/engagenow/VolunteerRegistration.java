@@ -29,6 +29,7 @@ import java.util.Map;
 public class VolunteerRegistration extends AppCompatActivity {
     private final String TAG = "VOLUNTEER_REGISTRATION";
     static FirebaseAuth fbAuth;
+    private long lastClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,12 @@ public class VolunteerRegistration extends AppCompatActivity {
         register_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerAccount();
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastClickTime > 1000) {
+                    registerAccount();
+                }
+                lastClickTime = currentTime;
+
             }
         });
     }
