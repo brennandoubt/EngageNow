@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -75,6 +76,14 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     }
 
+    public void deleteFromDatabase(int position){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        DatabaseReference  dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(orgs.get(position).userID).
+                child(auth.getCurrentUser().getUid()).child(orgs.get(position).event);
+        dbr.removeValue();
+
+    }
+
 
 
     @Override
@@ -101,7 +110,9 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardRewound() {
+        deleteFromDatabase(manager.getTopPosition());
         Log.d("CardStackView", "onCardRewound: " + manager.getTopPosition());
+
     }
 
     @Override
@@ -118,6 +129,9 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     @Override
     public void onCardDisappeared(View view, int position) {
         TextView textView = view.findViewById(R.id.item_name);
+        if(position == orgs.size() - 1){
+            Toast.makeText(this.getApplicationContext(),"It seems like there are no more events matching your preferences!", Toast.LENGTH_SHORT).show();
+        }
         Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
     }
 
