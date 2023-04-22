@@ -12,14 +12,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,6 +27,7 @@ public class EventRegistration extends OrganizationBaseClass {
     FirebaseAuth fbAuth;
     private String userId;
     final String TAG = "EventRegistration";
+    private long lastClickTime;
 
     private void populateSpinner(){
         //time commitment drop down
@@ -60,6 +57,10 @@ public class EventRegistration extends OrganizationBaseClass {
 
         if(name.equals("")) {
             showToast("Event Name Cannot Be Empty");
+            return false;
+        }
+        if (name.indexOf('/') != -1) {
+            showToast("Event Name Cannot Have '/'");
             return false;
         }
         else if(description.equals("")){
@@ -92,91 +93,102 @@ public class EventRegistration extends OrganizationBaseClass {
         String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
 
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
-        dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.getResult().exists()) {
-                    addEvent();
-                }
-                else {
-                    showToast("An event with this name already exists");
-                }
-
+        dbr.get().addOnCompleteListener(task -> {
+            if (!task.getResult().exists()) {
+                addEvent();
+                showToast("Event Created");
             }
+            else {
+                showToast("An event with this name already exists");
+            }
+
         });
 
 
     }
 
     private void addEvent() {
+        DatabaseReference websiteDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+        websiteDbr.get().addOnCompleteListener(task -> {
+            String websiteLink;
+            if (task.getResult().exists()) {
+                websiteLink = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+            }
+            else {
+                websiteLink = "No website information";
+            }
 
-        String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
+            String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
 
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
 
-        Map<String, Object> orgDBHashmap = new HashMap<>();
+            Map<String, Object> orgDBHashmap = new HashMap<>();
 
-        //extract data
-        String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
-        String locationAndStartTime = ((EditText) findViewById(R.id.location_et)).getText().toString().trim();
-        Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
-        Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
-        Spinner availabilitySpinner = (Spinner) findViewById(R.id.availability_spinner);
+            //extract data
+            String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
+            String locationAndStartTime = ((EditText) findViewById(R.id.location_et)).getText().toString().trim();
+            Spinner ageGroupSpinner = (Spinner) findViewById(R.id.age_group_spinner);
+            Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.time_commitment_spinner);
+            Spinner availabilitySpinner = (Spinner) findViewById(R.id.availability_spinner);
 
-        String ageGroup = ageGroupSpinner.getSelectedItem().toString();
-        String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
-        String availability = availabilitySpinner.getSelectedItem().toString();
+            String ageGroup = ageGroupSpinner.getSelectedItem().toString();
+            String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
+            String availability = availabilitySpinner.getSelectedItem().toString();
 
-        //If the input is invalid,  make the user fill it out
-        if (!checkInput(event_name, description, ageGroup, timeCommitment, availability, locationAndStartTime)) {
-            return;
-        }
+            //If the input is invalid,  make the user fill it out
+            if (!checkInput(event_name, description, ageGroup, timeCommitment, availability, locationAndStartTime)) {
+                return;
+            }
 
-        Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.start_date)).getMonth()) + ((DatePicker) findViewById(R.id.start_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.start_date)).getYear());
+            Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.start_date)).getMonth()) + ((DatePicker) findViewById(R.id.start_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.start_date)).getYear());
 
-        DatePicker datePicker = ((DatePicker) findViewById(R.id.start_date));
-        String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
-        String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString().trim();
-        boolean hasFbiClearance = ((CheckBox) findViewById(R.id.fbi_cb)).isChecked();
-        boolean hasChildClearance = ((CheckBox) findViewById(R.id.child_cb)).isChecked();
-        boolean hasCriminalClearance = ((CheckBox) findViewById(R.id.criminal_rb)).isChecked();
+            DatePicker datePicker = ((DatePicker) findViewById(R.id.start_date));
+            String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
+            String otherInfo = ((EditText) findViewById(R.id.other_specify_et)).getText().toString().trim();
+            boolean hasFbiClearance = ((CheckBox) findViewById(R.id.fbi_cb)).isChecked();
+            boolean hasChildClearance = ((CheckBox) findViewById(R.id.child_cb)).isChecked();
+            boolean hasCriminalClearance = ((CheckBox) findViewById(R.id.criminal_rb)).isChecked();
 
-        boolean hasLaborSkill = ((CheckBox) findViewById(R.id.labor_skill_cb)).isChecked();
-        boolean hasCareTakingSkill = ((CheckBox) findViewById(R.id.careTaking_skill_cb)).isChecked();
-        boolean hasFoodServiceSkill = ((CheckBox) findViewById(R.id.food_skill_cb)).isChecked();
+            boolean hasLaborSkill = ((CheckBox) findViewById(R.id.labor_skill_cb)).isChecked();
+            boolean hasCareTakingSkill = ((CheckBox) findViewById(R.id.careTaking_skill_cb)).isChecked();
+            boolean hasFoodServiceSkill = ((CheckBox) findViewById(R.id.food_skill_cb)).isChecked();
 
-        boolean hasSpanish = ((CheckBox) findViewById(R.id.spanish_language_rb)).isChecked();
-        boolean hasChinese = ((CheckBox) findViewById(R.id.chinese_language_rb)).isChecked();
-        boolean hasGerman = ((CheckBox) findViewById(R.id.german_language_rb)).isChecked();
-        boolean hasEnglish = ((CheckBox) findViewById(R.id.english_language_rb)).isChecked();
-        boolean hasVehicle = ((CheckBox) findViewById(R.id.vehicle_cb)).isChecked();
+            boolean hasSpanish = ((CheckBox) findViewById(R.id.spanish_language_rb)).isChecked();
+            boolean hasChinese = ((CheckBox) findViewById(R.id.chinese_language_rb)).isChecked();
+            boolean hasGerman = ((CheckBox) findViewById(R.id.german_language_rb)).isChecked();
+            boolean hasEnglish = ((CheckBox) findViewById(R.id.english_language_rb)).isChecked();
+            boolean hasVehicle = ((CheckBox) findViewById(R.id.vehicle_cb)).isChecked();
 
-        orgDBHashmap.put("event_name", event_name);
-        orgDBHashmap.put("description", description);
-        orgDBHashmap.put("location_start_time", locationAndStartTime);
-        orgDBHashmap.put("start_date", date);
-        orgDBHashmap.put("other_info", otherInfo);
-        orgDBHashmap.put("fbi_clearance", hasFbiClearance);
-        orgDBHashmap.put("child_clearance", hasChildClearance);
-        orgDBHashmap.put("criminal_history", hasCriminalClearance);
-        orgDBHashmap.put("labor_skill", hasLaborSkill);
-        orgDBHashmap.put("care_taking_skill", hasCareTakingSkill);
-        orgDBHashmap.put("food_service_skill", hasFoodServiceSkill);
-        orgDBHashmap.put("spanish", hasSpanish);
-        orgDBHashmap.put("chinese", hasChinese);
-        orgDBHashmap.put("german", hasGerman);
-        orgDBHashmap.put("english", hasEnglish);
-        orgDBHashmap.put("vehicle", hasVehicle);
-        orgDBHashmap.put("age_group", ageGroup);
-        orgDBHashmap.put("time_commitment", timeCommitment);
-        orgDBHashmap.put("availability", availability);
-        orgDBHashmap.put("other_info", otherInfo);
+            orgDBHashmap.put("event_name", event_name);
+            orgDBHashmap.put("description", description);
+            orgDBHashmap.put("location_start_time", locationAndStartTime);
+            orgDBHashmap.put("start_date", date);
+            orgDBHashmap.put("other_info", otherInfo);
+            orgDBHashmap.put("fbi_clearance", hasFbiClearance);
+            orgDBHashmap.put("child_clearance", hasChildClearance);
+            orgDBHashmap.put("criminal_history", hasCriminalClearance);
+            orgDBHashmap.put("labor_skill", hasLaborSkill);
+            orgDBHashmap.put("care_taking_skill", hasCareTakingSkill);
+            orgDBHashmap.put("food_service_skill", hasFoodServiceSkill);
+            orgDBHashmap.put("spanish", hasSpanish);
+            orgDBHashmap.put("chinese", hasChinese);
+            orgDBHashmap.put("german", hasGerman);
+            orgDBHashmap.put("english", hasEnglish);
+            orgDBHashmap.put("vehicle", hasVehicle);
+            orgDBHashmap.put("age_group", ageGroup);
+            orgDBHashmap.put("time_commitment", timeCommitment);
+            orgDBHashmap.put("availability", availability);
+            orgDBHashmap.put("other_info", otherInfo);
+            orgDBHashmap.put("website", websiteLink);
 
-        //push the data to firebase
-        dbr.updateChildren(orgDBHashmap);
+            //push the data to firebase
+            dbr.updateChildren(orgDBHashmap);
 
-        showToast("New event created");
-        launchActivity();
+            showToast("New event created");
+            launchActivity();
+        });
+
+
     }
 
     private void launchActivity() {
@@ -202,7 +214,13 @@ public class EventRegistration extends OrganizationBaseClass {
         ((DatePicker) findViewById(R.id.start_date)).setMinDate(System.currentTimeMillis());
         Button update_preferences_button = (Button) findViewById(R.id.update_preferences_button);
         update_preferences_button.setOnClickListener(View -> {
-            registerEvent();
+            
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 1000) {
+                registerEvent();
+            }
+            lastClickTime = currentTime;
+            
         });
     }
 }

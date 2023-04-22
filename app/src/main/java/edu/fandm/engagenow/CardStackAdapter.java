@@ -56,7 +56,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
         sb.append("Fbi Clearance: " + eventInfo.get("fbi_clearance") + "\n");
 
-        sb.append("Child Clearnce: " + eventInfo.get("child_clearance") + "\n");
+        sb.append("Child Clearance: " + eventInfo.get("child_clearance") + "\n");
 
         sb.append("Criminal History: " + eventInfo.get("criminal_history") + "\n");
 
@@ -77,6 +77,8 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         sb.append("Vehicle: " + eventInfo.get("vehicle") + "\n");
 
         sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+
+        sb.append("Website: " + eventInfo.get("website") + "\n");
 
         return sb.toString();
     }

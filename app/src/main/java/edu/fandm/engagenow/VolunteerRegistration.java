@@ -29,6 +29,7 @@ import java.util.Map;
 public class VolunteerRegistration extends AppCompatActivity {
     private final String TAG = "VOLUNTEER_REGISTRATION";
     static FirebaseAuth fbAuth;
+    private long lastClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,12 @@ public class VolunteerRegistration extends AppCompatActivity {
         register_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerAccount();
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastClickTime > 1000) {
+                    registerAccount();
+                }
+                lastClickTime = currentTime;
+
             }
         });
     }
@@ -116,6 +122,14 @@ public class VolunteerRegistration extends AppCompatActivity {
 
         if (first_name_inputted.equals("") || last_name_inputted.equals("") || time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
             Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else if (first_name_inputted.indexOf('/') != -1 || last_name_inputted.indexOf('/') != -1) {
+            Toast.makeText(getApplicationContext(), "Name Cannot Contain '/'", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else if (first_name_inputted.indexOf(',') != -1 || last_name_inputted.indexOf(',') != -1) {
+            Toast.makeText(getApplicationContext(), "Name Cannot Contain ','", Toast.LENGTH_LONG).show();
             return;
         }
         // registering new user with preferences

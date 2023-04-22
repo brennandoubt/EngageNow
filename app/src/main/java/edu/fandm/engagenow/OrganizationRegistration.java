@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +39,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     private String email;
     private String password;
     private String accountType;
+    private long lastClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +54,30 @@ public class OrganizationRegistration extends AppCompatActivity {
         getRegistrationInfo();
 
         Button uploadImageBtn = (Button) findViewById(R.id.upload_image_button);
-        uploadImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+        uploadImageBtn.setOnClickListener(v -> selectImage());
 
         Button update_preferences_button = (Button) findViewById(R.id.register_account_button);
-        update_preferences_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        update_preferences_button.setOnClickListener(view -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 1000) {
                 registerUser();
             }
+            lastClickTime = currentTime;
         });
+                
+                
+
+           
 
     }
 
+    //from chatgpt
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         pickImageLauncher.launch("image/*");
     }
+
 
     private ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -131,24 +133,22 @@ public class OrganizationRegistration extends AppCompatActivity {
         dbr.updateChildren(accountTypeMap);
     }
 
+    //https://firebase.google.com/docs/cloud-messaging
     private void getNotificationToken(){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()) {
-                    Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
-                    return;
-                }
-
-                // Get new FCM registration token that is associated with the device
-                String notificationToken = task.getResult();
-                Log.d("GENERATE TOKEN", notificationToken);
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                Map<String, Object> orgDBHashmap = new HashMap<>();
-                orgDBHashmap.put("notification", notificationToken);
-                dbr.updateChildren(orgDBHashmap);
-
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+                return;
             }
+
+            // Get new FCM registration token that is associated with the device
+            String notificationToken = task.getResult();
+            Log.d("GENERATE TOKEN", notificationToken);
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+            Map<String, Object> orgDBHashmap = new HashMap<>();
+            orgDBHashmap.put("notification", notificationToken);
+            dbr.updateChildren(orgDBHashmap);
+
         });
     }
 
@@ -170,46 +170,44 @@ public class OrganizationRegistration extends AppCompatActivity {
 
         //create the user
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
-        s.addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
+        s.addOnCompleteListener(task -> {
 
-                if (task.isSuccessful()) {
+            if (task.isSuccessful()) {
 
-                    Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
 
-                    FirebaseUser user = fbAuth.getCurrentUser();
-                    userId = user.getUid();
-                    DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                    Map<String, Object> orgDBHashmap = new HashMap<>();
+                FirebaseUser user = fbAuth.getCurrentUser();
+                userId = user.getUid();
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+                Map<String, Object> orgDBHashmap = new HashMap<>();
 
-                    //get device token needed to send and receive notification
-                    getNotificationToken();
+                //get device token needed to send and receive notification
+                getNotificationToken();
 
-                    orgDBHashmap.put("name", name);
-                    orgDBHashmap.put("description", description);
-                    orgDBHashmap.put("email", email);
-                    orgDBHashmap.put("website", website);
+                orgDBHashmap.put("name", name);
+                orgDBHashmap.put("description", description);
+                orgDBHashmap.put("email", email);
+                orgDBHashmap.put("website", website);
 
-                    //push the data to firebase
-                    dbr.updateChildren(orgDBHashmap);
+                //push the data to firebase
+                dbr.updateChildren(orgDBHashmap);
 
-                    //uploadImage
-                    uploadImage();
+                //uploadImage
+                uploadImage();
 
-                    storeAccountType();
+                storeAccountType();
 
-                    //Launch the organization chat activity
-                    launchActivity();
+                //Launch the organization chat activity
+                launchActivity();
 
 
-                } else {
-                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
-                        Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
-                    }                }
+            } else {
+                if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                    Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

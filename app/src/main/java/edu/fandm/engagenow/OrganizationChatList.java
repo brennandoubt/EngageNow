@@ -99,60 +99,108 @@ public class OrganizationChatList extends OrganizationBaseClass {
             }
         });
 
+        matchesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                deleteConversation(view, i);
+                return true;
+            }
+        });
+
+    }
+
+    private void deleteConversation(View view, int idx) {
+        String[] nameEmail = arrayAdapter.getItem(idx).toString().split(":");
+        String volName = nameEmail[0].trim();
+        String volEmail = nameEmail[1].trim();
+
+        String volId = volIdMap.get(volEmail).get("id");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("DANGER: Remove Match");
+        TextView description = new TextView(this);
+        description.setText("Are you sure you would like to disconnect with " + volName + "? This will PERMANENTLY remove your conversation with the volunteer. This volunteer can match with you again in the future if they wish.");
+        description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        description.setTextSize(15);
+        description.setPadding(20, 10, 20, 10);
+        builder.setView(description);
+
+        builder.setPositiveButton("DISCONNECT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DatabaseReference dbr1 = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volId);
+                dbr1.removeValue();
+
+                // refresh the page to remove deleted chat
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        builder.show();
     }
 
     private void populateChats() {
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HashMap<String, Object> chatsMap = (HashMap<String, Object>) snapshot.getValue();
-                Set<String> set = new HashSet<String>();
-                arrayAdapter.clear();
-                HashMap<String, Boolean> chatsHashmap = new HashMap<>();
-                // contains data from a firebase location.
-                if (chatsMap != null) {
-                    for (String key : chatsMap.keySet()) {
+                if (snapshot.exists()) {
+                    HashMap<String, Object> chatsMap = (HashMap<String, Object>) snapshot.getValue();
 
-                        HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(key);
-                        Log.d(TAG, "YOOO " + volChat);
-                        String volId = key;
+                    arrayAdapter.clear();
+                    HashMap<String, Boolean> chatsHashmap = new HashMap<>();
+                    // contains data from a firebase location.
+                    if (chatsMap != null) {
+                        for (String key : chatsMap.keySet()) {
 
-                        DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volId);
-                        volunteerAccDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                HashMap<String, String> volInfo = (HashMap<String, String>) task.getResult().getValue();
+                            HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(key);
+                            String volId = key;
 
-                                String volFirstName = (String) volInfo.get("first_name");
-                                String volLastName = (String) volInfo.get("last_name");
-                                String volEmail = (String) volInfo.get("email");
-                                Boolean readChat = (Boolean) volChat.get("organization_read");
+                            DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volId);
+                            volunteerAccDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    HashMap<String, String> volInfo = (HashMap<String, String>) task.getResult().getValue();
 
-                                chatsHashmap.put(volFirstName + " " + volLastName + ": " + volEmail, readChat);
+                                    String volFirstName = volInfo.get("first_name");
+                                    String volLastName = volInfo.get("last_name");
+                                    String volEmail = volInfo.get("email");
+                                    Boolean readChat = (Boolean) volChat.get("organization_read");
 
-                                volInfo.put("id", volId);
-                                volInfo.put("id", volId);
-                                volInfo.put("last_name", volLastName);
-                                volInfo.put("first_name", volFirstName);
-                                volIdMap.put(volEmail, volInfo);
-                                arrayAdapter.clear();
-                                for (String key : chatsHashmap.keySet()) {
-                                    if (!chatsHashmap.get(key)) {
-                                        arrayAdapter.insert(key, 0);
-                                    } else {
-                                        arrayAdapter.add(key);
+                                    chatsHashmap.put(volFirstName + " " + volLastName + ": " + volEmail, readChat);
+
+                                    volInfo.put("id", volId);
+                                    volInfo.put("id", volId);
+                                    volInfo.put("last_name", volLastName);
+                                    volInfo.put("first_name", volFirstName);
+                                    volIdMap.put(volEmail, volInfo);
+                                    arrayAdapter.clear();
+                                    for (String key : chatsHashmap.keySet()) {
+                                        if (chatsHashmap.get(key) != null && !chatsHashmap.get(key)) {
+                                            arrayAdapter.insert(key, 0);
+                                        } else {
+                                            arrayAdapter.add(key);
+                                        }
                                     }
+    //                            arrayAdapter.addAll(chatsHashmap.keySet());
+                                    setReadNotifications();
+                                    Log.d(TAG, "CHATMAP: " + chatsHashmap.toString());
+
                                 }
-//                            arrayAdapter.addAll(chatsHashmap.keySet());
-                                setReadNotifications();
-                                Log.d(TAG, "CHATMAP: " + chatsHashmap.toString());
+                            });
 
-                            }
-                        });
-
+                        }
                     }
 
-                    arrayAdapter.notifyDataSetChanged();
+                        arrayAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -174,60 +222,58 @@ public class OrganizationChatList extends OrganizationBaseClass {
             dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    boolean read = (boolean) task.getResult().getValue();
-                    View v = (View) matchesListView.getChildAt(idx);
-                    if (v != null) {
-                        if (!read) {
-                            v.setBackgroundColor(Color.RED);
-                            arrayAdapter.remove(v);
-                            arrayAdapter.notifyDataSetChanged();
+                    View v = matchesListView.getChildAt(idx);
+                    if (task.getResult().exists()) {
+                        boolean read = (boolean) task.getResult().getValue();
+                        if (v != null) {
+                            if (!read) {
+                                v.setBackgroundColor(Color.RED);
+                                arrayAdapter.remove(v);
+                                arrayAdapter.notifyDataSetChanged();
 
 
-                        } else {
-                            v.setBackgroundColor(Color.TRANSPARENT);
+                            } else {
+                                v.setBackgroundColor(Color.TRANSPARENT);
+                            }
                         }
                     }
                 }
             });
-
-
-            Log.d(TAG, Integer.toString(arrayAdapter.getCount()));
-
         }
 
         arrayAdapter.notifyDataSetChanged();
 
     }
 
-    private void makeNotification() {
-        //create the notification and fill with content
-        NotificationCompat.Builder nb = new NotificationCompat.Builder(this, this.CHANNEL_ID_1);
-        nb.setSmallIcon(R.drawable.chat_foreground);
-        nb.setContentTitle("ENGAGE NOW");
-        nb.setContentText("Test notification");
-        nb.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        // create the channel, (necessary and only possible on newer versions of android)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel1";
-            String desc = "Main channel for this app.";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(this.CHANNEL_ID_1, name, importance);
-            channel.setDescription(desc);
-
-            NotificationManager nm = this.CTX.getSystemService(NotificationManager.class);
-            nm.createNotificationChannel(channel);
-        }
-
-        // check permission
-        if (ContextCompat.checkSelfPermission(this.CTX, this.PERM) == PackageManager.PERMISSION_GRANTED) {
-            // display notification
-            NotificationManagerCompat nmc = NotificationManagerCompat.from(this.CTX);
-            nmc.notify(0, nb.build());
-        }
-        else {
-            Log.d(this.TAG, "Could not send notification, permissions not granted");
-        }
-    }
+//    private void makeNotification() {
+//        //create the notification and fill with content
+//        NotificationCompat.Builder nb = new NotificationCompat.Builder(this, this.CHANNEL_ID_1);
+//        nb.setSmallIcon(R.drawable.chat_foreground);
+//        nb.setContentTitle("ENGAGE NOW");
+//        nb.setContentText("Test notification");
+//        nb.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//
+//        // create the channel, (necessary and only possible on newer versions of android)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = "Channel1";
+//            String desc = "Main channel for this app.";
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(this.CHANNEL_ID_1, name, importance);
+//            channel.setDescription(desc);
+//
+//            NotificationManager nm = this.CTX.getSystemService(NotificationManager.class);
+//            nm.createNotificationChannel(channel);
+//        }
+//
+//        // check permission
+//        if (ContextCompat.checkSelfPermission(this.CTX, this.PERM) == PackageManager.PERMISSION_GRANTED) {
+//            // display notification
+//            NotificationManagerCompat nmc = NotificationManagerCompat.from(this.CTX);
+//            nmc.notify(0, nb.build());
+//        }
+//        else {
+//            Log.d(this.TAG, "Could not send notification, permissions not granted");
+//        }
+//    }
 
 }

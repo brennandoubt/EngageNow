@@ -1,12 +1,10 @@
 package edu.fandm.engagenow;
 
-import static edu.fandm.engagenow.FcmHttpRequest.sendFcmMessage;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
+import androidx.appcompat.app.AlertDialog;
 
-import android.graphics.Color;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,10 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -25,21 +23,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
+
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-// dependency for database
-//    implementation 'com.google.firebase:firebase-database:20.1.0'
+
 
 public class OrganizationChat extends OrganizationBaseClass {
     Button sendMessageButton;
@@ -50,6 +42,8 @@ public class OrganizationChat extends OrganizationBaseClass {
     ArrayAdapter arrayAdapter;
     String orgName, selectedVolunteer, user_message_key, uid, volunteerId;
     FirebaseUser currentUser;
+    boolean deleted = false;
+    android.content.Context context = this;
 
 
     final String TAG = "OrganizationChat";
@@ -87,7 +81,6 @@ public class OrganizationChat extends OrganizationBaseClass {
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendNotification();
                 storeMessage();
             }
         });
@@ -106,7 +99,26 @@ public class OrganizationChat extends OrganizationBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                deleted = true;
 
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setCancelable(false);
+                dialog.setTitle("Disconnected");
+                TextView notice = new TextView(context);
+                notice.setText("The Volunteer has unmatched with you. You will not longer be matched with the volunteer. The chat messages will be deleted. The volunteer can match with your organization in the future.");
+                notice.setTextSize(20);
+                notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                notice.setPadding(60, 5, 5, 5);
+                dialog.setView(notice);
+
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+
+                dialog.show();
             }
 
             @Override
@@ -121,49 +133,6 @@ public class OrganizationChat extends OrganizationBaseClass {
         });
     }
 
-    private void sendNotification() {
-
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volunteerId).child("notification");
-
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
-                String body = "You have a new message!";
-                String title = "Engage Now";
-
-//                Message message = Message.builder()
-//                        .putData("score", "850")
-//                        .putData("time", "2:45")
-//                        .setToken(registrationToken)
-//                        .build();
-//
-//// Send a message to the device corresponding to the provided
-//// registration token.
-//                String response = FirebaseMessaging.getInstance().send(message);
-
-//                Executor executor = Executors.newSingleThreadExecutor();
-//                executor.execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//
-//                        Log.d(TAG, "SUCCESS");
-//                        sendFcmMessage(value, title, body);
-//                    }
-//                });
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
-    }
 
     private void storeMessage() {
         String msg = messageEditText.getText().toString();
@@ -185,9 +154,6 @@ public class OrganizationChat extends OrganizationBaseClass {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("volunteer_read");
         dbr.setValue(false);
     }
-
-    //need to access the notification token stored in volunteers ID
-
 
 
     public void updateConversation(DataSnapshot dataSnapshot) {
@@ -211,38 +177,42 @@ public class OrganizationChat extends OrganizationBaseClass {
 //        dbr.setValue(true);
     }
 
-    public void colorText() {
-        for (int i = 0; i < arrayAdapter.getCount(); i++) {
-            View v = chatListView.getChildAt(i);
-            String name = ((String) chatListView.getItemAtPosition(i)).split(":")[0];
-//            Log.d(TAG, name + " : " + orgName);
-
-            if (v != null && name.equals(orgName)) {
-//                Log.d(TAG, arrayAdapter.getItem(i).toString() + " - " + name);
-//                Log.d(TAG, chatListView.getItemAtPosition(i).toString());
-//                Log.d(TAG, "");
-                v.setBackgroundColor(Color.GREEN);
-            }
-            else if (v != null) {
-//                Log.d(TAG, "ELSE " + chatListView.getItemAtPosition(i).toString());
-                v.setBackgroundColor(Color.RED);
-            }
-        }
-        arrayAdapter.notifyDataSetChanged();
-    }
+//    public void colorText() {
+//        for (int i = 0; i < arrayAdapter.getCount(); i++) {
+//            View v = chatListView.getChildAt(i);
+//            String name = ((String) chatListView.getItemAtPosition(i)).split(":")[0];
+////            Log.d(TAG, name + " : " + orgName);
+//
+//            if (v != null && name.equals(orgName)) {
+////                Log.d(TAG, arrayAdapter.getItem(i).toString() + " - " + name);
+////                Log.d(TAG, chatListView.getItemAtPosition(i).toString());
+////                Log.d(TAG, "");
+//                v.setBackgroundColor(Color.GREEN);
+//            }
+//            else if (v != null) {
+////                Log.d(TAG, "ELSE " + chatListView.getItemAtPosition(i).toString());
+//                v.setBackgroundColor(Color.RED);
+//            }
+//        }
+//        arrayAdapter.notifyDataSetChanged();
+//    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
-        dbr.setValue(true);
+        if (!deleted) {
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+            dbr.setValue(true);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();  // Always call the superclass method first
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
-        dbr.setValue(true);
+        if (!deleted) {
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
+            dbr.setValue(true);
+        }
     }
 
 

@@ -121,7 +121,7 @@ public class EventDashboard extends OrganizationBaseClass {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        dialogInterface.dismiss();
                     }
                 });
 
@@ -145,15 +145,33 @@ public class EventDashboard extends OrganizationBaseClass {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(uid).child("events").child(event).removeValue();
-                Toast.makeText(getApplicationContext(), event + " event has been deleted", Toast.LENGTH_SHORT).show();
-                populateEvents();
+                DatabaseReference potMatchDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid);
+                potMatchDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        HashMap<String, HashMap<String, Object>> potMatchesMap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
+                        // remove the event from potential matches so if an event with the same name is made in the future, the volunteer will see it
+                        for (String volId : potMatchesMap.keySet()) {
+                            if (potMatchesMap.get(volId).containsKey(event)) {
+                                DatabaseReference eventDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volId);
+                                HashMap<String, Object> m = new HashMap<>();
+                                m.put(event, null);
+                                eventDbr.updateChildren(m);
+                            }
+                        }
+                        Toast.makeText(getApplicationContext(), event + " event has been deleted", Toast.LENGTH_SHORT).show();
+                        populateEvents();
+                    }
+                });
+
+
             }
         });
 
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                dialogInterface.dismiss();
             }
         });
 //
@@ -179,7 +197,7 @@ public class EventDashboard extends OrganizationBaseClass {
 
         sb.append("Fbi Clearance: " + eventInfo.get("fbi_clearance") + "\n");
 
-        sb.append("Child Clearnce: " + eventInfo.get("child_clearance") + "\n");
+        sb.append("Child Clearance: " + eventInfo.get("child_clearance") + "\n");
 
         sb.append("Criminal History: " + eventInfo.get("criminal_history") + "\n");
 

@@ -30,6 +30,7 @@ public class EventPreferences extends OrganizationBaseClass {
     private final String TAG = "EVENT_PREFERENCES";
     FirebaseAuth fbAuth;
     private String userId;
+    private long lastClickTime;
 
     private void populateSpinner(){
         //time commitment drop down
@@ -56,12 +57,13 @@ public class EventPreferences extends OrganizationBaseClass {
     }
 
     private boolean checkInput(String ageGroup, String timeCommitment, String availability){
-        if(ageGroup.equals("Select Age Group")){
-            showToast("Must Select Age Group");
+
+       if(timeCommitment.equals("Select Time Commitment")){
+            showToast("Must Select Time Commitment");
             return false;
         }
-        else if(timeCommitment.equals("Select Time Commitment")){
-            showToast("Must Select Time Commitment");
+        else if(ageGroup.equals("Select Age Group")){
+            showToast("Must Select Age Group");
             return false;
         }
         else if(availability.equals("Select Availability")){
@@ -75,12 +77,9 @@ public class EventPreferences extends OrganizationBaseClass {
 
     private void updateEvent(String event_name){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
-        dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.getResult().exists()) {
-                    addEvent(event_name);
-                }
+        dbr.get().addOnCompleteListener(task -> {
+            if (task.getResult().exists()) {
+                addEvent(event_name);
             }
         });
     }
@@ -145,7 +144,7 @@ public class EventPreferences extends OrganizationBaseClass {
         //push the data to firebase
         dbr.updateChildren(orgDBHashmap);
 
-        showToast("New event created");
+        showToast("Event Updated: " + event_name);
         launchActivity();
     }
 
@@ -178,7 +177,12 @@ public class EventPreferences extends OrganizationBaseClass {
         ((DatePicker) findViewById(R.id.pstart_date)).setMinDate(System.currentTimeMillis());
         Button update_preferences_button = (Button) findViewById(R.id.pupdate_preferences_button);
         update_preferences_button.setOnClickListener(View -> {
-            updateEvent(event_name);
+
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 1000) {
+                updateEvent(event_name);
+            }
+            lastClickTime = currentTime;
         });
     }
 }
