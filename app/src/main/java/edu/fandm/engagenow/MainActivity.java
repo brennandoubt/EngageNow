@@ -1,9 +1,6 @@
 package edu.fandm.engagenow;
 
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,17 +13,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -57,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tv = findViewById(R.id.internet_tv);
         tv.setVisibility(View.VISIBLE);
-        if (isInternetConnection() && isNetworkConnected()) {
+        if (hasInternetConnection() && hasNetworkConnection()) {
             tv.setVisibility(View.INVISIBLE);
             logIn();
         }
@@ -70,25 +61,22 @@ public class MainActivity extends AppCompatActivity {
             // User is signed in
 //                          access data from database https://www.youtube.com/watch?v=E9drbKeVG7Y
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
-            dbr.child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().exists()) {
-                            String accountType = String.valueOf(task.getResult().getValue());
-                            Log.d(TAG, accountType);
+            dbr.child(user.getUid()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+                        String accountType = String.valueOf(task.getResult().getValue());
+                        Log.d(TAG, accountType);
 
-                            Intent i;
-                            if (accountType.equals("volunteer_account")) {
-                                i = new Intent(getApplicationContext(), VolunteerSwiping.class);
-                            } else {
-                                i = new Intent(getApplicationContext(), EventDashboard.class);
-                            }
-
-                            Toast.makeText(MainActivity.this, "Logged in as, " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                            startActivity(i);
-                            finish();
+                        Intent i;
+                        if (accountType.equals("volunteer_account")) {
+                            i = new Intent(getApplicationContext(), VolunteerSwiping.class);
+                        } else {
+                            i = new Intent(getApplicationContext(), EventDashboard.class);
                         }
+
+                        Toast.makeText(MainActivity.this, "Logged in as, " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                        startActivity(i);
+                        finish();
                     }
                 }
             });
@@ -116,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isInternetConnection()
+    private boolean hasInternetConnection()
     {
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -125,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         return connected;
     }
 
-    private boolean isNetworkConnected() {
+    private boolean hasNetworkConnection() {
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
