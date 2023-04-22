@@ -36,7 +36,7 @@ public class SpotDiffCallback extends DiffUtil.Callback {
         Org newSpot = newList.get(newPosition);
         return oldSpot.name.equals(newSpot.name)
                 && oldSpot.descrip.equals(newSpot.descrip)
-                && oldSpot.url.equals(newSpot.url);
+                && oldSpot.sr.equals(newSpot.sr);
     }
 
 }

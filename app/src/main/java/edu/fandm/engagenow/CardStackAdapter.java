@@ -2,6 +2,9 @@ package edu.fandm.engagenow;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,7 +85,25 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         final Org spot = organizations.get(position);
         holder.name.setText(spot.name);
         holder.descrip.setText(spot.descrip);
-        holder.image.setImageResource(R.drawable.place_holder_fore_ground);
+        try{
+            File local = File.createTempFile("temp", ".jpg");
+            spot.sr.getFile(local).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("CPS", "SUCCESS");
+                    Bitmap bitmap = BitmapFactory.decodeFile(local.getAbsolutePath());
+                    holder.image.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    holder.image.setImageResource(R.drawable.place_holder_fore_ground);
+
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

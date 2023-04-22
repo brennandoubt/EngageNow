@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -169,8 +171,11 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
         });
     }
 //Fetch data from database
+
     private void initialize() {
+
         DatabaseReference organizationsRef = FirebaseDatabase.getInstance().getReference("organization_accounts");
+
 
         organizationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -183,6 +188,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                     Log.d("CPS", OrgId.toString());
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                    String userID = auth.getCurrentUser().getUid();
+                   //dbr = root -> potentialMatches -> Org_id -> volunteer_id
                    DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(OrgId.getKey()).child(userID);
                    dbr.addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
@@ -191,8 +197,11 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                             if (map.containsKey("events")) {
                                 HashMap<String, HashMap<String, Object>> events = (HashMap<String, HashMap<String, Object>>) map.get("events");
                                 for (Map.Entry<String, HashMap<String, Object>> entry : events.entrySet()) {
+                                    //root -> potentialMatches -> Org_id -> volunteer_id -> event_name doesn't exist == has not swiped before
                                     if(!snapshot.hasChild(entry.getKey())) {
-                                        orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "", OrgId.getKey(),
+                                        Log.d("CPS", "images/" + OrgId.getKey());
+                                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("images/" + OrgId.getKey());
+                                        orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), storageRef, OrgId.getKey(),
                                                 events.get(entry.getKey()), entry.getKey()));
                                     }
                                 }
