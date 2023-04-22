@@ -121,7 +121,7 @@ public class EventDashboard extends OrganizationBaseClass {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        dialogInterface.dismiss();
                     }
                 });
 
@@ -171,7 +171,7 @@ public class EventDashboard extends OrganizationBaseClass {
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                dialogInterface.dismiss();
             }
         });
 //
