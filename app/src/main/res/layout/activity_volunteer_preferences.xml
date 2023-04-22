@@ -37,7 +37,7 @@
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
                 android:id="@+id/time_commitment_volunteer_spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_margin="5dp"
                 android:layout_height="50dp"
                 android:textAlignment="center"
@@ -46,7 +46,7 @@
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
                 android:id="@+id/age_group_volunteer_spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:textAlignment="center"
@@ -55,7 +55,7 @@
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
                 android:id="@+id/travel_distance_volunteer_spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:textAlignment="center"
