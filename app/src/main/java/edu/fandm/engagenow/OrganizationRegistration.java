@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,28 +53,20 @@ public class OrganizationRegistration extends AppCompatActivity {
         getRegistrationInfo();
 
         Button uploadImageBtn = (Button) findViewById(R.id.upload_image_button);
-        uploadImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+        uploadImageBtn.setOnClickListener(v -> selectImage());
 
         Button update_preferences_button = (Button) findViewById(R.id.register_account_button);
-        update_preferences_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerUser();
-            }
-        });
+        update_preferences_button.setOnClickListener(view -> registerUser());
 
     }
 
+    //from chatgpt
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         pickImageLauncher.launch("image/*");
     }
+
 
     private ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -131,24 +122,22 @@ public class OrganizationRegistration extends AppCompatActivity {
         dbr.updateChildren(accountTypeMap);
     }
 
+    //https://firebase.google.com/docs/cloud-messaging
     private void getNotificationToken(){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()) {
-                    Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
-                    return;
-                }
-
-                // Get new FCM registration token that is associated with the device
-                String notificationToken = task.getResult();
-                Log.d("GENERATE TOKEN", notificationToken);
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                Map<String, Object> orgDBHashmap = new HashMap<>();
-                orgDBHashmap.put("notification", notificationToken);
-                dbr.updateChildren(orgDBHashmap);
-
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+                return;
             }
+
+            // Get new FCM registration token that is associated with the device
+            String notificationToken = task.getResult();
+            Log.d("GENERATE TOKEN", notificationToken);
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+            Map<String, Object> orgDBHashmap = new HashMap<>();
+            orgDBHashmap.put("notification", notificationToken);
+            dbr.updateChildren(orgDBHashmap);
+
         });
     }
 

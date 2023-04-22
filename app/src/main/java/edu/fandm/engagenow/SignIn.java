@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignIn extends AppCompatActivity {
     final String TAG = "Sign in activity";
+    private long lastClickTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +33,20 @@ public class SignIn extends AppCompatActivity {
 
         Button login = (Button) findViewById(R.id.logInBtn);
         login.setOnClickListener(view -> {
-            String email = ((EditText) findViewById(R.id.et_emailAddress)).getText().toString().trim();
-            String password = ((EditText) findViewById(R.id.et_password)).getText().toString().trim();
 
-            //validate the input
-            if (!isValidInput(email, password)) return;
+            //This is to prevent the user from spamming the buttons
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastClickTime > 750) {
+                String email = ((EditText) findViewById(R.id.et_emailAddress)).getText().toString().trim();
+                String password = ((EditText) findViewById(R.id.et_password)).getText().toString().trim();
 
-            //sign user in  https://firebase.google.com/docs/auth/android/password-auth#java_2
-            signIn(email, password);
+                //validate the input
+                if (!isValidInput(email, password)) return;
+
+                //sign user in  https://firebase.google.com/docs/auth/android/password-auth#java_2
+                signIn(email, password);
+            }
+            lastClickTime = currentTime;
 
         });
 
