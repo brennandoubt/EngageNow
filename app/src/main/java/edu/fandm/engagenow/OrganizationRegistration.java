@@ -170,46 +170,44 @@ public class OrganizationRegistration extends AppCompatActivity {
 
         //create the user
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
-        s.addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
+        s.addOnCompleteListener(task -> {
 
-                if (task.isSuccessful()) {
+            if (task.isSuccessful()) {
 
-                    Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
 
-                    FirebaseUser user = fbAuth.getCurrentUser();
-                    userId = user.getUid();
-                    DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                    Map<String, Object> orgDBHashmap = new HashMap<>();
+                FirebaseUser user = fbAuth.getCurrentUser();
+                userId = user.getUid();
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+                Map<String, Object> orgDBHashmap = new HashMap<>();
 
-                    //get device token needed to send and receive notification
-                    getNotificationToken();
+                //get device token needed to send and receive notification
+                getNotificationToken();
 
-                    orgDBHashmap.put("name", name);
-                    orgDBHashmap.put("description", description);
-                    orgDBHashmap.put("email", email);
-                    orgDBHashmap.put("website", website);
+                orgDBHashmap.put("name", name);
+                orgDBHashmap.put("description", description);
+                orgDBHashmap.put("email", email);
+                orgDBHashmap.put("website", website);
 
-                    //push the data to firebase
-                    dbr.updateChildren(orgDBHashmap);
+                //push the data to firebase
+                dbr.updateChildren(orgDBHashmap);
 
-                    //uploadImage
-                    uploadImage();
+                //uploadImage
+                uploadImage();
 
-                    storeAccountType();
+                storeAccountType();
 
-                    //Launch the organization chat activity
-                    launchActivity();
+                //Launch the organization chat activity
+                launchActivity();
 
 
-                } else {
-                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
-                        Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
-                    }                }
+            } else {
+                if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                    Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
