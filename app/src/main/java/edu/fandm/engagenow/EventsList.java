@@ -46,6 +46,15 @@ public class EventsList extends AppCompatActivity {
     List<Map<String, String>> groupData = new ArrayList<>();
     List<List<Map<String, String>>> childData = new ArrayList<>();
 
+    /*
+     * Code below adapted from this source:
+     * https://abhiandroid.com/ui/simpleexpandablelistadapter-example-android-studio.html
+     */
+    String groupFrom[] = {NAME};
+    int groupTo[] = {R.id.heading};
+    String childFrom[] = {NAME};
+    int childTo[] = {R.id.childItem};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,16 +68,6 @@ public class EventsList extends AppCompatActivity {
          *
          * Are the events displayed the same way they are in the organization's events list activity? (assuming they are for now)
          */
-        String uid_of_organization = "JoHtDtO4wXd8Qq3DgztLg5Bu6uB3"; // test example using the "borg@example.com" organization account (with name "test org")
-
-        /*
-         * Code below adapted from this source:
-         * https://abhiandroid.com/ui/simpleexpandablelistadapter-example-android-studio.html
-         */
-        String groupFrom[] = {NAME};
-        int groupTo[] = {R.id.heading};
-        String childFrom[] = {NAME};
-        int childTo[] = {R.id.childItem};
 
         // add data in group and child list
         populate_events_exp();
@@ -146,6 +145,31 @@ public class EventsList extends AppCompatActivity {
 
                     childItems.add(org_events);
                 }
+
+                for (int i = 0; i < groupItems.size(); i++) {
+                    Map<String, String> curGroupMap = new HashMap<>();
+                    groupData.add(curGroupMap);
+                    curGroupMap.put(NAME, groupItems.get(i));
+
+                    List<Map<String, String>> children = new ArrayList<>();
+                    for (int j = 0; j < childItems.get(i).size(); j++) {
+                        Map<String, String> curChildMap = new HashMap<>();
+                        children.add(curChildMap);
+                        curChildMap.put(NAME, childItems.get(i).get(j));
+                    }
+                    childData.add(children);
+                }
+                Log.d(TAG, "List mappings for groups: " + emap.toString());
+
+                // initiate expandable list view
+                ExpandableListView elv = (ExpandableListView) findViewById(R.id.events_list_elv);
+
+                // set up the adapter
+                ExpandableListAdapter ela = new SimpleExpandableListAdapter(getApplicationContext(), groupData,
+                        R.layout.group_items,
+                        groupFrom, groupTo,
+                        childData, R.layout.child_items, childFrom, childTo);
+                elv.setAdapter(ela);
             }
         });
     }
