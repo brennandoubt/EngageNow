@@ -3,11 +3,13 @@ package edu.fandm.engagenow;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -35,17 +37,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // notification code for future use if desired
+//        this.CTX = getApplicationContext();
+//        int permStatus = ContextCompat.checkSelfPermission(this.CTX, this.PERM);
+//        Log.d(TAG, Integer.toString(permStatus));
+//        if (permStatus != PackageManager.PERMISSION_GRANTED) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                requestPermissions(new String[] {this.PERM}, 0);
+//            }
+//        }
 
-        // notification code
-        this.CTX = getApplicationContext();
-        int permStatus = ContextCompat.checkSelfPermission(this.CTX, this.PERM);
-        Log.d(TAG, Integer.toString(permStatus));
-        if (permStatus != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[] {this.PERM}, 0);
-            }
-        }
+        startUp();
+    }
 
+    private void startUp() {
         TextView tv = findViewById(R.id.internet_tv);
         tv.setVisibility(View.VISIBLE);
         if (hasInternetConnection() && hasNetworkConnection()) {
