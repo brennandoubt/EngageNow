@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner1" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner2" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner3" />
+    <TextView
+        android:layout_margin ="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/languages"
+        />
+
+    <CheckBox
+        android:id="@+id/english_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="English"/>
+    <CheckBox
+        android:id="@+id/spanish_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spanish"/>
+    <CheckBox
+        android:id="@+id/chinese_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chinese"/>
+    <CheckBox
+        android:id="@+id/german_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="German"/>
+
+    <TextView
+        android:layout_margin ="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clearances"
+        />
+
+    <CheckBox
+        android:id="@+id/fbi_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FBI"/>
+    <CheckBox
+        android:id="@+id/child_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Child Care"/>
+    <CheckBox
+        android:id="@+id/criminal_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Criminal History"/>
+
+</LinearLayout>

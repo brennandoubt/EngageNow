@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,8 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -35,33 +32,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class VolunteerSwiping extends VolunteerBaseClass implements CardStackListener {
-    private DrawerLayout drawerLayout;
+public class VolunteerSwiping extends VolunteerBaseClass implements CardStackListener{
 
     private CardStackLayoutManager manager;
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
     List<Org> orgs = new ArrayList<>();
-    boolean swipedRight = false;
+
+    int unsortedIdx = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_swiping);
         setTitle("Volunteer Events");
-        setupCardStackView();
         setupButton();
+        initialize();
+
     }
 
-//    commented this out so app does not crash on back swipe because the app should just close since the user can't go back to the login screen
-//    @Override
-//    public void onBackPressed() {
-//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawers();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
     //Adds to database after swiping
     public void addToDatabase(int position){
         if(position < orgs.size()){
@@ -84,7 +73,40 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     }
 
+    @Override
+    public void  onPositiveButtonClicked(HashMap<String, Object> choices){
+        ArrayList<Org> unsortedList = new ArrayList<>();
+        ArrayList<Org> sorted = new ArrayList<>();
 
+        for(Org o : orgs){
+            boolean match = true;
+            HashMap<String, Object> eventInfo = o.m;
+            for(Map.Entry<String, Object> entry: choices.entrySet()){
+                if(choices.get(entry.getKey()).equals("Select Time Commitment") || choices.get(entry.getKey()).equals("Select Age")
+                || choices.get(entry.getKey()).equals("Select Availability")){
+                    continue;
+                }
+                if(!choices.get(entry.getKey()).equals(eventInfo.get(entry.getKey()))){
+                    match = false;
+                    break;
+                }
+            }
+            if(!match){
+                unsortedList.add(o);
+            }
+            else{
+                sorted.add(o);
+            }
+        }
+        unsortedIdx = sorted.size();
+        Log.d("UNSORTED IDX", String.valueOf(unsortedIdx));
+        sorted.addAll(unsortedList);
+        orgs = sorted;
+        CardStackCreator();
+    }
+
+    @Override
+    public void onNegativeButtonClicked(){}
 
     @Override
     public void onCardDragging(Direction direction, float ratio) {
@@ -136,10 +158,6 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     }
 
 
-    private void setupCardStackView() {
-        initialize();
-    }
-
     private void setupButton() {
         View skip = findViewById(R.id.skip_button);
         skip.setOnClickListener(new View.OnClickListener() {
@@ -183,13 +201,20 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                 addToDatabase(manager.getTopPosition());
             }
         });
+        View search = findViewById(R.id.search_button);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MultipleChoiceDialogBoxFragment d = new MultipleChoiceDialogBoxFragment();
+                d.show(getSupportFragmentManager(), "CPS");
+            }
+        });
     }
 //Fetch data from database
 
     private void initialize() {
 
         DatabaseReference organizationsRef = FirebaseDatabase.getInstance().getReference("organization_accounts");
-
 
         organizationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -214,8 +239,8 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                                     //root -> potentialMatches -> Org_id -> volunteer_id -> event_name doesn't exist == has not swiped before
                                     if(!snapshot.hasChild(entry.getKey())) {
                                         Log.d("CPS", "images/" + OrgId.getKey());
-                                        StorageReference storageRef = FirebaseStorage.getInstance().getReference("images/" + OrgId.getKey());
-                                        orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), storageRef, OrgId.getKey(),
+
+                                        orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "images/" + OrgId.getKey(), OrgId.getKey(),
                                                 events.get(entry.getKey()), entry.getKey()));
                                     }
                                 }
@@ -239,6 +264,9 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
             }
         });
+       CardStackCreator();
+    }
+    public void CardStackCreator(){
         manager = new CardStackLayoutManager(this, this);
         manager.setStackFrom(StackFrom.None);
         manager.setVisibleCount(3);
@@ -344,6 +372,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     private Org createOrg() {
         return null;
     }
+
 
 
 }

@@ -12,6 +12,8 @@
     <string name="swap_first_for_last">Swap first for last</string>
     <string name="org_edit_event_dialog">Edit Event</string>
     <string name="cancel">Cancel</string>
+    <string name="languages">Languages</string>
+    <string name="clearances">Clearances</string>
 
 
     <string-array name="register_select">
@@ -65,6 +67,19 @@
         <item>2–4 miles</item>
         <item>4–10 miles</item>
         <item>10+ miles</item>
+    </string-array>
+
+    <string-array name="choice_items">
+        <item>Under 2 miles</item>
+        <item>2–4 miles</item>
+        <item>4–10 miles</item>
+        <item>10+ miles</item>
+        <item>Immediately</item>
+        <item>Within 24 hours</item>
+        <item>Within 48 hours</item>
+        <item>Within 72 hours</item>
+        <item>Within 1 wk</item>
+        <item>Within 2 wks</item>
     </string-array>
 
 

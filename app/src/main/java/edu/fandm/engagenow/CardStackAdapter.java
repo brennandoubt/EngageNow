@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,7 +91,8 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         holder.descrip.setText(spot.descrip);
         try{
             File local = File.createTempFile("temp", ".jpg");
-            spot.sr.getFile(local).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference(spot.sr);
+            storageRef.getFile(local).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Log.d("CPS", "SUCCESS");
