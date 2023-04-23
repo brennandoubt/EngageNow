@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -53,7 +54,7 @@ public class EventRegistration extends OrganizationBaseClass {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean checkInput(String name, String description, String ageGroup, String timeCommitment, String availability, String locationAndStartTIme){
+    private boolean checkInput(String name, String description, String ageGroup, String timeCommitment, String availability, String locationAndStartTime, String website){
 
         if(name.equals("")) {
             showToast("Event Name Cannot Be Empty");
@@ -67,7 +68,7 @@ public class EventRegistration extends OrganizationBaseClass {
             showToast("Event Description Cannot Be Empty");
             return false;
         }
-        else if(locationAndStartTIme.equals("")){
+        else if(locationAndStartTime.equals("")){
             showToast("Location and Start Time Cannot Be Empty");
             return false;
         }
@@ -81,6 +82,10 @@ public class EventRegistration extends OrganizationBaseClass {
         }
         else if(availability.equals("Select Availability")){
             showToast("Must Select Availability");
+            return false;
+        }
+        else if(!(Patterns.WEB_URL.matcher(website).matches())) {
+            showToast("Invalid Website URL");
             return false;
         }
         else{
@@ -108,15 +113,19 @@ public class EventRegistration extends OrganizationBaseClass {
     }
 
     private void addEvent() {
+
         DatabaseReference websiteDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+
         websiteDbr.get().addOnCompleteListener(task -> {
             String websiteLink;
-            if (task.getResult().exists()) {
-                websiteLink = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+            websiteLink = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+
+            //if the event website is not empty, we update the url
+            String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
+            if(!eventWebUrl.equals("")) {
+                websiteLink = eventWebUrl;
             }
-            else {
-                websiteLink = "No website information";
-            }
+
 
             String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
 
@@ -135,8 +144,10 @@ public class EventRegistration extends OrganizationBaseClass {
             String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
             String availability = availabilitySpinner.getSelectedItem().toString();
 
+
+
             //If the input is invalid,  make the user fill it out
-            if (!checkInput(event_name, description, ageGroup, timeCommitment, availability, locationAndStartTime)) {
+            if (!checkInput(event_name, description, ageGroup, timeCommitment, availability, locationAndStartTime, websiteLink)) {
                 return;
             }
 
@@ -187,7 +198,6 @@ public class EventRegistration extends OrganizationBaseClass {
             showToast("New event created");
             launchActivity();
         });
-
 
     }
 

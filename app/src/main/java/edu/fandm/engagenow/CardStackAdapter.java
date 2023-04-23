@@ -146,15 +146,12 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
     }
 
     private void launchWebsite(String website, View v) {
-        if (Patterns.WEB_URL.matcher(website).matches()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
-            if (intent.resolveActivity(v.getContext().getPackageManager()) != null) {
-                v.getContext().startActivity(intent);
-            } else {
-                Toast.makeText(v.getContext(), "No browser app available", Toast.LENGTH_SHORT).show();
-            }
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
+        Intent chooserIntent = Intent.createChooser(intent, "Open with");
+        if (chooserIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+            v.getContext().startActivity(chooserIntent);
         } else {
-            Toast.makeText(v.getContext(), "Invalid URL", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "No browser app available", Toast.LENGTH_SHORT).show();
         }
     }
 

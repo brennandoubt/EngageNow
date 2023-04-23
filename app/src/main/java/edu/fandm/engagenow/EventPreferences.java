@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -56,7 +57,7 @@ public class EventPreferences extends OrganizationBaseClass {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean checkInput(String ageGroup, String timeCommitment, String availability){
+    private boolean checkInput(String ageGroup, String timeCommitment, String availability, String website){
 
        if(timeCommitment.equals("Select Time Commitment")){
             showToast("Must Select Time Commitment");
@@ -70,6 +71,10 @@ public class EventPreferences extends OrganizationBaseClass {
             showToast("Must Select Availability");
             return false;
         }
+       else if(!(Patterns.WEB_URL.matcher(website).matches())) {
+           showToast("Invalid Website URL");
+           return false;
+       }
         else{
             return true;
         }
@@ -85,67 +90,79 @@ public class EventPreferences extends OrganizationBaseClass {
     }
 
     private void addEvent(String event_name) {
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
+        //retrieve the web url
+        DatabaseReference websiteDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+        websiteDbr.get().addOnCompleteListener(task -> {
+            String websiteLink;
+            websiteLink = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
 
-        Map<String, Object> orgDBHashmap = new HashMap<>();
+            String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
+            if(!eventWebUrl.equals("")) {
+                websiteLink = eventWebUrl;
+            }
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
 
-        //extract data
-        Spinner ageGroupSpinner = (Spinner) findViewById(R.id.page_group_spinner);
-        Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.ptime_commitment_spinner);
-        Spinner availabilitySpinner = (Spinner) findViewById(R.id.pavailability_spinner);
+            Map<String, Object> orgDBHashmap = new HashMap<>();
 
-        String ageGroup = ageGroupSpinner.getSelectedItem().toString();
-        String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
-        String availability = availabilitySpinner.getSelectedItem().toString();
+            //extract data
+            Spinner ageGroupSpinner = (Spinner) findViewById(R.id.page_group_spinner);
+            Spinner timeCommitmentSpinner = (Spinner) findViewById(R.id.ptime_commitment_spinner);
+            Spinner availabilitySpinner = (Spinner) findViewById(R.id.pavailability_spinner);
 
-        //If the input is invalid,  make the user fill it out
-        if (!checkInput(ageGroup, timeCommitment, availability)) {
-            return;
-        }
+            String ageGroup = ageGroupSpinner.getSelectedItem().toString();
+            String timeCommitment = timeCommitmentSpinner.getSelectedItem().toString();
+            String availability = availabilitySpinner.getSelectedItem().toString();
 
-        Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.pstart_date)).getMonth()) + ((DatePicker) findViewById(R.id.pstart_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.pstart_date)).getYear());
+            //If the input is invalid,  make the user fill it out
+            if (!checkInput(ageGroup, timeCommitment, availability, websiteLink)) {
+                return;
+            }
 
-        DatePicker datePicker = ((DatePicker) findViewById(R.id.pstart_date));
-        String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
-        String otherInfo = ((EditText) findViewById(R.id.pother_specify_et)).getText().toString().trim();
-        boolean hasFbiClearance = ((CheckBox) findViewById(R.id.pfbi_cb)).isChecked();
-        boolean hasChildClearance = ((CheckBox) findViewById(R.id.pchild_cb)).isChecked();
-        boolean hasCriminalClearance = ((CheckBox) findViewById(R.id.pcriminal_rb)).isChecked();
+            Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.pstart_date)).getMonth()) + ((DatePicker) findViewById(R.id.pstart_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.pstart_date)).getYear());
 
-        boolean hasLaborSkill = ((CheckBox) findViewById(R.id.plabor_skill_cb)).isChecked();
-        boolean hasCareTakingSkill = ((CheckBox) findViewById(R.id.pcareTaking_skill_cb)).isChecked();
-        boolean hasFoodServiceSkill = ((CheckBox) findViewById(R.id.pfood_skill_cb)).isChecked();
+            DatePicker datePicker = ((DatePicker) findViewById(R.id.pstart_date));
+            String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
+            String otherInfo = ((EditText) findViewById(R.id.pother_specify_et)).getText().toString().trim();
+            boolean hasFbiClearance = ((CheckBox) findViewById(R.id.pfbi_cb)).isChecked();
+            boolean hasChildClearance = ((CheckBox) findViewById(R.id.pchild_cb)).isChecked();
+            boolean hasCriminalClearance = ((CheckBox) findViewById(R.id.pcriminal_rb)).isChecked();
 
-        boolean hasSpanish = ((CheckBox) findViewById(R.id.pspanish_language_rb)).isChecked();
-        boolean hasChinese = ((CheckBox) findViewById(R.id.pchinese_language_rb)).isChecked();
-        boolean hasGerman = ((CheckBox) findViewById(R.id.pgerman_language_rb)).isChecked();
-        boolean hasEnglish = ((CheckBox) findViewById(R.id.penglish_language_rb)).isChecked();
-        boolean hasVehicle = ((CheckBox) findViewById(R.id.pvehicle_cb)).isChecked();
+            boolean hasLaborSkill = ((CheckBox) findViewById(R.id.plabor_skill_cb)).isChecked();
+            boolean hasCareTakingSkill = ((CheckBox) findViewById(R.id.pcareTaking_skill_cb)).isChecked();
+            boolean hasFoodServiceSkill = ((CheckBox) findViewById(R.id.pfood_skill_cb)).isChecked();
 
-        orgDBHashmap.put("event_name", event_name);
-        orgDBHashmap.put("start_date", date);
-        orgDBHashmap.put("other_info", otherInfo);
-        orgDBHashmap.put("fbi_clearance", hasFbiClearance);
-        orgDBHashmap.put("child_clearance", hasChildClearance);
-        orgDBHashmap.put("criminal_history", hasCriminalClearance);
-        orgDBHashmap.put("labor_skill", hasLaborSkill);
-        orgDBHashmap.put("care_taking_skill", hasCareTakingSkill);
-        orgDBHashmap.put("food_service_skill", hasFoodServiceSkill);
-        orgDBHashmap.put("spanish", hasSpanish);
-        orgDBHashmap.put("chinese", hasChinese);
-        orgDBHashmap.put("german", hasGerman);
-        orgDBHashmap.put("english", hasEnglish);
-        orgDBHashmap.put("vehicle", hasVehicle);
-        orgDBHashmap.put("age_group", ageGroup);
-        orgDBHashmap.put("time_commitment", timeCommitment);
-        orgDBHashmap.put("availability", availability);
-        orgDBHashmap.put("other_info", otherInfo);
+            boolean hasSpanish = ((CheckBox) findViewById(R.id.pspanish_language_rb)).isChecked();
+            boolean hasChinese = ((CheckBox) findViewById(R.id.pchinese_language_rb)).isChecked();
+            boolean hasGerman = ((CheckBox) findViewById(R.id.pgerman_language_rb)).isChecked();
+            boolean hasEnglish = ((CheckBox) findViewById(R.id.penglish_language_rb)).isChecked();
+            boolean hasVehicle = ((CheckBox) findViewById(R.id.pvehicle_cb)).isChecked();
 
-        //push the data to firebase
-        dbr.updateChildren(orgDBHashmap);
+            orgDBHashmap.put("event_name", event_name);
+            orgDBHashmap.put("start_date", date);
+            orgDBHashmap.put("other_info", otherInfo);
+            orgDBHashmap.put("fbi_clearance", hasFbiClearance);
+            orgDBHashmap.put("child_clearance", hasChildClearance);
+            orgDBHashmap.put("criminal_history", hasCriminalClearance);
+            orgDBHashmap.put("labor_skill", hasLaborSkill);
+            orgDBHashmap.put("care_taking_skill", hasCareTakingSkill);
+            orgDBHashmap.put("food_service_skill", hasFoodServiceSkill);
+            orgDBHashmap.put("spanish", hasSpanish);
+            orgDBHashmap.put("chinese", hasChinese);
+            orgDBHashmap.put("german", hasGerman);
+            orgDBHashmap.put("english", hasEnglish);
+            orgDBHashmap.put("vehicle", hasVehicle);
+            orgDBHashmap.put("age_group", ageGroup);
+            orgDBHashmap.put("time_commitment", timeCommitment);
+            orgDBHashmap.put("availability", availability);
+            orgDBHashmap.put("other_info", otherInfo);
 
-        showToast("Event Updated: " + event_name);
-        launchActivity();
+            //push the data to firebase
+            dbr.updateChildren(orgDBHashmap);
+
+            showToast("Event Updated: " + event_name);
+            launchActivity();
+        });
+
     }
 
     private void launchActivity() {

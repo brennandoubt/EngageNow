@@ -228,6 +228,15 @@
                 android:hint="If other, please specify"
                 />
 
+            <EditText
+                android:id="@+id/ep_websiteurl_et"
+                android:layout_width="match_parent"
+                android:layout_margin ="20dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="Enter the website url"
+                />
+
 
             <CheckBox
                 android:id="@+id/pvehicle_cb"

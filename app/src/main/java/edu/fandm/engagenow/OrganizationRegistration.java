@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -122,10 +123,29 @@ public class OrganizationRegistration extends AppCompatActivity {
     }
 
     private boolean checkInput(String name, String description, String website){
-        if (name.equals("") || description.equals("") || website.equals("") || imageUri == null) {
+        if(name.equals("")) {
+            showToast("Event Name Cannot Be Empty");
             return false;
         }
-        return true;
+        else if(description.equals("")){
+            showToast("Event Description Cannot Be Empty");
+            return false;
+        }
+        else if(!(Patterns.WEB_URL.matcher(website).matches())) {
+            showToast("Invalid Website URL");
+            return false;
+        }
+        else if(imageUri == null){
+            showToast("Must Select an Image");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void storeAccountType(){
@@ -187,10 +207,7 @@ public class OrganizationRegistration extends AppCompatActivity {
         String website = ((EditText) findViewById(R.id.website_link_et)).getText().toString().trim();
 
         // verify all fields have been filled out
-        if(!checkInput(name, description, website)){
-            Toast.makeText(getApplicationContext(), "All Fields Are Required!", Toast.LENGTH_LONG).show();
-            return;
-        }
+        if(!checkInput(name, description, website)) return;
 
         //create the user
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
