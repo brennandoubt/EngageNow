@@ -6,4 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".EventsList">
 
+    <!-- TODO: set tv's text in Java file to "Here are [organization's name] events" -->
+    <TextView
+        android:id="@+id/vevents_list_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        android:text="These are [organization name]'s events. Tap an event to view its details."
+        android:textSize="20dp"
+        android:textAlignment="center"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ListView
+        android:id="@+id/vevents_list_lv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/vevents_list_tv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
