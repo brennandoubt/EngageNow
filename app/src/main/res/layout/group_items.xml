@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/heading"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:paddingLeft="35sp"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
