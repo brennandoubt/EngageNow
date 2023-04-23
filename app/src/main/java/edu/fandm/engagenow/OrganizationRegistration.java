@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -40,6 +41,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     private String password;
     private String accountType;
     private long lastClickTime;
+    private final String TAG = "OrgRegistration";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +158,29 @@ public class OrganizationRegistration extends AppCompatActivity {
 
 
     private void registerUser() {
+        String entered_registration_code = ((EditText) findViewById(R.id.org_registration_code)).getText().toString().trim();
 
+//        Verify the user entered the correct org registration code
+        DatabaseReference registrationCodeDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_registration_code");
+        registrationCodeDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, (String) task.getResult().getValue());
+                    Log.d(TAG, entered_registration_code);
+                    String registrationCode = (String) task.getResult().getValue();
+                    if (registrationCode.equals(entered_registration_code)) {
+                        createUserAccount();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Invalid Registration Code. Cannot Create Account", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void createUserAccount() {
         //extract data first
         String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString().trim();
         String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
@@ -210,6 +234,7 @@ public class OrganizationRegistration extends AppCompatActivity {
                 }
             }
         });
-
     }
+
+
 }
