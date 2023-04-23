@@ -3,6 +3,10 @@
 3    package="com.yuyakaido.android.cardstackview" >
 4
 5    <uses-sdk android:minSdkVersion="14" />
-5-->/Users/bdoubt/AndroidStudioProjects/EngageNow/cardstackview/src/main/AndroidManifest.xml
+<<<<<<< HEAD
+5-->C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+=======
+5-->C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+>>>>>>> 7cfa237c6ace308cd8f3297fb9cc36639e6b757b
 6
 7</manifest>

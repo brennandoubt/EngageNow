@@ -1,15 +1,22 @@
 package edu.fandm.engagenow;
 
 
+
 import android.content.Context;
+
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,6 +35,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
     private LayoutInflater inflater;
     private List<Org> organizations;
+    private final String TAG = "CardStackAdapter";
 
     public CardStackAdapter(Context context, List<Org> organizations) {
         this.inflater = LayoutInflater.from(context);
@@ -78,8 +86,6 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
         sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
 
-        sb.append("Website: " + eventInfo.get("website") + "\n");
-
         return sb.toString();
     }
     @Override
@@ -119,9 +125,37 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
                 info.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 info.setPadding(60, 5, 5, 5);
                 dialog.setView(info);
+                String website = (String) spot.m.get("website");
+                if (website!= null) {
+                    Log.d(TAG, website);
+                }
+                dialog.setPositiveButton(website, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(website!=null) {
+                            launchWebsite(website, v);
+                        }
+                    }
+                });
                 dialog.show();
+
+
             }
         });
+
+    }
+
+    private void launchWebsite(String website, View v) {
+        if (Patterns.WEB_URL.matcher(website).matches()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
+            if (intent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                v.getContext().startActivity(intent);
+            } else {
+                Toast.makeText(v.getContext(), "No browser app available", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(v.getContext(), "Invalid URL", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
