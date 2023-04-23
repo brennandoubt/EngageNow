@@ -149,14 +149,18 @@ public class EventDashboard extends OrganizationBaseClass {
                 potMatchDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        HashMap<String, HashMap<String, Object>> potMatchesMap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
-                        // remove the event from potential matches so if an event with the same name is made in the future, the volunteer will see it
-                        for (String volId : potMatchesMap.keySet()) {
-                            if (potMatchesMap.get(volId).containsKey(event)) {
-                                DatabaseReference eventDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volId);
-                                HashMap<String, Object> m = new HashMap<>();
-                                m.put(event, null);
-                                eventDbr.updateChildren(m);
+                        if (task.isSuccessful()) {
+                            HashMap<String, HashMap<String, Object>> potMatchesMap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
+                            // remove the event from potential matches so if an event with the same name is made in the future, the volunteer will see it
+                            if (potMatchesMap != null) {
+                                for (String volId : potMatchesMap.keySet()) {
+                                    if (potMatchesMap.get(volId).containsKey(event)) {
+                                        DatabaseReference eventDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volId);
+                                        HashMap<String, Object> m = new HashMap<>();
+                                        m.put(event, null);
+                                        eventDbr.updateChildren(m);
+                                    }
+                                }
                             }
                         }
                         Toast.makeText(getApplicationContext(), event + " event has been deleted", Toast.LENGTH_SHORT).show();

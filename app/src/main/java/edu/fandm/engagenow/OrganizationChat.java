@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,7 @@ public class OrganizationChat extends OrganizationBaseClass {
     FirebaseUser currentUser;
     boolean deleted = false;
     android.content.Context context = this;
+    static boolean active = false;
 
 
     final String TAG = "OrganizationChat";
@@ -99,6 +101,10 @@ public class OrganizationChat extends OrganizationBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                if (!active) {
+                    return;
+                }
+
                 deleted = true;
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -114,7 +120,9 @@ public class OrganizationChat extends OrganizationBaseClass {
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), OrganizationChatList.class);
                         finish();
+                        startActivity(intent);
                     }
                 });
 
@@ -209,10 +217,17 @@ public class OrganizationChat extends OrganizationBaseClass {
     @Override
     protected void onStop() {
         super.onStop();  // Always call the superclass method first
+        active = false;
         if (!deleted) {
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
             dbr.setValue(true);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
     }
 
 

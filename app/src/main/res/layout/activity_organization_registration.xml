@@ -29,6 +29,16 @@
                 />
 
             <EditText
+                android:id="@+id/org_registration_code"
+                android:layout_width="match_parent"
+                android:layout_margin ="20dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:inputType="textPassword"
+                android:hint="Registration Code"
+                />
+
+            <EditText
                 android:id="@+id/name_preference_et"
                 android:layout_width="match_parent"
                 android:layout_margin ="20dp"
@@ -55,7 +65,7 @@
                 android:layout_margin ="15dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Organization Website Link"
+                android:hint="Link must begin with 'https://www.'"
                 android:maxLength="200"
                 />
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -40,6 +42,7 @@ public class OrganizationRegistration extends AppCompatActivity {
     private String password;
     private String accountType;
     private long lastClickTime;
+    private final String TAG = "OrgRegistration";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,10 +123,29 @@ public class OrganizationRegistration extends AppCompatActivity {
     }
 
     private boolean checkInput(String name, String description, String website){
-        if (name.equals("") || description.equals("") || website.equals("") || imageUri == null) {
+        if(name.equals("")) {
+            showToast("Event Name Cannot Be Empty");
             return false;
         }
-        return true;
+        else if(description.equals("")){
+            showToast("Event Description Cannot Be Empty");
+            return false;
+        }
+        else if(!(Patterns.WEB_URL.matcher(website).matches())) {
+            showToast("Invalid Website URL");
+            return false;
+        }
+        else if(imageUri == null){
+            showToast("Must Select an Image");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void storeAccountType(){
@@ -156,17 +178,36 @@ public class OrganizationRegistration extends AppCompatActivity {
 
 
     private void registerUser() {
+        String entered_registration_code = ((EditText) findViewById(R.id.org_registration_code)).getText().toString().trim();
 
+//        Verify the user entered the correct org registration code
+        DatabaseReference registrationCodeDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_registration_code");
+        registrationCodeDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, (String) task.getResult().getValue());
+                    Log.d(TAG, entered_registration_code);
+                    String registrationCode = (String) task.getResult().getValue();
+                    if (registrationCode.equals(entered_registration_code)) {
+                        createUserAccount();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Invalid Registration Code. Cannot Create Account", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+    }
+
+    private void createUserAccount() {
         //extract data first
         String name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString().trim();
         String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
         String website = ((EditText) findViewById(R.id.website_link_et)).getText().toString().trim();
 
         // verify all fields have been filled out
-        if(!checkInput(name, description, website)){
-            Toast.makeText(getApplicationContext(), "All Fields Are Required!", Toast.LENGTH_LONG).show();
-            return;
-        }
+        if(!checkInput(name, description, website)) return;
 
         //create the user
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
@@ -210,6 +251,7 @@ public class OrganizationRegistration extends AppCompatActivity {
                 }
             }
         });
-
     }
+
+
 }
