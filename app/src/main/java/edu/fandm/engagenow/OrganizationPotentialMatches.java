@@ -54,7 +54,6 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 eventsHashmap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
-                Log.d(TAG, eventsHashmap.toString());
             }
         });
 
@@ -68,7 +67,6 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.getResult().getValue() != null) {
                     potentialMatchesMap = (HashMap<String, HashMap<String, Object>>) ((DataSnapshot) task.getResult()).getValue();
-//                    Log.d(TAG, potentialMatchesMap.toString());
                     populatePotentialMatches();
                 }
             }

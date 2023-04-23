@@ -58,6 +58,14 @@ public class VolunteerBaseClass extends AppCompatActivity {
                 startActivity(vi);
                 finish();
                 break;
+
+            case R.id.events_list_mi:
+                if (!this.getClass().getSimpleName().equals("EventsList")) {
+                    Intent eli = new Intent(getApplicationContext(), EventsList.class);
+                    startActivity(eli);
+                }
+                finish();
+                break;
         }
         return true;
     }

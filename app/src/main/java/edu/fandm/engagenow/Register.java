@@ -58,20 +58,8 @@ public class Register extends AppCompatActivity {
         String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
         Spinner dropdownSelect = findViewById(R.id.account_type_select_spinner);
         String accountTypeSelection = dropdownSelect.getSelectedItem().toString();
-        if (email.equals("")) {
-            Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (password.equals("")) {
-            Toast.makeText(getApplicationContext(), "Enter password", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (password.length() < 6) {
-            Toast.makeText(getApplicationContext(), "Password must be 6 or more characters", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (accountTypeSelection.equals("Select Account Type")) {
-            Toast.makeText(getApplicationContext(), "Select Account Type", Toast.LENGTH_LONG).show();
+
+        if (!validateInput(email, password, accountTypeSelection)) {
             return;
         }
 
@@ -97,6 +85,28 @@ public class Register extends AppCompatActivity {
 
             startActivity(oi);
         }
+    }
+
+    private boolean validateInput(String email, String password, String accountTypeSelection) {
+        if (email.equals("")) {
+            Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (password.equals("")) {
+            Toast.makeText(getApplicationContext(), "Enter password", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (password.length() < 6) {
+            Toast.makeText(getApplicationContext(), "Password must be 6 or more characters", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (accountTypeSelection.equals("Select Account Type")) {
+            Toast.makeText(getApplicationContext(), "Select Account Type", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+//        valid input
+        return true;
     }
 
     private void setDropDown() {

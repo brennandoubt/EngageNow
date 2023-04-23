@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" package="edu.fandm.engagenow">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="edu.fandm.engagenow">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -18,6 +19,9 @@
         tools:targetApi="31"
         >
 
+        <activity
+            android:name=".EventsList"
+            android:exported="false" />
         <activity
             android:name=".EventPreferences"
             android:exported="false" />

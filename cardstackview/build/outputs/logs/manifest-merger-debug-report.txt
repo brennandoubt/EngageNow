@@ -1,25 +1,51 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
+<<<<<<< HEAD
+ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
 	package
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:11-56
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:11-56
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml:3:1-58
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
 uses-sdk
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		ADDED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
-		INJECTED from /Users/weichi2002/Desktop/MobileApp/EngageNow/cardstackview/src/main/AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		ADDED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\noahf\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+=======
+ADDED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+	package
+		ADDED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:11-56
+		INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml:3:1-58
+uses-sdk
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		ADDED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		ADDED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\brenn\AndroidStudioProjects\EngageNow\cardstackview\src\main\AndroidManifest.xml
+>>>>>>> 7cfa237c6ace308cd8f3297fb9cc36639e6b757b
