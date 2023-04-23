@@ -101,16 +101,18 @@ public class EventsList extends AppCompatActivity {
         elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
 
+                Log.d(TAG, "Group Name Is :" + groupItems.get(i));
                 return false;
             }
         });
         elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
+                // TODO: should display event info here
+                //DatabaseReference event_dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child()
 
+                Log.d(TAG, "Child name is: " + childItems.get(i).get(i1));
                 return false;
             }
         });
@@ -173,4 +175,49 @@ public class EventsList extends AppCompatActivity {
             }
         });
     }
+
+    // Copied helper function from EventDashboard.java
+    /*private String getEventInfo(String event) {
+        StringBuilder sb = new StringBuilder();
+
+        HashMap<String, Object> eventInfo = eventsMap.get(event);
+
+        sb.append("Description: " + eventInfo.get("description") + "\n");
+
+        sb.append("Location/Start Time: " + eventInfo.get("location_start_time") + "\n");
+
+        sb.append("Start Date: " + eventInfo.get("start_date") + "\n");
+
+        sb.append("Time Commitment: " + eventInfo.get("time_commitment") + "\n");
+
+        sb.append("Age Group: " + eventInfo.get("age_group") + "\n");
+
+        sb.append("Availability: " + eventInfo.get("availability") + "\n");
+
+        sb.append("Fbi Clearance: " + eventInfo.get("fbi_clearance") + "\n");
+
+        sb.append("Child Clearance: " + eventInfo.get("child_clearance") + "\n");
+
+        sb.append("Criminal History: " + eventInfo.get("criminal_history") + "\n");
+
+        sb.append("Labor Skill: " + eventInfo.get("labor_skill") + "\n");
+
+        sb.append("Care Taking Skill: " + eventInfo.get("care_taking_skill") + "\n");
+
+        sb.append("Food Service Skill: " + eventInfo.get("food_service_skill") + "\n");
+
+        sb.append("English: " + eventInfo.get("english") + "\n");
+
+        sb.append("Spanish: " + eventInfo.get("spanish") + "\n");
+
+        sb.append("Chinese: " + eventInfo.get("chinese") + "\n");
+
+        sb.append("German: " + eventInfo.get("german") + "\n");
+
+        sb.append("Vehicle: " + eventInfo.get("vehicle") + "\n");
+
+        sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+
+        return sb.toString();
+    }*/
 }
