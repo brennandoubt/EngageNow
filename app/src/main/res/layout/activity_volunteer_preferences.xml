@@ -12,21 +12,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="40dp"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             >
 
             <TextView
                 android:id="@+id/instructions_preferences_tv"
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_margin="20dp"
                 android:text="Please fill in the following fields to update your account's preferences. Be sure to make selections for all fields."
                 android:textAlignment="center"
                 android:textSize="20sp"
@@ -37,7 +36,7 @@
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
                 android:id="@+id/time_commitment_volunteer_spinner"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_margin="5dp"
                 android:layout_height="50dp"
                 android:textAlignment="center"
@@ -46,7 +45,7 @@
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
                 android:id="@+id/age_group_volunteer_spinner"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:textAlignment="center"
@@ -55,89 +54,164 @@
             <!-- Need to set spinner's prompt before user clicks it -->
             <Spinner
                 android:id="@+id/travel_distance_volunteer_spinner"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 android:layout_marginBottom="10dp"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/darker_gray" />
+
             <TextView
-                android:id="@+id/clearances_volunteer_tv"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:text="Select Clearances"
-                android:textSize="20sp"
+                android:id="@+id/clearances_tv"
                 android:textAlignment="center"
-                android:layout_margin="5dp"/>
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
+                android:text="Clearances"
+                />
 
             <LinearLayout
-                android:id="@+id/clearances_volunteer_ll"
-                android:layout_width="250dp"
-                android:layout_height="match_parent"
-                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_margin="10dp"
-                >
+                android:gravity="center">
 
                 <CheckBox
                     android:id="@+id/fbi_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
                     android:text="FBI" />
 
                 <CheckBox
                     android:id="@+id/child_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
                     android:text="Child" />
+
                 <CheckBox
                     android:id="@+id/criminal_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
                     android:text="Criminal History" />
+
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/darker_gray"/>
 
             <TextView
-                android:id="@+id/languages_volunteer_tv"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:text="Languages Spoken"
-                android:textSize="20sp"
+                android:id="@+id/skills_tv"
                 android:textAlignment="center"
-                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
+                android:text="Skills"
                 />
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/labor_skill_vcb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Labor" />
+
+                <CheckBox
+                    android:id="@+id/careTaking_skill_vcb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Care Taking" />
+
+                <CheckBox
+                    android:id="@+id/food_skill_vcb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="Food Service" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/languages_tv"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop ="10dp"
+                android:text="Languages"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                >
+                android:layout_marginBottom="20dp">
 
                 <CheckBox
-                    android:id="@+id/english"
+                    android:id="@+id/english_language_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="English" />
+
                 <CheckBox
-                    android:id="@+id/spanish"
+                    android:id="@+id/spanish_language_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Spanish" />
+
                 <CheckBox
-                    android:id="@+id/german"
+                    android:id="@+id/german_language_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="German" />
+
                 <CheckBox
-                    android:id="@+id/chinese"
+                    android:id="@+id/chinese_language_vcb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chinese" />
 
             </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/vehicle_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin ="10dp"
+                android:text="Do you have a vehicle?"
+                android:layout_gravity="center_horizontal"
+                />
 
             <Button
                 android:id="@+id/update_account_button"
