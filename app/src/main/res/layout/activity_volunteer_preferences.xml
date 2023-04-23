@@ -205,7 +205,7 @@
             </LinearLayout>
 
             <CheckBox
-                android:id="@+id/vehicle_cb"
+                android:id="@+id/vehicle_vcb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin ="10dp"

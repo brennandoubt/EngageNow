@@ -75,6 +75,9 @@ public class VolunteerPreferences extends VolunteerBaseClass {
         boolean german = ((CheckBox) findViewById(R.id.german_language_vcb)).isChecked();
         boolean chinese = ((CheckBox) findViewById(R.id.chinese_language_vcb)).isChecked();
 
+        boolean vehicle = ((CheckBox) findViewById(R.id.vehicle_vcb)).isChecked();
+
+
         // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
 
         if (time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
@@ -97,6 +100,7 @@ public class VolunteerPreferences extends VolunteerBaseClass {
         m.put("spanish", spanish);
         m.put("german", german);
         m.put("chinese", chinese);
+        m.put("vehicle", vehicle);
 
 
         dbr.updateChildren(m);

@@ -112,13 +112,17 @@ public class VolunteerRegistration extends AppCompatActivity {
         String time_commitment = ((Spinner) findViewById(R.id.time_commitment_volunteer_spinner)).getSelectedItem().toString();
         String age_group = ((Spinner) findViewById(R.id.age_group_volunteer_spinner)).getSelectedItem().toString();
         String travel_distance = ((Spinner) findViewById(R.id.travel_distance_volunteer_spinner)).getSelectedItem().toString();
-        boolean fbi_certification = ((CheckBox) findViewById(R.id.fbi_vcb)).isChecked();
-        boolean child_certification = ((CheckBox) findViewById(R.id.child_vcb)).isChecked();
-        boolean criminal_history = ((CheckBox) findViewById(R.id.criminal_vcb)).isChecked();
-        boolean english = ((CheckBox) findViewById(R.id.english)).isChecked();
-        boolean spanish = ((CheckBox) findViewById(R.id.spanish)).isChecked();
-        boolean german = ((CheckBox) findViewById(R.id.german)).isChecked();
-        boolean chinese = ((CheckBox) findViewById(R.id.chinese)).isChecked();
+        boolean fbi_certification = ((CheckBox) findViewById(R.id.fbi_vrcb)).isChecked();
+        boolean child_certification = ((CheckBox) findViewById(R.id.child_vrcb)).isChecked();
+        boolean criminal_history = ((CheckBox) findViewById(R.id.criminal_vrcb)).isChecked();
+        boolean english = ((CheckBox) findViewById(R.id.english_language_vrcb)).isChecked();
+        boolean spanish = ((CheckBox) findViewById(R.id.spanish_language_vrcb)).isChecked();
+        boolean german = ((CheckBox) findViewById(R.id.german_language_vrcb)).isChecked();
+        boolean chinese = ((CheckBox) findViewById(R.id.chinese_language_vrcb)).isChecked();
+        boolean laborSkill = ((CheckBox) findViewById(R.id.labor_skill_vrcb)).isChecked();
+        boolean careTakingSkill = ((CheckBox) findViewById(R.id.careTaking_skill_vrcb)).isChecked();
+        boolean foodServiceSkill = ((CheckBox) findViewById(R.id.food_skill_vrcb)).isChecked();
+        boolean vehicle = ((CheckBox) findViewById(R.id.vehicle_vrcb)).isChecked();
 
         if (first_name_inputted.equals("") || last_name_inputted.equals("") || time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
             Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required!", Toast.LENGTH_LONG).show();
@@ -137,7 +141,6 @@ public class VolunteerRegistration extends AppCompatActivity {
         s.addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
-//                        FirebaseAuthException e = (FirebaseAuthException )task.getException();
                 if (task.isSuccessful()) {
                     FirebaseUser user = fbAuth.getCurrentUser();
                     String userId = user.getUid();
@@ -168,6 +171,10 @@ public class VolunteerRegistration extends AppCompatActivity {
                     m.put("spanish", spanish);
                     m.put("german", german);
                     m.put("chinese", chinese);
+                    m.put("labor_skill", laborSkill);
+                    m.put("care_taking_skill", careTakingSkill);
+                    m.put("food_service_skill", foodServiceSkill);
+                    m.put("vehicle", vehicle);
 
                     dbr.updateChildren(m);
 
