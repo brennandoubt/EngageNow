@@ -6,28 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".EventsList">
 
-    <TextView
-        android:id="@+id/desc_events_list_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="Here are all events listed by their hosting organizations."
-        android:textSize="20dp"
-        android:textAlignment="center"
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        <ExpandableListView
+            android:id="@+id/events_list_elv"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-    <ExpandableListView
-        android:id="@+id/events_list_elv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-        app:layout_constraintTop_toBottomOf="@+id/desc_events_list_tv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
