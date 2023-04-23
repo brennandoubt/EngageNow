@@ -37,6 +37,7 @@
                 android:inputType="text"
                 android:maxLength="30" />
 
+
             <EditText
                 android:id="@+id/description_et"
                 android:layout_width="match_parent"
@@ -45,6 +46,16 @@
                 android:gravity="center"
                 android:hint="Event Description"
                 android:maxLength="200" />
+
+            <EditText
+                android:id="@+id/website_et"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:hint="Event Website (Optional)"
+                android:inputType="text"
+                />
 
             <EditText
                 android:id="@+id/location_et"

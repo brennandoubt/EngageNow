@@ -108,15 +108,21 @@ public class EventRegistration extends OrganizationBaseClass {
     }
 
     private void addEvent() {
+
         DatabaseReference websiteDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+
         websiteDbr.get().addOnCompleteListener(task -> {
-            String websiteLink;
+            String websiteLink = "Website is not available";
             if (task.getResult().exists()) {
                 websiteLink = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
             }
-            else {
-                websiteLink = "No website information";
+
+            //if the event website is not empty, we update the url
+            String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
+            if(!eventWebUrl.equals("")) {
+                websiteLink = eventWebUrl;
             }
+
 
             String event_name = ((EditText) findViewById(R.id.name_preference_et)).getText().toString();
 
@@ -187,7 +193,6 @@ public class EventRegistration extends OrganizationBaseClass {
             showToast("New event created");
             launchActivity();
         });
-
 
     }
 
