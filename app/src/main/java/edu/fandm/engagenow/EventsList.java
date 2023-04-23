@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class EventsList extends AppCompatActivity {
@@ -36,26 +41,20 @@ public class EventsList extends AppCompatActivity {
          * ---Node paths in Firebase's Realtime Database---
          * An organization's events - _root/organization_accounts/[uid]/events/_
          *
-         * ---Questions about Implementing in App---
-         * Which activity/click is this activity started from? (add Intent code there)
-         *  ...started from VolunteerBaseClass as a menu item (goes here when the menu item is clicked)
-         *      - put organization's uid in the Intent used to start this activity
-         *      - retrieve organization's uid from this Intent here
+         * This activity is started from VolunteerBaseClass as a menu item (goes here when the menu item is clicked)
+         *  - retrieve each organization's uid from _root/organization_accounts/[uids]_ in Realtime Database
+         *
          * Are the events displayed the same way they are in the organization's events list activity? (assuming they are for now)
          */
         String uid_of_organization = "JoHtDtO4wXd8Qq3DgztLg5Bu6uB3"; // test example using the "borg@example.com" organization account (with name "test org")
 
-        ListView events_lv = findViewById(R.id.vevents_list_lv);
-        aa = new ArrayAdapter(this, android.R.layout.simple_list_item_1, events_list);
-        events_lv.setAdapter(aa);
-        populate_events(uid_of_organization);
 
-        // 0) put the requested organization's uid in this Intent (in the activity where this Intent is created)
-
-        // 1) get organization's uid from this Intent
-
-        // 2) go to organization's events data location inside the Realtime Database
-
+        // initiate expandable list view
+        ExpandableListView events_elv = (ExpandableListView) findViewById(R.id.events_list_elv);
+        // create lists for group and child items
+        List<Map<String, String>> groupData = new ArrayList<>();
+        List<List<Map<String, String>>> childData = new ArrayList<>();
+        // add data in group and child list
     }
 
     /**
@@ -77,7 +76,7 @@ public class EventsList extends AppCompatActivity {
                     }
                     Log.d(TAG, event_names.toString());
                     aa.addAll(event_names);
-                    TextView instructions = findViewById(R.id.vevents_list_tv);
+                    TextView instructions = findViewById(R.id.desc_events_list_tv);
                     instructions.setText("These are [organization name]'s events. Tap an event to see its details.");
                 } else {
                     aa.clear();
