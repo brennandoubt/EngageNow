@@ -6,18 +6,18 @@ Welcome to Engage Now, an app designed to help connect volunteers with local org
 To use Engage Now, simply create a profile and indicate your interests and availability. From there, you can start swiping through different volunteer opportunities and connect with the ones that align with your values and schedule.
 
 ### Features:
-Create a profile and indicate your interests and availability
-Swipe through various volunteer opportunities
-Quickly match with the ones that interest you
-Connect with local organizations and causes in need
-Make a positive impact on your community
+* Create a profile and indicate your interests and availability
+* Swipe through various volunteer opportunities
+* Quickly match with the ones that interest you
+* Connect with local organizations and causes in need
+* Make a positive impact on your community
 
 ### DEMO:
 
 
 ### Technologies Stack: 
-Front-end: Android Studio, Java.
-Back-end: Firebase: Authentication, Realtime Database, Storage, Cloud Messaging.
+* Front-end: Android Studio, Java.
+* Back-end: Firebase: Authentication, Realtime Database, Storage, Cloud Messaging.
 
 ### Contributing
 We welcome contributions from anyone who is interested in helping make Volunteer Match even better! If you'd like to contribute, please fork the repository and submit a pull request.
