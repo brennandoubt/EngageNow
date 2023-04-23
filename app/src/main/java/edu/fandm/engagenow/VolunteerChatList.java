@@ -58,7 +58,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String[] nameEmail = adapterView.getItemAtPosition(position).toString().split(":");
-//                Log.d(TAG, nameIdMap.get(email));
+
                 Intent i = new Intent(getApplicationContext(), VolunteerChat.class);
                 i.putExtra("organization_id", nameIdMap.get(nameEmail[1].trim()).get("id"));
                 i.putExtra("organization_email", nameEmail[1].trim());
@@ -66,8 +66,9 @@ public class VolunteerChatList extends VolunteerBaseClass {
                 String organizationId = nameIdMap.get(nameEmail[1].trim()).get("id");
                 DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
                 dbr.setValue(true);
-                //                i.putExtra("current_user_name", nameIdMap.get(email));
+
                 startActivity(i);
+                finish();
             }
         });
 
@@ -197,7 +198,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
                         boolean read = (boolean) task.getResult().getValue();
                         View v = (View) matchesListView.getChildAt(idx);
                         if (!read) {
-                            v.setBackgroundColor(Color.RED);
+                            v.setBackgroundColor(Color.GREEN);
                         } else {
                             v.setBackgroundColor(Color.TRANSPARENT);
                         }

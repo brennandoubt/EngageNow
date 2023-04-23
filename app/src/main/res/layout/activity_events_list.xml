@@ -13,9 +13,10 @@
 
         <TextView
             android:id="@+id/events_list_tv"
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="50dp"
             android:padding="10dp"
+            android:textSize="20dp"
             android:text="Click on an organization to see their current events"
             android:textAlignment="center" />
 

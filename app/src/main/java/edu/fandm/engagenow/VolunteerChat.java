@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +44,8 @@ public class VolunteerChat extends VolunteerBaseClass {
 
     final String TAG = "VolunteerChat";
     private DatabaseReference dbr;
+    static boolean active = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +133,9 @@ public class VolunteerChat extends VolunteerBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                if (!active) {
+                    return;
+                }
                 deleted = true;
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -145,7 +151,9 @@ public class VolunteerChat extends VolunteerBaseClass {
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), VolunteerChatList.class);
                         finish();
+                        startActivity(intent);
                     }
                 });
 
@@ -189,9 +197,16 @@ public class VolunteerChat extends VolunteerBaseClass {
     @Override
     protected void onStop() {
         super.onStop();  // Always call the superclass method first
+        active = false;
         if (!deleted) {
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("volunteer_read");
             dbr.setValue(true);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
     }
 }

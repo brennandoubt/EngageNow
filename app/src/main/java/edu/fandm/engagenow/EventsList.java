@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class EventsList extends AppCompatActivity {
+public class EventsList extends VolunteerBaseClass {
     private final static String TAG = "EVENTS_LIST";
 
     ArrayList<String> events_list = new ArrayList<>();
@@ -98,22 +98,22 @@ public class EventsList extends AppCompatActivity {
                 childData, R.layout.child_items, childFrom, childTo);
         elv.setAdapter(ela);
 
-        elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
-
-                return false;
-            }
-        });
-        elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
-
-                return false;
-            }
-        });
+//        elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+//            @Override
+//            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+//                Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
+//
+//                return false;
+//            }
+//        });
+//        elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//            @Override
+//            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+//                Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
+//
+//                return false;
+//            }
+//        });
     }
 
     private void populate_events_exp() {

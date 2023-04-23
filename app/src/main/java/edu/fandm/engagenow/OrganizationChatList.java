@@ -96,6 +96,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
                 i.putExtra("volunteer_id", volunteerId);
                 i.putExtra("org_name", orgName);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -227,7 +228,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
                         boolean read = (boolean) task.getResult().getValue();
                         if (v != null) {
                             if (!read) {
-                                v.setBackgroundColor(Color.RED);
+                                v.setBackgroundColor(Color.GREEN);
                                 arrayAdapter.remove(v);
                                 arrayAdapter.notifyDataSetChanged();
 
@@ -244,36 +245,5 @@ public class OrganizationChatList extends OrganizationBaseClass {
         arrayAdapter.notifyDataSetChanged();
 
     }
-
-//    private void makeNotification() {
-//        //create the notification and fill with content
-//        NotificationCompat.Builder nb = new NotificationCompat.Builder(this, this.CHANNEL_ID_1);
-//        nb.setSmallIcon(R.drawable.chat_foreground);
-//        nb.setContentTitle("ENGAGE NOW");
-//        nb.setContentText("Test notification");
-//        nb.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-//
-//        // create the channel, (necessary and only possible on newer versions of android)
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            CharSequence name = "Channel1";
-//            String desc = "Main channel for this app.";
-//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(this.CHANNEL_ID_1, name, importance);
-//            channel.setDescription(desc);
-//
-//            NotificationManager nm = this.CTX.getSystemService(NotificationManager.class);
-//            nm.createNotificationChannel(channel);
-//        }
-//
-//        // check permission
-//        if (ContextCompat.checkSelfPermission(this.CTX, this.PERM) == PackageManager.PERMISSION_GRANTED) {
-//            // display notification
-//            NotificationManagerCompat nmc = NotificationManagerCompat.from(this.CTX);
-//            nmc.notify(0, nb.build());
-//        }
-//        else {
-//            Log.d(this.TAG, "Could not send notification, permissions not granted");
-//        }
-//    }
 
 }
