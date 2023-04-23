@@ -25,13 +25,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class EventsList extends AppCompatActivity {
+public class EventsList extends VolunteerBaseClass {
     private final String TAG = "EVENTS_LIST";
 
     ArrayList<String> events_list = new ArrayList<>();
     HashMap<String, HashMap<String, Object>> events_map = new HashMap<>();
-
     ArrayAdapter aa;
+
+    ExpandableListAdapter ela;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,13 @@ public class EventsList extends AppCompatActivity {
          */
         String uid_of_organization = "JoHtDtO4wXd8Qq3DgztLg5Bu6uB3"; // test example using the "borg@example.com" organization account (with name "test org")
 
-
         // initiate expandable list view
         ExpandableListView events_elv = (ExpandableListView) findViewById(R.id.events_list_elv);
+
         // create lists for group and child items
         List<Map<String, String>> groupData = new ArrayList<>();
         List<List<Map<String, String>>> childData = new ArrayList<>();
+
         // add data in group and child list
     }
 
@@ -76,12 +78,27 @@ public class EventsList extends AppCompatActivity {
                     }
                     Log.d(TAG, event_names.toString());
                     aa.addAll(event_names);
+
+                    // getting organization's name
                     TextView instructions = findViewById(R.id.desc_events_list_tv);
                     instructions.setText("These are [organization name]'s events. Tap an event to see its details.");
                 } else {
                     aa.clear();
                     TextView instructions = findViewById(R.id.description);
                     instructions.setText("Sorry, there are no active events for this organization at the moment.");
+                }
+            }
+        });
+    }
+
+    private void populate_events_exp() {
+        DatabaseReference organizations_dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts");
+        organizations_dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot child : task.getResult().getChildren()) {
+                    Log.d(TAG, child.getKey().toString());
+
                 }
             }
         });
