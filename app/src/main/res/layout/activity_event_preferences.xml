@@ -30,6 +30,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20dp"
+
                 android:layout_marginTop="20dp"
                 android:text="Start Date"/>
 
@@ -43,9 +45,9 @@
 
             <Spinner
                 android:id="@+id/ptime_commitment_spinner"
-                android:layout_width="wrap_content"
                 android:layout_margin ="5dp"
-                android:layout_height="30dp"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
                 android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 />
@@ -53,17 +55,17 @@
 
             <Spinner
                 android:id="@+id/page_group_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:spinnerMode="dropdown"
                 android:textAlignment="center" />
 
             <Spinner
                 android:id="@+id/pavailability_spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_margin ="5dp"
-                android:layout_height="30dp"
+                android:layout_height="50dp"
                 android:textAlignment="center"
                 android:spinnerMode="dropdown"
                 />
@@ -79,7 +81,7 @@
                 android:id="@+id/pclearances_tv"
                 android:textAlignment="center"
                 android:layout_width="match_parent"
-                android:textSize="17sp"
+                android:textSize="20dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="10dp"
                 android:text="Clearances"
@@ -125,7 +127,7 @@
                 android:id="@+id/pskills_tv"
                 android:textAlignment="center"
                 android:layout_width="match_parent"
-                android:textSize="17sp"
+                android:textSize="20dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="10dp"
                 android:text="Skills"
@@ -171,7 +173,7 @@
                 android:id="@+id/planguages_tv"
                 android:textAlignment="center"
                 android:layout_width="match_parent"
-                android:textSize="17sp"
+                android:textSize="20dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="10dp"
                 android:text="Languages"
