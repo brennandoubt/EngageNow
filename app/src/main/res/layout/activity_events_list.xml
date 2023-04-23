@@ -11,8 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <TextView
+            android:id="@+id/events_list_tv"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:text="Click on an organization to see their current events"
+            android:textAlignment="center" />
+
         <ExpandableListView
             android:id="@+id/events_list_elv"
+            android:layout_below="@+id/events_list_tv"
             android:layout_width="match_parent"
             android:layout_height="600dp"
             android:divider="@android:color/darker_gray"
