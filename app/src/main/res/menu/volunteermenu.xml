@@ -19,4 +19,9 @@
         app:showAsAction="ifRoom"
         android:title="Log Out"
         android:icon="@drawable/log_out_foreground" />
+
+    <item android:id="@+id/events_list_mi"
+        app:showAsAction="ifRoom"
+        android:title="List of all events by organization"
+        android:icon="@drawable/events_list_menu_button" />
 </menu>

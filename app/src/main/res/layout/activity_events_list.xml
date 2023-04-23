@@ -4,28 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventDashboard">
+    tools:context=".EventsList">
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/desc_events_list_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="40dp"
-        android:text="These are your events. Tap to view. Long click to delete."
+        android:padding="20dp"
+        android:text="Here are all events listed by their hosting organizations."
         android:textSize="20dp"
         android:textAlignment="center"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <ListView
-        android:id="@+id/event_lv"
-        android:layout_width="0dp"
+    <ExpandableListView
+        android:id="@+id/events_list_elv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+        app:layout_constraintTop_toBottomOf="@+id/desc_events_list_tv"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

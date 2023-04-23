@@ -80,23 +80,20 @@ public class VolunteerRegistration extends AppCompatActivity {
     }
 
     private void getNotificationToken(String userId){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()) {
-                    Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
-                    return;
-                }
-
-                // Get new FCM registration token that is associated with the device
-
-                String notificationToken = task.getResult();
-                Log.d("GENERATE TOKEN", notificationToken);
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
-                Map<String, Object> orgDBHashmap = new HashMap<>();
-                orgDBHashmap.put("notification", notificationToken);
-                dbr.updateChildren(orgDBHashmap);
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+                return;
             }
+
+            // Get new FCM registration token that is associated with the device
+
+            String notificationToken = task.getResult();
+            Log.d("GENERATE TOKEN", notificationToken);
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+            Map<String, Object> orgDBHashmap = new HashMap<>();
+            orgDBHashmap.put("notification", notificationToken);
+            dbr.updateChildren(orgDBHashmap);
         });
     }
 
@@ -112,14 +109,19 @@ public class VolunteerRegistration extends AppCompatActivity {
         String time_commitment = ((Spinner) findViewById(R.id.time_commitment_volunteer_spinner)).getSelectedItem().toString();
         String age_group = ((Spinner) findViewById(R.id.age_group_volunteer_spinner)).getSelectedItem().toString();
         String travel_distance = ((Spinner) findViewById(R.id.travel_distance_volunteer_spinner)).getSelectedItem().toString();
-        boolean fbi_certification = ((CheckBox) findViewById(R.id.fbi_vcb)).isChecked();
-        boolean child_certification = ((CheckBox) findViewById(R.id.child_vcb)).isChecked();
-        boolean criminal_history = ((CheckBox) findViewById(R.id.criminal_vcb)).isChecked();
-        boolean english = ((CheckBox) findViewById(R.id.english)).isChecked();
-        boolean spanish = ((CheckBox) findViewById(R.id.spanish)).isChecked();
-        boolean german = ((CheckBox) findViewById(R.id.german)).isChecked();
-        boolean chinese = ((CheckBox) findViewById(R.id.chinese)).isChecked();
+        boolean fbi_certification = ((CheckBox) findViewById(R.id.fbi_vrcb)).isChecked();
+        boolean child_certification = ((CheckBox) findViewById(R.id.child_vrcb)).isChecked();
+        boolean criminal_history = ((CheckBox) findViewById(R.id.criminal_vrcb)).isChecked();
+        boolean english = ((CheckBox) findViewById(R.id.english_language_vrcb)).isChecked();
+        boolean spanish = ((CheckBox) findViewById(R.id.spanish_language_vrcb)).isChecked();
+        boolean german = ((CheckBox) findViewById(R.id.german_language_vrcb)).isChecked();
+        boolean chinese = ((CheckBox) findViewById(R.id.chinese_language_vrcb)).isChecked();
+        boolean laborSkill = ((CheckBox) findViewById(R.id.labor_skill_vrcb)).isChecked();
+        boolean careTakingSkill = ((CheckBox) findViewById(R.id.careTaking_skill_vrcb)).isChecked();
+        boolean foodServiceSkill = ((CheckBox) findViewById(R.id.food_skill_vrcb)).isChecked();
+        boolean vehicle = ((CheckBox) findViewById(R.id.vehicle_vrcb)).isChecked();
 
+        //check if inputs are valid
         if (first_name_inputted.equals("") || last_name_inputted.equals("") || time_commitment.equals("Select Time Commitment") || age_group.equals("Select Age Group") || travel_distance.equals("Select Travel Distance")) {
             Toast.makeText(getApplicationContext(), "All Text and Dropdown Fields Are Required!", Toast.LENGTH_LONG).show();
             return;
@@ -132,59 +134,60 @@ public class VolunteerRegistration extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Name Cannot Contain ','", Toast.LENGTH_LONG).show();
             return;
         }
+
         // registering new user with preferences
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
-        s.addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-//                        FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                if (task.isSuccessful()) {
-                    FirebaseUser user = fbAuth.getCurrentUser();
-                    String userId = user.getUid();
+        s.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = fbAuth.getCurrentUser();
+                String userId = user.getUid();
 
-                    //generate the notification token
-                    getNotificationToken(userId);
+                //generate the notification token
+                getNotificationToken(userId);
 
-                    // store account type under "account_type/" in Realtime Database
-                    DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
-                    Map<String, Object> accountTypeMap = new HashMap<>();
-                    accountTypeMap.put(userId, "volunteer_account");
-                    dbr.updateChildren(accountTypeMap);
+                // store account type under "account_type/" in Realtime Database
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
+                Map<String, Object> accountTypeMap = new HashMap<>();
+                accountTypeMap.put(userId, "volunteer_account");
+                dbr.updateChildren(accountTypeMap);
 
-                    // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
-                    dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
-                    HashMap<String, Object> m = new HashMap<>();
-                    m.put("account_type", "volunteer_account");
-                    m.put("first_name", first_name_inputted);
-                    m.put("last_name", last_name_inputted);
-                    m.put("email", email);
-                    m.put("time_commitment", time_commitment);
-                    m.put("age_group", age_group);
-                    m.put("travel_distance", travel_distance);
-                    m.put("fbi_clearance", fbi_certification);
-                    m.put("child_clearance", child_certification);
-                    m.put("criminal_history", criminal_history);
-                    m.put("english", english);
-                    m.put("spanish", spanish);
-                    m.put("german", german);
-                    m.put("chinese", chinese);
+                // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
+                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                HashMap<String, Object> m = new HashMap<>();
+                m.put("account_type", "volunteer_account");
+                m.put("first_name", first_name_inputted);
+                m.put("last_name", last_name_inputted);
+                m.put("email", email);
+                m.put("time_commitment", time_commitment);
+                m.put("age_group", age_group);
+                m.put("travel_distance", travel_distance);
+                m.put("fbi_clearance", fbi_certification);
+                m.put("child_clearance", child_certification);
+                m.put("criminal_history", criminal_history);
+                m.put("english", english);
+                m.put("spanish", spanish);
+                m.put("german", german);
+                m.put("chinese", chinese);
+                m.put("labor_skill", laborSkill);
+                m.put("care_taking_skill", careTakingSkill);
+                m.put("food_service_skill", foodServiceSkill);
+                m.put("vehicle", vehicle);
 
-                    dbr.updateChildren(m);
+                dbr.updateChildren(m);
 
-                    Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_LONG).show();
 
-                    // moving to volunteer swiping activity after user is registered
-                    Intent vsi = new Intent(getApplicationContext(), VolunteerSwiping.class);
-                    startActivity(vsi);
-                    finish();
+                // moving to volunteer swiping activity after user is registered
+                Intent vsi = new Intent(getApplicationContext(), VolunteerSwiping.class);
+                startActivity(vsi);
+                finish();
+            }
+            else {
+                if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                    Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
-                        Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
                 }
             }
         });

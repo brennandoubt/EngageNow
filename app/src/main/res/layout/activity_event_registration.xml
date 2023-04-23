@@ -22,7 +22,11 @@
                 android:id="@+id/instructions_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_margin="40dp"
+=======
+                android:layout_margin ="20dp"
+>>>>>>> 7cfa237c6ace308cd8f3297fb9cc36639e6b757b
                 android:text="Fill in the following fields to create an event"
                 android:textAlignment="center"
                 android:textSize="20dp" />
@@ -59,7 +63,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+<<<<<<< HEAD
                 android:text="Start Date" />
+=======
+                android:textSize="17sp"
+                android:text="Start Date"/>
+>>>>>>> 7cfa237c6ace308cd8f3297fb9cc36639e6b757b
 
             <DatePicker
                 android:id="@+id/start_date"
@@ -71,8 +80,14 @@
             <Spinner
                 android:id="@+id/time_commitment_spinner"
                 android:layout_width="250dp"
+<<<<<<< HEAD
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
+=======
+                android:layout_margin ="5dp"
+                android:layout_height="50dp"
+                android:textAlignment="center"
+>>>>>>> 7cfa237c6ace308cd8f3297fb9cc36639e6b757b
                 android:spinnerMode="dropdown"
                 android:textAlignment="center" />
 
@@ -80,7 +95,7 @@
             <Spinner
                 android:id="@+id/age_group_spinner"
                 android:layout_width="250dp"
-                android:layout_height="30dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:spinnerMode="dropdown"
                 android:textAlignment="center" />
@@ -88,10 +103,19 @@
             <Spinner
                 android:id="@+id/availability_spinner"
                 android:layout_width="250dp"
+<<<<<<< HEAD
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
                 android:spinnerMode="dropdown"
                 android:textAlignment="center" />
+=======
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
+                />
+>>>>>>> 7cfa237c6ace308cd8f3297fb9cc36639e6b757b
 
             <View
                 android:layout_width="match_parent"
