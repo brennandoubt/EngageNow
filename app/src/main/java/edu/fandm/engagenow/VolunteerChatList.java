@@ -198,7 +198,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
                         boolean read = (boolean) task.getResult().getValue();
                         View v = (View) matchesListView.getChildAt(idx);
                         if (!read) {
-                            v.setBackgroundColor(Color.GREEN);
+                            v.setBackgroundColor(getResources().getColor(R.color.light_green));
                         } else {
                             v.setBackgroundColor(Color.TRANSPARENT);
                         }

@@ -228,7 +228,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
                         boolean read = (boolean) task.getResult().getValue();
                         if (v != null) {
                             if (!read) {
-                                v.setBackgroundColor(Color.GREEN);
+                                v.setBackgroundColor(getResources().getColor(R.color.light_green));
                                 arrayAdapter.remove(v);
                                 arrayAdapter.notifyDataSetChanged();
 

@@ -10,6 +10,7 @@
         android:id="@+id/childItem"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:textColor="#808080"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
