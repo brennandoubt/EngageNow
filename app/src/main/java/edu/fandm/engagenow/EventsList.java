@@ -50,42 +50,16 @@ public class EventsList extends VolunteerBaseClass {
      * Code below adapted from this source:
      * https://abhiandroid.com/ui/simpleexpandablelistadapter-example-android-studio.html
      */
-    String groupFrom[] = {NAME};
-    int groupTo[] = {R.id.heading};
-    String childFrom[] = {NAME};
-    int childTo[] = {R.id.childItem};
+    String[] groupFrom = {NAME};
+    int[] groupTo = {R.id.heading};
+    String[] childFrom = {NAME};
+    int[] childTo = {R.id.childItem};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_list);
-        /**
-         * ---Node paths in Firebase's Realtime Database---
-         * An organization's events - _root/organization_accounts/[uid]/events/_
-         *
-         * This activity is started from VolunteerBaseClass as a menu item (goes here when the menu item is clicked)
-         *  - retrieve each organization's uid from _root/organization_accounts/[uids]_ in Realtime Database
-         *
-         * Are the events displayed the same way they are in the organization's events list activity? (assuming they are for now)
-         */
 
-        // add data in group and child list
-        populate_events_exp();
-        //List<String> headers = new ArrayList<>(emap.keySet()); // headers for each events list is just the key values for each pairing in map
-
-        for (int i = 0; i < groupItems.size(); i++) {
-            Map<String, String> curGroupMap = new HashMap<>();
-            groupData.add(curGroupMap);
-            curGroupMap.put(NAME, groupItems.get(i));
-
-            List<Map<String, String>> children = new ArrayList<>();
-            for (int j = 0; j < childItems.get(i).size(); j++) {
-                Map<String, String> curChildMap = new HashMap<>();
-                children.add(curChildMap);
-                curChildMap.put(NAME, childItems.get(i).get(j));
-            }
-            childData.add(children);
-        }
         Log.d(TAG, "List mappings for groups: " + emap.toString());
 
         // initiate expandable list view
@@ -98,22 +72,24 @@ public class EventsList extends VolunteerBaseClass {
                 childData, R.layout.child_items, childFrom, childTo);
         elv.setAdapter(ela);
 
-//        elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-//            @Override
-//            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-//                Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
-//
-//                return false;
-//            }
-//        });
-//        elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//            @Override
-//            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-//                Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
-//
-//                return false;
-//            }
-//        });
+        populate_events_exp();
+
+        elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                //Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Group Name Is :" + groupItems.get(i));
+                return false;
+            }
+        });
+        elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+                //Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Group Name Is :" + childItems.get(i).get(i1));
+                return false;
+            }
+        });
     }
 
     private void populate_events_exp() {
