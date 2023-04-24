@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:textColor="#808080"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="15dp"
+        android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>
