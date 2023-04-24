@@ -66,8 +66,8 @@ public class VolunteerChatList extends VolunteerBaseClass {
                 String organizationId = nameIdMap.get(nameEmail[1].trim()).get("id");
                 DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
                 dbr.setValue(true);
-
                 startActivity(i);
+                finish();
             }
         });
 

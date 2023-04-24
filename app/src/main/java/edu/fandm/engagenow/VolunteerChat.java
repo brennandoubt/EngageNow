@@ -157,8 +157,8 @@ public class VolunteerChat extends VolunteerBaseClass {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(getApplicationContext(), VolunteerChatList.class);
-                        finish();
                         startActivity(intent);
+                        finish();
                     }
                 });
 

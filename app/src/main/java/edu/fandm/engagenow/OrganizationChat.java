@@ -125,8 +125,8 @@ public class OrganizationChat extends OrganizationBaseClass {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(getApplicationContext(), OrganizationChatList.class);
-                        finish();
                         startActivity(intent);
+                        finish();
                     }
                 });
 
