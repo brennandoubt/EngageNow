@@ -78,7 +78,6 @@ public class OrganizationChat extends OrganizationBaseClass {
         volunteerId = getIntent().getExtras().get("volunteer_id").toString();
         setTitle("Chat: " + selectedVolunteer);
 //        Log.d(TAG, selectedVolunteer);
-        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +86,11 @@ public class OrganizationChat extends OrganizationBaseClass {
             }
         });
 
+        setUpChat();
+    }
+
+    private void setUpChat() {
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
         dbr.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

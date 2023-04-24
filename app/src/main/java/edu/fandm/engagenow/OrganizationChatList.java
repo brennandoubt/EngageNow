@@ -2,6 +2,7 @@ package edu.fandm.engagenow;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,14 +73,11 @@ public class OrganizationChatList extends OrganizationBaseClass {
             }
         });
 
-        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid);
-
         matchesListView = (ListView) findViewById(R.id.matches_lv);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatches);
 
         matchesListView.setAdapter(arrayAdapter);
         this.CTX = getApplicationContext();
-        Log.d(TAG, dbr.toString());
 
         populateChats();
         matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -131,11 +130,6 @@ public class OrganizationChatList extends OrganizationBaseClass {
             public void onClick(DialogInterface dialogInterface, int i) {
                 DatabaseReference dbr1 = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volId);
                 dbr1.removeValue();
-
-                // refresh the page to remove deleted chat
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
             }
         });
 
@@ -148,22 +142,23 @@ public class OrganizationChatList extends OrganizationBaseClass {
 
         builder.show();
     }
-
     private void populateChats() {
+        arrayAdapter.clear();
+        dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid);
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Log.d(TAG, "CHANGE");
+                arrayAdapter.clear();
                 if (snapshot.exists()) {
                     HashMap<String, Object> chatsMap = (HashMap<String, Object>) snapshot.getValue();
 
-                    arrayAdapter.clear();
                     HashMap<String, Boolean> chatsHashmap = new HashMap<>();
                     // contains data from a firebase location.
                     if (chatsMap != null) {
-                        for (String key : chatsMap.keySet()) {
+                        for (String volId : chatsMap.keySet()) {
 
-                            HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(key);
-                            String volId = key;
+                            HashMap<String, Object> volChat = (HashMap<String, Object>) chatsMap.get(volId);
 
                             DatabaseReference volunteerAccDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(volId);
                             volunteerAccDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -191,30 +186,20 @@ public class OrganizationChatList extends OrganizationBaseClass {
                                             arrayAdapter.add(key);
                                         }
                                     }
-    //                            arrayAdapter.addAll(chatsHashmap.keySet());
-                                    setReadNotifications();
-                                    Log.d(TAG, "CHATMAP: " + chatsHashmap.toString());
 
+                                    setReadNotifications();
                                 }
                             });
 
                         }
                     }
 
-                        arrayAdapter.notifyDataSetChanged();
+                    arrayAdapter.notifyDataSetChanged();
                 }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, "FAIL");
-            }
-        });
-    }
-
     private void setReadNotifications() {
         for (int i = 0; i < matchesListView.getCount(); i++) {
-            Log.d("ERROR", arrayAdapter.getItem(i).toString());
             String email = arrayAdapter.getItem(i).toString().split(":")[1].trim();
             String volunteerId = volIdMap.get(email).get("id");
 
@@ -246,4 +231,12 @@ public class OrganizationChatList extends OrganizationBaseClass {
 
     }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.d(TAG, "FAIL");
+            }
+        });
+    }
 }
+
+

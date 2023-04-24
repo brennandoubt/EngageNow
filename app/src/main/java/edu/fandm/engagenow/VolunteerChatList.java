@@ -68,7 +68,6 @@ public class VolunteerChatList extends VolunteerBaseClass {
                 dbr.setValue(true);
 
                 startActivity(i);
-                finish();
             }
         });
 
@@ -79,9 +78,6 @@ public class VolunteerChatList extends VolunteerBaseClass {
                 return true;
             }
         });
-
-
-
     }
 
     private void deleteConversation(View view, int idx) {
@@ -105,11 +101,6 @@ public class VolunteerChatList extends VolunteerBaseClass {
             public void onClick(DialogInterface dialogInterface, int i) {
                 DatabaseReference dbr1 = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(orgId).child(userId);
                 dbr1.removeValue();
-
-                // refresh the page to remove deleted chat
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
             }
         });
 
@@ -128,8 +119,10 @@ public class VolunteerChatList extends VolunteerBaseClass {
         dbr.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d(TAG, "CHANGED");
+                arrayAdapter.clear();
+
                 if (snapshot.exists()) {
-//                    Log.d("HERE", " HERE " + snapshot.getValue().toString());
                     HashMap<String, Boolean> chatMap = new HashMap<>();
 
                     if (snapshot.exists()) {
@@ -137,10 +130,8 @@ public class VolunteerChatList extends VolunteerBaseClass {
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             Log.d(TAG, ds.getValue().toString());
                             Map<String, Object> m = (Map) ds.getValue();
-                            Log.d("HERE", m.toString());
                             if (m.containsKey(userId)) {
                                 String orgId = ds.getKey();
-                                Log.d("MEEE", ds.getValue().toString());
                                 Boolean read = (Boolean) ((HashMap<String, HashMap<String, Object>>) ds.getValue()).get(userId).get("volunteer_read");
                                 DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
 
@@ -172,7 +163,6 @@ public class VolunteerChatList extends VolunteerBaseClass {
                         }
 
                         arrayAdapter.notifyDataSetChanged();
-//                    Log.d("EXISTS", nameSet.toString());
                     }
                 }
             }
