@@ -47,46 +47,18 @@ public class EventsList extends VolunteerBaseClass {
     List<List<Map<String, String>>> childData = new ArrayList<>();
 
     /*
-     * Code below adapted from this source:
+     * Code below for Expandable List View is adapted from this source:
      * https://abhiandroid.com/ui/simpleexpandablelistadapter-example-android-studio.html
      */
-    String groupFrom[] = {NAME};
-    int groupTo[] = {R.id.heading};
-    String childFrom[] = {NAME};
-    int childTo[] = {R.id.childItem};
+    String[] groupFrom = {NAME};
+    int[] groupTo = {R.id.heading};
+    String[] childFrom = {NAME};
+    int[] childTo = {R.id.childItem};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_list);
-        /**
-         * ---Node paths in Firebase's Realtime Database---
-         * An organization's events - _root/organization_accounts/[uid]/events/_
-         *
-         * This activity is started from VolunteerBaseClass as a menu item (goes here when the menu item is clicked)
-         *  - retrieve each organization's uid from _root/organization_accounts/[uids]_ in Realtime Database
-         *
-         * Are the events displayed the same way they are in the organization's events list activity? (assuming they are for now)
-         */
-
-        // add data in group and child list
-        populate_events_exp();
-        //List<String> headers = new ArrayList<>(emap.keySet()); // headers for each events list is just the key values for each pairing in map
-
-        for (int i = 0; i < groupItems.size(); i++) {
-            Map<String, String> curGroupMap = new HashMap<>();
-            groupData.add(curGroupMap);
-            curGroupMap.put(NAME, groupItems.get(i));
-
-            List<Map<String, String>> children = new ArrayList<>();
-            for (int j = 0; j < childItems.get(i).size(); j++) {
-                Map<String, String> curChildMap = new HashMap<>();
-                children.add(curChildMap);
-                curChildMap.put(NAME, childItems.get(i).get(j));
-            }
-            childData.add(children);
-        }
-        Log.d(TAG, "List mappings for groups: " + emap.toString());
 
         // initiate expandable list view
         ExpandableListView elv = (ExpandableListView) findViewById(R.id.events_list_elv);
@@ -98,22 +70,24 @@ public class EventsList extends VolunteerBaseClass {
                 childData, R.layout.child_items, childFrom, childTo);
         elv.setAdapter(ela);
 
-//        elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-//            @Override
-//            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-//                Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
-//
-//                return false;
-//            }
-//        });
-//        elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//            @Override
-//            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-//                Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
-//
-//                return false;
-//            }
-//        });
+        populate_events_exp(); // update events list data in the list adapter
+
+        elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                //Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Group Name Is :" + groupItems.get(i));
+                return false;
+            }
+        });
+        elv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+                //Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Group Name Is :" + childItems.get(i).get(i1));
+                return false;
+            }
+        });
     }
 
     private void populate_events_exp() {
@@ -121,6 +95,8 @@ public class EventsList extends VolunteerBaseClass {
         organizations_dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
+
+                // retrieving group and child list items from database
                 for (DataSnapshot child : task.getResult().getChildren()) {
                     Log.d(TAG, child.getKey().toString()); // child keys are organization user id nodes
                     String org_uid = child.getKey().toString();
@@ -142,10 +118,10 @@ public class EventsList extends VolunteerBaseClass {
                         org_events.add(event);
                     }
                     emap.put(org_name, org_events); // put organization's name-events pairings into data map for expandable list view
-
                     childItems.add(org_events);
                 }
 
+                // re-formatting list items to map organizations to their events
                 for (int i = 0; i < groupItems.size(); i++) {
                     Map<String, String> curGroupMap = new HashMap<>();
                     groupData.add(curGroupMap);

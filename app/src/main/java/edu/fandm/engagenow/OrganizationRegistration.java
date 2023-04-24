@@ -122,17 +122,13 @@ public class OrganizationRegistration extends AppCompatActivity {
         finish();
     }
 
-    private boolean checkInput(String name, String description, String website){
+    private boolean checkInput(String name, String description){
         if(name.equals("")) {
             showToast("Event Name Cannot Be Empty");
             return false;
         }
         else if(description.equals("")){
             showToast("Event Description Cannot Be Empty");
-            return false;
-        }
-        else if(!(Patterns.WEB_URL.matcher(website).matches())) {
-            showToast("Invalid Website URL");
             return false;
         }
         else if(imageUri == null){
@@ -206,8 +202,14 @@ public class OrganizationRegistration extends AppCompatActivity {
         String description = ((EditText) findViewById(R.id.description_et)).getText().toString().trim();
         String website = ((EditText) findViewById(R.id.website_link_et)).getText().toString().trim();
 
+        //if the website is inputted, make sure its valid
+        if(!website.equals("") && !(Patterns.WEB_URL.matcher(website).matches()) ){
+            showToast("Invalid Website URL");
+            return;
+        }
+
         // verify all fields have been filled out
-        if(!checkInput(name, description, website)) return;
+        if(!checkInput(name, description)) return;
 
         //create the user
         Task s = fbAuth.createUserWithEmailAndPassword(email, password);
