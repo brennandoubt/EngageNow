@@ -47,7 +47,7 @@ public class EventsList extends VolunteerBaseClass {
     List<List<Map<String, String>>> childData = new ArrayList<>();
 
     /*
-     * Code below adapted from this source:
+     * Code below for Expandable List View is adapted from this source:
      * https://abhiandroid.com/ui/simpleexpandablelistadapter-example-android-studio.html
      */
     String[] groupFrom = {NAME};
@@ -60,8 +60,6 @@ public class EventsList extends VolunteerBaseClass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_list);
 
-        Log.d(TAG, "List mappings for groups: " + emap.toString());
-
         // initiate expandable list view
         ExpandableListView elv = (ExpandableListView) findViewById(R.id.events_list_elv);
 
@@ -72,7 +70,7 @@ public class EventsList extends VolunteerBaseClass {
                 childData, R.layout.child_items, childFrom, childTo);
         elv.setAdapter(ela);
 
-        populate_events_exp();
+        populate_events_exp(); // update events list data in the list adapter
 
         elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -97,6 +95,8 @@ public class EventsList extends VolunteerBaseClass {
         organizations_dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
+
+                // retrieving group and child list items from database
                 for (DataSnapshot child : task.getResult().getChildren()) {
                     Log.d(TAG, child.getKey().toString()); // child keys are organization user id nodes
                     String org_uid = child.getKey().toString();
@@ -118,10 +118,10 @@ public class EventsList extends VolunteerBaseClass {
                         org_events.add(event);
                     }
                     emap.put(org_name, org_events); // put organization's name-events pairings into data map for expandable list view
-
                     childItems.add(org_events);
                 }
 
+                // re-formatting list items to map organizations to their events
                 for (int i = 0; i < groupItems.size(); i++) {
                     Map<String, String> curGroupMap = new HashMap<>();
                     groupData.add(curGroupMap);
