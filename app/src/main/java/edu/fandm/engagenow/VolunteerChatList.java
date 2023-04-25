@@ -120,50 +120,11 @@ public class VolunteerChatList extends VolunteerBaseClass {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.d(TAG, "CHANGED");
-                arrayAdapter.clear();
 
                 if (snapshot.exists()) {
                     HashMap<String, Boolean> chatMap = new HashMap<>();
+                    Log.d(TAG, chatMap.toString());
 
-                    if (snapshot.exists()) {
-                        // for each organization
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            Log.d(TAG, ds.getValue().toString());
-                            Map<String, Object> m = (Map) ds.getValue();
-                            if (m.containsKey(userId)) {
-                                String orgId = ds.getKey();
-                                Boolean read = (Boolean) ((HashMap<String, HashMap<String, Object>>) ds.getValue()).get(userId).get("volunteer_read");
-                                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
-
-                                dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        HashMap<String, Object> orgInfo = (HashMap<String, Object>) ((DataSnapshot) task.getResult()).getValue();
-                                        String orgEmail = (String) orgInfo.get("email");
-                                        String orgName = (String) orgInfo.get("name");
-
-                                        chatMap.put(orgName + ": " + orgEmail, read);
-                                        HashMap<String, String> m = new HashMap<>();
-                                        m.put("id", orgId);
-                                        m.put("name", orgName);
-                                        nameIdMap.put(orgEmail, m);
-                                        arrayAdapter.clear();
-                                        for (String key : chatMap.keySet()) {
-                                            if (chatMap.get(key) != null && !chatMap.get(key)) {
-                                                arrayAdapter.insert(key, 0);
-                                            } else {
-                                                arrayAdapter.add(key);
-                                            }
-                                        }
-                                        setReadNotifications();
-                                    }
-                                });
-                            }
-
-                        }
-
-                        arrayAdapter.notifyDataSetChanged();
-                    }
                 }
             }
 
