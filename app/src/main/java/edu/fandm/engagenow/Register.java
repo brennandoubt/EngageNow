@@ -1,7 +1,5 @@
 package edu.fandm.engagenow;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -10,6 +8,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,6 +74,7 @@ public class Register extends AppCompatActivity {
             vi.putExtra("account_type", accountType);
 
             startActivity(vi);
+            finish();
         }
         else {
             accountType = "organization_account";
@@ -84,6 +85,8 @@ public class Register extends AppCompatActivity {
             oi.putExtra("account_type", accountType);
 
             startActivity(oi);
+            finish();
+
         }
     }
 

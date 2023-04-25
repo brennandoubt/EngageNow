@@ -38,7 +38,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
     List<Org> orgs = new ArrayList<>();
-
+    boolean go_back = false;
     int unsortedIdx = -1;
 
     @Override
@@ -151,8 +151,11 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     @Override
     public void onCardDisappeared(View view, int position) {
         TextView textView = view.findViewById(R.id.item_name);
-        if(position == orgs.size() - 1){
+        if(position == orgs.size() - 1 && !go_back){
             Toast.makeText(this.getApplicationContext(),"It seems like there are no more events matching your preferences!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            go_back = false;
         }
         Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
     }
@@ -184,6 +187,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                         .build();
                 manager.setRewindAnimationSetting(setting);
                 cardStackView.rewind();
+                go_back = true;
             }
         });
 
