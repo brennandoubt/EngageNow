@@ -57,7 +57,7 @@ public class EventPreferences extends OrganizationBaseClass {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean checkInput(String ageGroup, String timeCommitment, String availability, String website){
+    private boolean checkInput(String ageGroup, String timeCommitment, String availability){
 
        if(timeCommitment.equals("Select Time Commitment")){
             showToast("Must Select Time Commitment");
@@ -71,10 +71,6 @@ public class EventPreferences extends OrganizationBaseClass {
             showToast("Must Select Availability");
             return false;
         }
-       else if(!(Patterns.WEB_URL.matcher(website).matches())) {
-           showToast("Invalid Website URL");
-           return false;
-       }
         else{
             return true;
         }
@@ -93,13 +89,24 @@ public class EventPreferences extends OrganizationBaseClass {
         //retrieve the web url
         DatabaseReference websiteDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
         websiteDbr.get().addOnCompleteListener(task -> {
-            String websiteLink;
-            websiteLink = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+            String websiteLink = "";
+
+            //if the org already has website in their database, use it for the event
+            String tempWeb = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+            if (!tempWeb.equals("")){
+                websiteLink = tempWeb;
+            }
 
             String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
             if(!eventWebUrl.equals("")) {
-                websiteLink = eventWebUrl;
+                if(!(Patterns.WEB_URL.matcher(websiteLink).matches())) {
+                    showToast("Invalid Website URL");
+                    return;
+                }else{
+                    websiteLink = eventWebUrl;
+                }
             }
+
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId).child("events").child(event_name);
 
             Map<String, Object> orgDBHashmap = new HashMap<>();
@@ -114,7 +121,7 @@ public class EventPreferences extends OrganizationBaseClass {
             String availability = availabilitySpinner.getSelectedItem().toString();
 
             //If the input is invalid,  make the user fill it out
-            if (!checkInput(ageGroup, timeCommitment, availability, websiteLink)) {
+            if (!checkInput(ageGroup, timeCommitment, availability)) {
                 return;
             }
 
@@ -155,6 +162,7 @@ public class EventPreferences extends OrganizationBaseClass {
             orgDBHashmap.put("time_commitment", timeCommitment);
             orgDBHashmap.put("availability", availability);
             orgDBHashmap.put("other_info", otherInfo);
+            orgDBHashmap.put("website", websiteLink);
 
             //push the data to firebase
             dbr.updateChildren(orgDBHashmap);
