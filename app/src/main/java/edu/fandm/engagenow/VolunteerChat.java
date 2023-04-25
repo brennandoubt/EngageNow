@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class VolunteerChat extends VolunteerBaseClass {
     final String TAG = "VolunteerChat";
     private DatabaseReference dbr;
     static boolean active = false;
+    Activity activityContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +140,8 @@ public class VolunteerChat extends VolunteerBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if (active) {
-                    endChat();
+                if (!isFinishing()) {
+                    endChat(activityContext);
                 }
             }
 
@@ -155,29 +157,31 @@ public class VolunteerChat extends VolunteerBaseClass {
         });
     }
 
-    private void endChat() {
+    private void endChat(Activity activityContext) {
         deleted = true;
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setCancelable(false);
-        dialog.setTitle("Disconnected");
-        TextView notice = new TextView(context);
-        notice.setText("The organization has ended the chat. You will not longer be matched with the organization. The chat messages will be deleted. You can match with this organization in the future.");
-        notice.setTextSize(20);
-        notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        notice.setPadding(60, 5, 5, 5);
-        dialog.setView(notice);
+        if (!isFinishing()) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            dialog.setCancelable(false);
+            dialog.setTitle("Disconnected");
+            TextView notice = new TextView(context);
+            notice.setText("The organization has ended the chat. You will not longer be matched with the organization. The chat messages will be deleted. You can match with this organization in the future.");
+            notice.setTextSize(20);
+            notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            notice.setPadding(60, 5, 5, 5);
+            dialog.setView(notice);
 
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(getApplicationContext(), VolunteerChatList.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent intent = new Intent(getApplicationContext(), VolunteerChatList.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
-        dialog.show();
+            dialog.show();
+        }
     }
 
 
