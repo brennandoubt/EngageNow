@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -114,7 +115,6 @@ public class OrganizationChatList extends OrganizationBaseClass {
                 String[] nameEmail = ((TextView)view).getText().toString().split(":");
                 String name = nameEmail[0].trim();
                 String email = nameEmail[1].trim();
-                Log.d(TAG, volEmailIdMap.toString());
                 String volunteerId = volEmailIdMap.get(email);
                 DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
                 dbr.setValue(true);
@@ -141,7 +141,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
         String volName = nameEmail[0].trim();
         String volEmail = nameEmail[1].trim();
 
-        String volId = volEmailKeyDataMap.get(volEmail).get("id");
+        String volId = volEmailIdMap.get(volEmail);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("DANGER: Remove Match");
@@ -155,6 +155,7 @@ public class OrganizationChatList extends OrganizationBaseClass {
         builder.setPositiveButton("DISCONNECT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, volId);
                 DatabaseReference dbr1 = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volId);
                 dbr1.removeValue();
             }
@@ -179,17 +180,27 @@ public class OrganizationChatList extends OrganizationBaseClass {
                 if (snapshot.exists()) {
                     HashMap<String, Object> conversationsMap = (HashMap<String, Object>) snapshot.getValue();
                     ArrayList<String> newVolChatList = new ArrayList<>();
+                    ArrayList<Boolean> readStatusList = new ArrayList<>();
 
-//                    TODO: account for null chatMap value
-                    for (String volId : conversationsMap.keySet()) {
-                        String volNameEmail = volIdKeyDataMap.get(volId).get("first_name") + " " + volIdKeyDataMap.get(volId).get("last_name") + ": " + volIdKeyDataMap.get(volId).get("email");
-                        newVolChatList.add(volNameEmail);
+//                    TODO: make sure it works for null chatMap value
+                    if (conversationsMap != null) {
+                        for (String volId : conversationsMap.keySet()) {
+                            String volNameEmail = volIdKeyDataMap.get(volId).get("first_name") + " " + volIdKeyDataMap.get(volId).get("last_name") + ": " + volIdKeyDataMap.get(volId).get("email");
+                            newVolChatList.add(volNameEmail);
+                            readStatusList.add((Boolean) ((HashMap<String, Object>) conversationsMap.get(volId)).get("organization_read"));
+                        }
+                        Log.d(TAG, newVolChatList.toString());
+                        Log.d(TAG, conversationsList.toString());
+                        Log.d(TAG, readStatusList.toString());
+
+                        compareConversationsLists(newVolChatList, readStatusList);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                setReadNotifications(newVolChatList, readStatusList);
+                            }
+                        }, 500);
                     }
-                    Log.d(TAG, newVolChatList.toString());
-                    Log.d(TAG, conversationsList.toString());
-
-                    compareConversationsLists(newVolChatList);
-//                    setReadNotifications();
                 }
             }
 
@@ -200,52 +211,55 @@ public class OrganizationChatList extends OrganizationBaseClass {
         });
     }
 
-    private void compareConversationsLists(ArrayList<String> newVolChatList) {
+    private void compareConversationsLists(ArrayList<String> newVolChatList, ArrayList<Boolean> readStatusList) {
+//        remove chats that have been deleted
         for (int i = 0; i < conversationsList.size(); i++) {
             if (!newVolChatList.contains(conversationsList.get(i))) {
                 conversationsList.remove(i);
             }
         }
+//        add new chats, if they are unread add them at beginning
         for (int i = 0; i < newVolChatList.size(); i++) {
             if (!conversationsList.contains(newVolChatList.get(i))) {
+                if (!readStatusList.get(i)) {
+                    conversationsList.add(0, newVolChatList.get(i));
+                }
+                else {
+                    conversationsList.add(newVolChatList.get(i));
+                }
+            }
+//            move unread chats to top
+            else if (!readStatusList.get(i)) {
+                conversationsList.remove(newVolChatList.get(i));
                 conversationsList.add(0, newVolChatList.get(i));
             }
         }
         arrayAdapter.notifyDataSetChanged();
     }
 
-    private void setReadNotifications() {
-        for (int i = 0; i < matchesListView.getCount(); i++) {
-            String email = arrayAdapter.getItem(i).toString().split(":")[1].trim();
-            String volunteerId = volEmailKeyDataMap.get(email).get("id");
+    //    color the chats that are unread
+    private void setReadNotifications(ArrayList<String> newVolChatList, ArrayList<Boolean> readStatusList) {
+        for (int i = 0; i < newVolChatList.size(); i++) {
+            int idx = conversationsList.indexOf(newVolChatList.get(i));
+            View v = matchesListView.getChildAt(idx);
+            Log.d(TAG, Integer.toString(i));
+            Log.d(TAG, matchesListView.toString());
+            // not read
+            if (!readStatusList.get(i) && v != null) {
+                v.setBackgroundColor(getResources().getColor(R.color.light_green));
 
-            final int idx = i;
-            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId).child("organization_read");
-            dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    View v = matchesListView.getChildAt(idx);
-                    if (task.getResult().exists()) {
-                        boolean read = (boolean) task.getResult().getValue();
-                        if (v != null) {
-                            if (!read) {
-                                v.setBackgroundColor(getResources().getColor(R.color.light_green));
-                                arrayAdapter.remove(v);
-                                arrayAdapter.notifyDataSetChanged();
+            }
+            else if (v != null){
+                v.setBackgroundColor(Color.TRANSPARENT);
 
-
-                            } else {
-                                v.setBackgroundColor(Color.TRANSPARENT);
-                            }
-                        }
-                    }
-                }
-            });
+            }
         }
 
         arrayAdapter.notifyDataSetChanged();
 
     }
+
+
 }
 
 

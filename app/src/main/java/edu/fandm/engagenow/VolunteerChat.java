@@ -138,31 +138,9 @@ public class VolunteerChat extends VolunteerBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if (!active) {
-                    return;
+                if (active) {
+                    endChat();
                 }
-                deleted = true;
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setCancelable(false);
-                dialog.setTitle("Disconnected");
-                TextView notice = new TextView(context);
-                notice.setText("The organization has ended the chat. You will not longer be matched with the organization. The chat messages will be deleted. You can match with this organization in the future.");
-                notice.setTextSize(20);
-                notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                notice.setPadding(60, 5, 5, 5);
-                dialog.setView(notice);
-
-                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(getApplicationContext(), VolunteerChatList.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-                dialog.show();
             }
 
             @Override
@@ -175,6 +153,31 @@ public class VolunteerChat extends VolunteerBaseClass {
 
             }
         });
+    }
+
+    private void endChat() {
+        deleted = true;
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setCancelable(false);
+        dialog.setTitle("Disconnected");
+        TextView notice = new TextView(context);
+        notice.setText("The organization has ended the chat. You will not longer be matched with the organization. The chat messages will be deleted. You can match with this organization in the future.");
+        notice.setTextSize(20);
+        notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        notice.setPadding(60, 5, 5, 5);
+        dialog.setView(notice);
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getApplicationContext(), VolunteerChatList.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        dialog.show();
     }
 
 
@@ -201,7 +204,7 @@ public class VolunteerChat extends VolunteerBaseClass {
 
     @Override
     protected void onStop() {
-        super.onStop();  // Always call the superclass method first
+        super.onStop();
         active = false;
         if (!deleted) {
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(uid).child("volunteer_read");
