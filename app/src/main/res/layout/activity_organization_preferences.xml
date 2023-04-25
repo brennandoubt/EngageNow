@@ -21,9 +21,9 @@
             <TextView
                 android:textAlignment="center"
                 android:layout_width="match_parent"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop ="20dp"
+                android:layout_margin ="20dp"
                 android:text="Fill in the following fields to update your account"
                 />
 
