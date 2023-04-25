@@ -189,9 +189,9 @@ public class OrganizationChatList extends OrganizationBaseClass {
                             newVolChatList.add(volNameEmail);
                             readStatusList.add((Boolean) ((HashMap<String, Object>) conversationsMap.get(volId)).get("organization_read"));
                         }
-                        Log.d(TAG, newVolChatList.toString());
-                        Log.d(TAG, conversationsList.toString());
-                        Log.d(TAG, readStatusList.toString());
+//                        Log.d(TAG, newVolChatList.toString());
+//                        Log.d(TAG, conversationsList.toString());
+//                        Log.d(TAG, readStatusList.toString());
 
                         compareConversationsLists(newVolChatList, readStatusList);
                         new Handler().postDelayed(new Runnable() {
@@ -201,6 +201,11 @@ public class OrganizationChatList extends OrganizationBaseClass {
                             }
                         }, 500);
                     }
+                }
+                else {
+//                     no organizations in list
+                    arrayAdapter.clear();
+                    arrayAdapter.notifyDataSetChanged();
                 }
             }
 

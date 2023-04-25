@@ -155,27 +155,33 @@ public class VolunteerChatList extends VolunteerBaseClass {
                     HashMap<String, HashMap<String, Object>> conversationsMap = (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
                     ArrayList<String> newVolChatList = new ArrayList<>();
                     ArrayList<Boolean> readStatusList = new ArrayList<>();
-                    Log.d(TAG, conversationsMap.toString());
+//                    Log.d(TAG, conversationsMap.toString());
+                    if (conversationsMap != null) {
+                        for (String orgId : conversationsMap.keySet()) {
+                            if (conversationsMap.get(orgId).containsKey(userId)) {
 
-                    for (String orgId : conversationsMap.keySet()) {
-                        if (conversationsMap.get(orgId).containsKey(userId)) {
-
-                            String volNameEmail = orgIdKeyDataMap.get(orgId).get("name") + ": " + orgIdKeyDataMap.get(orgId).get("email");
-                            newVolChatList.add(volNameEmail);
-                            readStatusList.add((Boolean) ((HashMap<String, Object>) conversationsMap.get(orgId).get(userId)).get("volunteer_read"));
+                                String volNameEmail = orgIdKeyDataMap.get(orgId).get("name") + ": " + orgIdKeyDataMap.get(orgId).get("email");
+                                newVolChatList.add(volNameEmail);
+                                readStatusList.add((Boolean) ((HashMap<String, Object>) conversationsMap.get(orgId).get(userId)).get("volunteer_read"));
 //                            Log.d(TAG, newVolChatList.toString());
 //                            Log.d(TAG, conversationsList.toString());
 //                            Log.d(TAG, readStatusList.toString());
+                            }
                         }
                     }
                     compareConversationsLists(newVolChatList, readStatusList);
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             setReadNotifications(newVolChatList, readStatusList);
                         }
                     }, 500);
-
+                }
+//                no messages in list
+                else {
+                    arrayAdapter.clear();
+                    arrayAdapter.notifyDataSetChanged();
                 }
             }
 
