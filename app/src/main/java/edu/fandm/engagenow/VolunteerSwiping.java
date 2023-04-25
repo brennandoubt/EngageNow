@@ -144,6 +144,15 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardAppeared(View view, int position) {
+        if(unsortedIdx == 0){
+            Toast.makeText(this, "There seems to be no matches for your search filters!", Toast.LENGTH_SHORT);
+        }
+        else if(position == unsortedIdx && !go_back){
+            Toast.makeText(this, "The previous event was the last one matching your search filters!", Toast.LENGTH_SHORT);
+        }
+        else{
+            go_back = false;
+        }
         TextView textView = view.findViewById(R.id.item_name);
         Log.d("CardStackView", "onCardAppeared: (" + position + ") " + textView.getText());
     }
