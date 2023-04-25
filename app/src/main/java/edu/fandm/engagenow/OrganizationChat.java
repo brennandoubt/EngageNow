@@ -105,32 +105,9 @@ public class OrganizationChat extends OrganizationBaseClass {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if (!active) {
-                    return;
+                if (!isFinishing()) {
+                    endChat();
                 }
-
-                deleted = true;
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setCancelable(false);
-                dialog.setTitle("Disconnected");
-                TextView notice = new TextView(context);
-                notice.setText("The Volunteer has unmatched with you. You will not longer be matched with the volunteer. The chat messages will be deleted. The volunteer can match with your organization in the future.");
-                notice.setTextSize(20);
-                notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                notice.setPadding(60, 5, 5, 5);
-                dialog.setView(notice);
-
-                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(getApplicationContext(), OrganizationChatList.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-                dialog.show();
             }
 
             @Override
@@ -143,6 +120,35 @@ public class OrganizationChat extends OrganizationBaseClass {
 
             }
         });
+    }
+
+    private void endChat() {
+        if (!active) {
+            return;
+        }
+
+        deleted = true;
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setCancelable(false);
+        dialog.setTitle("Disconnected");
+        TextView notice = new TextView(context);
+        notice.setText("The Volunteer has unmatched with you. You will not longer be matched with the volunteer. The chat messages will be deleted. The volunteer can match with your organization in the future.");
+        notice.setTextSize(20);
+        notice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        notice.setPadding(60, 5, 5, 5);
+        dialog.setView(notice);
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getApplicationContext(), OrganizationChatList.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        dialog.show();
     }
 
 

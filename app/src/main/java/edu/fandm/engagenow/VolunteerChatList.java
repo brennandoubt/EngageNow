@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -35,8 +36,12 @@ import java.util.Set;
 
 public class VolunteerChatList extends VolunteerBaseClass {
     ListView matchesListView;
-    ArrayList<String> listOfMatchesName = new ArrayList<String>();
-    HashMap<String, HashMap<String, String>> nameIdMap = new HashMap<>();
+    ArrayList<String> conversationsList = new ArrayList<String>();
+    static HashMap<String, HashMap<String, String>> orgIdKeyDataMap = new HashMap<>();
+    //    contains organizations accounts data retrieved by email (email:hashmap of data for vol)
+    static HashMap<String, HashMap<String, String>> orgEmailKeyDataMap = new HashMap<>();
+    static HashMap<String, String> orgEmailIdMap = new HashMap<>();
+//    HashMap<String, HashMap<String, String>> nameIdMap = new HashMap<>();
     ArrayAdapter arrayAdapter;
     String userId;
     String TAG = "VolunteerChatList";
@@ -46,25 +51,50 @@ public class VolunteerChatList extends VolunteerBaseClass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_chat_list);
         setTitle("Chats");
-        matchesListView = (ListView) findViewById(R.id.matches_lv);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfMatchesName);
+
+        startUp();
+
+        DatabaseReference orgDbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts");
+        orgDbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    orgIdKeyDataMap = (HashMap<String, HashMap<String, String>>) task.getResult().getValue();
+                    for (String volId : orgIdKeyDataMap.keySet()) {
+                        orgEmailIdMap.put(orgIdKeyDataMap.get(volId).get("email"), volId);
+                        orgEmailKeyDataMap.put(orgIdKeyDataMap.get(volId).get("email"), orgIdKeyDataMap.get(volId));
+                    }
+//                    Log.d("KEY", volIdKeyDataMap.toString());
+//                    Log.d("EMAIL", volEmailKeyDataMap.toString());
+                    populateChats();
+
+                }
+            }
+        });
+
+
+    }
+
+    private void startUp() {
+
+        matchesListView = findViewById(R.id.matches_lv);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, conversationsList);
 
         matchesListView.setAdapter(arrayAdapter);
         userId = FirebaseAuth.getInstance().getUid();
-
-        populateChats();
 
         matchesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String[] nameEmail = adapterView.getItemAtPosition(position).toString().split(":");
+                String orgId = orgEmailIdMap.get(nameEmail[1].trim());
 
                 Intent i = new Intent(getApplicationContext(), VolunteerChat.class);
-                i.putExtra("organization_id", nameIdMap.get(nameEmail[1].trim()).get("id"));
+                i.putExtra("organization_id", orgId);
                 i.putExtra("organization_email", nameEmail[1].trim());
-                i.putExtra("organization_name", nameIdMap.get(nameEmail[1].trim()).get("name"));
-                String organizationId = nameIdMap.get(nameEmail[1].trim()).get("id");
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
+                i.putExtra("organization_name", nameEmail[0].trim());
+
+                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(orgId).child(userId).child("volunteer_read");
                 dbr.setValue(true);
                 startActivity(i);
                 finish();
@@ -85,7 +115,7 @@ public class VolunteerChatList extends VolunteerBaseClass {
         String orgName = nameEmail[0].trim();
         String orgEmail = nameEmail[1].trim();
 
-        String orgId = nameIdMap.get(orgEmail).get("id");
+        String orgId = orgEmailIdMap.get(nameEmail[1].trim());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("DANGER: Remove Match");
@@ -120,50 +150,32 @@ public class VolunteerChatList extends VolunteerBaseClass {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.d(TAG, "CHANGED");
-                arrayAdapter.clear();
 
                 if (snapshot.exists()) {
-                    HashMap<String, Boolean> chatMap = new HashMap<>();
+                    HashMap<String, HashMap<String, Object>> conversationsMap = (HashMap<String, HashMap<String, Object>>) snapshot.getValue();
+                    ArrayList<String> newVolChatList = new ArrayList<>();
+                    ArrayList<Boolean> readStatusList = new ArrayList<>();
+                    Log.d(TAG, conversationsMap.toString());
 
-                    if (snapshot.exists()) {
-                        // for each organization
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            Log.d(TAG, ds.getValue().toString());
-                            Map<String, Object> m = (Map) ds.getValue();
-                            if (m.containsKey(userId)) {
-                                String orgId = ds.getKey();
-                                Boolean read = (Boolean) ((HashMap<String, HashMap<String, Object>>) ds.getValue()).get(userId).get("volunteer_read");
-                                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(orgId);
+                    for (String orgId : conversationsMap.keySet()) {
+                        if (conversationsMap.get(orgId).containsKey(userId)) {
 
-                                dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        HashMap<String, Object> orgInfo = (HashMap<String, Object>) ((DataSnapshot) task.getResult()).getValue();
-                                        String orgEmail = (String) orgInfo.get("email");
-                                        String orgName = (String) orgInfo.get("name");
-
-                                        chatMap.put(orgName + ": " + orgEmail, read);
-                                        HashMap<String, String> m = new HashMap<>();
-                                        m.put("id", orgId);
-                                        m.put("name", orgName);
-                                        nameIdMap.put(orgEmail, m);
-                                        arrayAdapter.clear();
-                                        for (String key : chatMap.keySet()) {
-                                            if (chatMap.get(key) != null && !chatMap.get(key)) {
-                                                arrayAdapter.insert(key, 0);
-                                            } else {
-                                                arrayAdapter.add(key);
-                                            }
-                                        }
-                                        setReadNotifications();
-                                    }
-                                });
-                            }
-
+                            String volNameEmail = orgIdKeyDataMap.get(orgId).get("name") + ": " + orgIdKeyDataMap.get(orgId).get("email");
+                            newVolChatList.add(volNameEmail);
+                            readStatusList.add((Boolean) ((HashMap<String, Object>) conversationsMap.get(orgId).get(userId)).get("volunteer_read"));
+//                            Log.d(TAG, newVolChatList.toString());
+//                            Log.d(TAG, conversationsList.toString());
+//                            Log.d(TAG, readStatusList.toString());
                         }
-
-                        arrayAdapter.notifyDataSetChanged();
                     }
+                    compareConversationsLists(newVolChatList, readStatusList);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setReadNotifications(newVolChatList, readStatusList);
+                        }
+                    }, 500);
+
                 }
             }
 
@@ -174,29 +186,52 @@ public class VolunteerChatList extends VolunteerBaseClass {
         });
     }
 
-    private void setReadNotifications() {
-        for (int i = 0; i < matchesListView.getCount(); i++) {
-            String email = arrayAdapter.getItem(i).toString().split(":")[1].trim();
-
-            String organizationId = nameIdMap.get(email).get("id");
-            final int idx = i;
-            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(organizationId).child(userId).child("volunteer_read");
-            Task<DataSnapshot> ds = dbr.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (task.getResult().exists()) {
-                        boolean read = (boolean) task.getResult().getValue();
-                        View v = (View) matchesListView.getChildAt(idx);
-                        if (!read) {
-                            v.setBackgroundColor(getResources().getColor(R.color.light_green));
-                        } else {
-                            v.setBackgroundColor(Color.TRANSPARENT);
-                        }
-                        arrayAdapter.notifyDataSetChanged();
-                    }
-                }
-            });
-
+//    update the list of conversations
+    private void compareConversationsLists(ArrayList<String> newVolChatList, ArrayList<Boolean> readStatusList) {
+//        remove chats that have been deleted
+        for (int i = 0; i < conversationsList.size(); i++) {
+            if (!newVolChatList.contains(conversationsList.get(i))) {
+                conversationsList.remove(i);
+            }
         }
+//        add new chats, if they are unread add them at beginning
+        for (int i = 0; i < newVolChatList.size(); i++) {
+            if (!conversationsList.contains(newVolChatList.get(i))) {
+                if (!readStatusList.get(i)) {
+                    conversationsList.add(0, newVolChatList.get(i));
+                }
+                else {
+                    conversationsList.add(newVolChatList.get(i));
+                }
+            }
+//            move unread chats to top
+            else if (!readStatusList.get(i)) {
+                conversationsList.remove(newVolChatList.get(i));
+                conversationsList.add(0, newVolChatList.get(i));
+            }
+        }
+        arrayAdapter.notifyDataSetChanged();
+    }
+
+//    color the chats that are unread
+    private void setReadNotifications(ArrayList<String> newVolChatList, ArrayList<Boolean> readStatusList) {
+        for (int i = 0; i < newVolChatList.size(); i++) {
+            int idx = conversationsList.indexOf(newVolChatList.get(i));
+            View v = matchesListView.getChildAt(idx);
+            Log.d(TAG, Integer.toString(i));
+            Log.d(TAG, matchesListView.toString());
+            // not read
+            if (!readStatusList.get(i) && v != null) {
+                v.setBackgroundColor(getResources().getColor(R.color.light_green));
+
+            }
+            else if (v != null){
+                v.setBackgroundColor(Color.TRANSPARENT);
+
+            }
+        }
+
+        arrayAdapter.notifyDataSetChanged();
+
     }
 }
