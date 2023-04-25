@@ -79,23 +79,23 @@ public class VolunteerRegistration extends AppCompatActivity {
         travel_distance_spinner.setAdapter(travel_distance_aa);
     }
 
-    private void getNotificationToken(String userId){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
-                return;
-            }
-
-            // Get new FCM registration token that is associated with the device
-
-            String notificationToken = task.getResult();
-            Log.d("GENERATE TOKEN", notificationToken);
-            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
-            Map<String, Object> orgDBHashmap = new HashMap<>();
-            orgDBHashmap.put("notification", notificationToken);
-            dbr.updateChildren(orgDBHashmap);
-        });
-    }
+//    private void getNotificationToken(String userId){
+//        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+//            if (!task.isSuccessful()) {
+//                Log.d("Token registration", "Fetching FCM registration token failed", task.getException());
+//                return;
+//            }
+//
+//            // Get new FCM registration token that is associated with the device
+//
+//            String notificationToken = task.getResult();
+//            Log.d("GENERATE TOKEN", notificationToken);
+//            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+//            Map<String, Object> orgDBHashmap = new HashMap<>();
+//            orgDBHashmap.put("notification", notificationToken);
+//            dbr.updateChildren(orgDBHashmap);
+//        });
+//    }
 
     private void registerAccount() {
         // get data from last Register activity (if registering new user)
@@ -143,16 +143,10 @@ public class VolunteerRegistration extends AppCompatActivity {
                 String userId = user.getUid();
 
                 //generate the notification token
-                getNotificationToken(userId);
-
-                // store account type under "account_type/" in Realtime Database
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
-                Map<String, Object> accountTypeMap = new HashMap<>();
-                accountTypeMap.put(userId, "volunteer_account");
-                dbr.updateChildren(accountTypeMap);
+//                getNotificationToken(userId);
 
                 // store user account preferences under "volunteer_accounts/[user_id]/" in Realtime Database
-                dbr  = FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
+                DatabaseReference dbr= FirebaseDatabase.getInstance().getReference().getRoot().child("volunteer_accounts").child(userId);
                 HashMap<String, Object> m = new HashMap<>();
                 m.put("account_type", "volunteer_account");
                 m.put("first_name", first_name_inputted);

@@ -27,4 +27,9 @@
         android:title="Log Out"
         android:icon="@drawable/log_out_foreground" />
 
+    <item android:id="@+id/update_setting"
+        app:showAsAction="withText"
+        android:title="Update Setting"
+       />
+
 </menu>

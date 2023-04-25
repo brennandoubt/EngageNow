@@ -64,6 +64,14 @@ public abstract class OrganizationBaseClass extends AppCompatActivity {
                 startActivity(i);
                 finish();
                 break;
+            case R.id.update_setting:
+                if (this.getClass().getSimpleName().equals("OrganizationPreferences")) {
+                    break;
+                }
+                i = new Intent(getApplicationContext(), OrganizationPreferences.class);
+                startActivity(i);
+                finish();
+                break;
 
         }
         return true;

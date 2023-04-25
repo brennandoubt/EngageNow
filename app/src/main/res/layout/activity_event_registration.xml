@@ -25,7 +25,7 @@
                 android:layout_margin="40dp"
                 android:text="Fill in the following fields to create an event"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="17dp" />
 
             <EditText
                 android:id="@+id/name_preference_et"

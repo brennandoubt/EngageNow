@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventRegistration"
+    tools:context=".EventPreferences"
     >
 
     <ScrollView
@@ -19,27 +19,16 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/instructions_tv"
                 android:textAlignment="center"
                 android:layout_width="match_parent"
                 android:textSize="18dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop ="20dp"
-                android:text="Fill in the following fields to create your account"
+                android:text="Fill in the following fields to update your account"
                 />
 
             <EditText
-                android:id="@+id/org_registration_code"
-                android:layout_width="match_parent"
-                android:layout_margin ="20dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:inputType="textPassword"
-                android:hint="Registration Code"
-                />
-
-            <EditText
-                android:id="@+id/name_preference_et"
+                android:id="@+id/org_update_name_et"
                 android:layout_width="match_parent"
                 android:layout_margin ="20dp"
                 android:layout_height="50dp"
@@ -50,7 +39,7 @@
                 />
 
             <EditText
-                android:id="@+id/description_et"
+                android:id="@+id/org_update_descr_et"
                 android:layout_width="match_parent"
                 android:layout_margin ="15dp"
                 android:layout_height="wrap_content"
@@ -60,7 +49,7 @@
                 />
 
             <EditText
-                android:id="@+id/website_link_et"
+                android:id="@+id/org_update_website_link_et"
                 android:layout_width="match_parent"
                 android:layout_margin ="15dp"
                 android:layout_height="wrap_content"
@@ -70,7 +59,7 @@
                 />
 
             <ImageView
-                android:id="@+id/selected_image"
+                android:id="@+id/org_update_selected_image"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:scaleType="centerCrop"
@@ -80,7 +69,7 @@
                 />
 
             <Button
-                android:id="@+id/upload_image_button"
+                android:id="@+id/org_update_upload_image_button"
                 android:layout_width="match_parent"
                 android:layout_margin ="20dp"
                 android:layout_height="wrap_content"
@@ -88,11 +77,11 @@
                 />
 
             <Button
-                android:id="@+id/register_account_button"
+                android:id="@+id/submit_change_button"
                 android:layout_width="match_parent"
                 android:layout_margin ="20dp"
                 android:layout_height="wrap_content"
-                android:text="Register Account"
+                android:text="Update Account"
                 />
         </LinearLayout>
 
