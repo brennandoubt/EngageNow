@@ -150,44 +150,25 @@ public class OrganizationPreferences extends AppCompatActivity {
         // verify all fields have been filled out
         if(!checkInput(name, description)) return;
 
-        //create the user
-        Task s = fbAuth.createUserWithEmailAndPassword(email, password);
-        s.addOnCompleteListener(task -> {
+        FirebaseUser user = fbAuth.getCurrentUser();
+        userId = user.getUid();
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
+        Map<String, Object> orgDBHashmap = new HashMap<>();
 
-            if (task.isSuccessful()) {
+        orgDBHashmap.put("name", name);
+        orgDBHashmap.put("description", description);
+        orgDBHashmap.put("website", website);
 
-                Toast.makeText(getApplicationContext(), "New organization user created", Toast.LENGTH_LONG).show();
+        //push the data to firebase
+        dbr.updateChildren(orgDBHashmap);
 
-                FirebaseUser user = fbAuth.getCurrentUser();
-                userId = user.getUid();
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("organization_accounts").child(userId);
-                Map<String, Object> orgDBHashmap = new HashMap<>();
+        //uploadImage
+        uploadImage();
 
-                orgDBHashmap.put("name", name);
-                orgDBHashmap.put("description", description);
-                orgDBHashmap.put("email", email);
-                orgDBHashmap.put("website", website);
-
-                //push the data to firebase
-                dbr.updateChildren(orgDBHashmap);
-
-                //uploadImage
-                uploadImage();
-
-                //Launch the organization dashboard activity
-                launchActivity();
+        //Launch the organization dashboard activity
+        launchActivity();
 
 
-            } else {
-                if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
-                    Toast.makeText(getApplicationContext(), "Failed to create new user: Email address in use", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Failed to create new user", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
-
 
 }
