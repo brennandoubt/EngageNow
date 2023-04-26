@@ -1,8 +1,11 @@
 package edu.fandm.engagenow;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,6 +90,26 @@ public class EventsList extends VolunteerBaseClass {
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 //Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Group Name Is :" + childItems.get(i).get(i1));
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(EventsList.this);
+                dialog.setCancelable(true);
+                TextView info = new TextView(EventsList.this);
+                info.setText("Want to like this event?");
+                info.setTextSize(20);
+                info.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                info.setPadding(0, 20, 0, 20);
+                dialog.setView(info);
+
+                //dialog.setTitle("Event: " + )
+                dialog.setPositiveButton("Like Event", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // TODO: add this event to volunteer's liked events
+                        Toast.makeText(EventsList.this, "Event Liked!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.show();
+
                 return false;
             }
         });
