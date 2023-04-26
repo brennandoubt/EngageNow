@@ -123,7 +123,7 @@ public class EventRegistration extends OrganizationBaseClass {
             //if the event website is not empty, we update the url
             String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
             if(!eventWebUrl.equals("")) {
-                if(!(Patterns.WEB_URL.matcher(websiteLink).matches())) {
+                if(!(Patterns.WEB_URL.matcher(eventWebUrl).matches())) {
                     showToast("Invalid Website URL. Must Start With 'https://'");
                     return;
                 }else{
