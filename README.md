@@ -6,16 +6,16 @@ Welcome to Engage Now, an app designed to help connect volunteers with local org
 To use Engage Now, simply create a profile and indicate your interests and availability. From there, you can start swiping through different volunteer opportunities and connect with the ones that align with your values and schedule.
 
 ### Features:
+  <img src="images/customize.png" width="250">
 * Create a profile and indicate your interests and availability
+  <img src="images/swiping.png" width="250">
 * Swipe through various volunteer opportunities
 * Quickly match with the ones that interest you
+  <img src="images/chat.png" width="250">
 * Connect with local organizations and causes in need
 * Make a positive impact on your community
 
-### DEMO:
-<img src="images/swiping.png" width="200">
-<img src="images/customize.png" width="200">
-<img src="images/chat.png" width="200">
+
 
 
 ### Technologies Stack: 
