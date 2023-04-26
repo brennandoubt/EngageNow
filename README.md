@@ -11,7 +11,7 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 * Connect with local organizations and causes in need with in-app chat
 
 
-<div style="display:flex; flex-wrap:wrap; flex-direction:horiztonal">
+<div style="display:flex; flex-wrap:wrap; flex-direction:row">
   <img src="images/swiping.png" width="150">
   <p>Swipe on events that interests you! </p>
 
