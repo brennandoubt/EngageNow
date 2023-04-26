@@ -60,6 +60,9 @@ public class EventsList extends VolunteerBaseClass {
     String[] childFrom = {NAME};
     int[] childTo = {R.id.childItem};
 
+    //ArrayList<DataSnapshot> all_events_list = new ArrayList<>();
+    HashMap<String, HashMap<String, Object>> all_events_map = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +84,7 @@ public class EventsList extends VolunteerBaseClass {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
                 //Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Group Name Is :" + groupItems.get(i));
+                Log.d(TAG, "Group Name Is: " + groupItems.get(i));
                 return false;
             }
         });
@@ -89,12 +92,15 @@ public class EventsList extends VolunteerBaseClass {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 //Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Group Name Is :" + childItems.get(i).get(i1));
+                String event_name = childItems.get(i).get(i1);
+                Log.d(TAG, "Child Name Is: " + event_name);
+
+                String event_data = get_event_info(event_name);
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(EventsList.this);
                 dialog.setCancelable(true);
                 TextView info = new TextView(EventsList.this);
-                info.setText("Want to like this event?");
+                info.setText(event_data);
                 info.setTextSize(20);
                 info.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 info.setPadding(0, 20, 0, 20);
@@ -140,11 +146,15 @@ public class EventsList extends VolunteerBaseClass {
                         String event = e.getKey().toString();  // each event for this organization
                         Log.d(TAG, "Event: " + event);
 
+                        Log.d(TAG, "Event data: " + e.toString());
+                        all_events_map.put(e.getKey(), (HashMap<String, Object>) e.getValue());
+
                         org_events.add(event);
                     }
                     emap.put(org_name, org_events); // put organization's name-events pairings into data map for expandable list view
                     childItems.add(org_events);
                 }
+                Log.d(TAG, "All events mapped: " + all_events_map.toString());
 
                 // re-formatting list items to map organizations to their events
                 for (int i = 0; i < groupItems.size(); i++) {
@@ -173,6 +183,33 @@ public class EventsList extends VolunteerBaseClass {
                 elv.setAdapter(ela);
             }
         });
+    }
+
+    private String get_event_info(String event_name) {
+        StringBuilder sb = new StringBuilder();
+
+        HashMap<String, Object> eventInfo = all_events_map.get(event_name);
+
+        sb.append("Description: " + eventInfo.get("description") + "\n");
+        sb.append("Location/Start Time: " + eventInfo.get("location_start_time") + "\n");
+        sb.append("Start Date: " + eventInfo.get("start_date") + "\n");
+        sb.append("Time Commitment: " + eventInfo.get("time_commitment") + "\n");
+        sb.append("Age Group: " + eventInfo.get("age_group") + "\n");
+        sb.append("Availability: " + eventInfo.get("availability") + "\n");
+        sb.append("Fbi Clearance: " + eventInfo.get("fbi_clearance") + "\n");
+        sb.append("Child Clearance: " + eventInfo.get("child_clearance") + "\n");
+        sb.append("Criminal History: " + eventInfo.get("criminal_history") + "\n");
+        sb.append("Labor Skill: " + eventInfo.get("labor_skill") + "\n");
+        sb.append("Care Taking Skill: " + eventInfo.get("care_taking_skill") + "\n");
+        sb.append("Food Service Skill: " + eventInfo.get("food_service_skill") + "\n");
+        sb.append("English: " + eventInfo.get("english") + "\n");
+        sb.append("Spanish: " + eventInfo.get("spanish") + "\n");
+        sb.append("Chinese: " + eventInfo.get("chinese") + "\n");
+        sb.append("German: " + eventInfo.get("german") + "\n");
+        sb.append("Vehicle: " + eventInfo.get("vehicle") + "\n");
+        sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+
+        return sb.toString();
     }
 
     // Copied helper function from EventDashboard.java
