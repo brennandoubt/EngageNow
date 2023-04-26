@@ -14,7 +14,6 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 
 ### DEMO:
 <img src="images/swiping.png" width="100">
-![](images/swiping.png)
 
 
 ### Technologies Stack: 
