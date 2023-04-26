@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -62,6 +63,8 @@ public class EventsList extends VolunteerBaseClass {
 
     //ArrayList<DataSnapshot> all_events_list = new ArrayList<>();
     HashMap<String, HashMap<String, Object>> all_events_map = new HashMap<>();
+    ArrayList<String> all_org_ids = new ArrayList<>();
+    String curr_org_id_clicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +83,16 @@ public class EventsList extends VolunteerBaseClass {
 
         populate_events_exp(); // update events list data in the list adapter
 
+
         elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
                 //Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Group Name Is: " + groupItems.get(i));
+                curr_org_id_clicked = all_org_ids.get(i);
+
+                Log.d(TAG, "Group ID is: " + curr_org_id_clicked);
+                //curr_org_id_clicked = groupItems.get(i);
                 return false;
             }
         });
@@ -94,6 +102,9 @@ public class EventsList extends VolunteerBaseClass {
                 //Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems.get(i).get(i1), Toast.LENGTH_LONG).show();
                 String event_name = childItems.get(i).get(i1);
                 Log.d(TAG, "Child Name Is: " + event_name);
+
+                String org_id_for_this_event = all_org_ids.get(i); // org id that owns this event
+                Log.d(TAG, "Organization for this child event: " + org_id_for_this_event);
 
                 String event_data = get_event_info(event_name);
 
@@ -110,8 +121,15 @@ public class EventsList extends VolunteerBaseClass {
                 dialog.setPositiveButton("Like Event", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // TODO: add this event to volunteer's liked events
                         Toast.makeText(EventsList.this, "Event Liked!", Toast.LENGTH_SHORT).show();
+
+                        // add this user to this event's potential matches
+                        DatabaseReference group_org_database_location = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(org_id_for_this_event).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        Map<String, Object> m = new HashMap<>();
+                        m.put(event_name, true);
+                        group_org_database_location.updateChildren(m);
+
+                        Log.d(TAG, "Updated potential matches for event: " + event_name + " under this org uid: " + curr_org_id_clicked);
                     }
                 });
                 dialog.show();
@@ -131,6 +149,7 @@ public class EventsList extends VolunteerBaseClass {
                 for (DataSnapshot child : task.getResult().getChildren()) {
                     Log.d(TAG, child.getKey().toString()); // child keys are organization user id nodes
                     String org_uid = child.getKey().toString();
+                    all_org_ids.add(org_uid); // org id's index in all_org_ids corresponds to org name's groupItems
 
                     // get this org's name to add to headers for expandable list view
                     DataSnapshot name_ds = child.child("name");
