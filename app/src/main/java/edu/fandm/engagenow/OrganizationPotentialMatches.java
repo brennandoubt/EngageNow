@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -124,56 +125,65 @@ public class OrganizationPotentialMatches extends OrganizationBaseClass {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(true);
         dialog.setTitle("Accept/Reject " + volName + "\n" + "Event: " + eventName);
-        String volInfo = getVolInfo(eventName);
-        TextView name = new TextView(this);
+        try {
+            String volInfo = getVolInfo(eventName);
+            TextView name = new TextView(this);
 //        name.set
-        name.setText(volInfo);
-        name.setTextSize(20);
-        name.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        name.setPadding(60, 5, 5, 5);
-        dialog.setView(name);
+            name.setText(volInfo);
+            name.setTextSize(20);
+            name.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            name.setPadding(60, 5, 5, 5);
+            dialog.setView(name);
 
-        dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-                DatabaseReference dbrMessageInfo = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
+                    DatabaseReference dbrMessageInfo = FirebaseDatabase.getInstance().getReference().getRoot().child("messages").child("organization_id").child(uid).child(volunteerId);
 
-                HashMap<String, Object> readMap = new HashMap<>();
-                readMap.put("volunteer_read", false);
-                readMap.put("organization_read", false);
-                dbrMessageInfo.updateChildren(readMap);
-                HashMap<String, Object> m = new HashMap<>();
-                String user_message_key = dbrMessageInfo.push().getKey();
-                dbrMessageInfo.updateChildren(m);
+                    HashMap<String, Object> readMap = new HashMap<>();
+                    readMap.put("volunteer_read", false);
+                    readMap.put("organization_read", false);
+                    dbrMessageInfo.updateChildren(readMap);
+                    HashMap<String, Object> m = new HashMap<>();
+                    String user_message_key = dbrMessageInfo.push().getKey();
+                    dbrMessageInfo.updateChildren(m);
 
-                DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
-                Map<String, Object> m2 = new HashMap<String, Object>();
-                m2.put("msg", volName + " and " + orgName + " have been connected! " + volName + " is interested in the '" + eventName + "' event.");
-                m2.put("user", "MATCHED");
-                dbr2.updateChildren(m2);
-                dbrMessageInfo.child(volunteerId).updateChildren(m);
+                    DatabaseReference dbr2 = dbrMessageInfo.child(user_message_key);
+                    Map<String, Object> m2 = new HashMap<String, Object>();
+                    m2.put("msg", volName + " and " + orgName + " have been connected! " + volName + " is interested in the '" + eventName + "' event.");
+                    m2.put("user", "MATCHED");
+                    dbr2.updateChildren(m2);
+                    dbrMessageInfo.child(volunteerId).updateChildren(m);
 
-                DatabaseReference d = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId);
-                m = new HashMap<>();
-                m.put(eventName, false);
-                d.updateChildren(m);
-                updatePotentialMatches(volunteerId, eventName);
-            }
-        });
+                    DatabaseReference d = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId);
+                    m = new HashMap<>();
+                    m.put(eventName, false);
+                    d.updateChildren(m);
+                    updatePotentialMatches(volunteerId, eventName);
+                }
+            });
 
-        dialog.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                DatabaseReference d = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId);
-                HashMap <String, Object> m = new HashMap<>();
-                m.put(eventName, false);
-                d.updateChildren(m);
-                updatePotentialMatches(volunteerId, eventName);
-            }
-        });
+            dialog.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    DatabaseReference d = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId);
+                    HashMap<String, Object> m = new HashMap<>();
+                    m.put(eventName, false);
+                    d.updateChildren(m);
+                    updatePotentialMatches(volunteerId, eventName);
+                }
+            });
 
-        dialog.show();
+            dialog.show();
+        }
+        catch (NullPointerException e) {
+            Toast.makeText(getApplicationContext(), "This event has been deleted", Toast.LENGTH_SHORT).show();
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("potentialMatches").child(uid).child(volunteerId).child(eventName);
+            dbr.removeValue();
+            updatePotentialMatches(volunteerId, eventName);
+            populatePotentialMatches();
+        }
 
     }
 

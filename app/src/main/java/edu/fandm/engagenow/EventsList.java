@@ -110,11 +110,13 @@ public class EventsList extends VolunteerBaseClass {
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(EventsList.this);
                 dialog.setCancelable(true);
+                dialog.setTitle("Event: " + event_name);
+
                 TextView info = new TextView(EventsList.this);
                 info.setText(event_data);
                 info.setTextSize(20);
-                info.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                info.setPadding(0, 20, 0, 20);
+                info.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                info.setPadding(60, 5, 5, 5);
                 dialog.setView(info);
 
                 //dialog.setTitle("Event: " + )
@@ -252,18 +254,9 @@ public class EventsList extends VolunteerBaseClass {
             sb.append("Need a Vehicle\n");
         }
 
-        //sb.append("Fbi Clearance: " + eventInfo.get("fbi_clearance") + "\n");
-        //sb.append("Child Clearance: " + eventInfo.get("child_clearance") + "\n");
-        //sb.append("Criminal History: " + eventInfo.get("criminal_history") + "\n");
-//        sb.append("Labor Skill: " + eventInfo.get("labor_skill") + "\n");
-//        sb.append("Care Taking Skill: " + eventInfo.get("care_taking_skill") + "\n");
-//        sb.append("Food Service Skill: " + eventInfo.get("food_service_skill") + "\n");
-//        sb.append("English: " + eventInfo.get("english") + "\n");
-//        sb.append("Spanish: " + eventInfo.get("spanish") + "\n");
-//        sb.append("Chinese: " + eventInfo.get("chinese") + "\n");
-//        sb.append("German: " + eventInfo.get("german") + "\n");
-//        sb.append("Vehicle: " + eventInfo.get("vehicle") + "\n");
-        sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+        if (!String.valueOf(eventInfo.get("other_info")).equals("")) {
+            sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+        }
 
         return sb.toString();
     }

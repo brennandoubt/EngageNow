@@ -98,10 +98,6 @@ public class EventRegistration extends OrganizationBaseClass {
             if (!task.getResult().exists()) {
                 addEvent();
             }
-            else {
-                showToast("An event with this name already exists");
-            }
-
         });
 
 
