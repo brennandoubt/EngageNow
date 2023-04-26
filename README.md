@@ -13,7 +13,7 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 * Make a positive impact on your community
 
 ### DEMO:
-![](images/swiping.pg)
+![](images/swiping.png)
 
 
 ### Technologies Stack: 
