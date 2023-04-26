@@ -7,13 +7,12 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 
 ### Features:
 * Create a profile and indicate your interests and availability
-  <img src="images/customize.png" width="250">
 * Swipe through various volunteer opportunities and quickly match with the ones that interest you
-  <img src="images/swiping.png" width="250">
-* Connect with local organizations and causes in need
-  <img src="images/chat.png" width="250">
+* Connect with local organizations and causes in need with in-app chat
 
-
+<img src="images/swiping.png" width="250">
+<img src="images/customize.png" width="250">
+<img src="images/chat.png" width="250">
 
 
 
