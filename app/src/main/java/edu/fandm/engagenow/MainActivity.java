@@ -50,7 +50,14 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 
-        startUp();
+        Handler n = new Handler();
+        n.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startUp();
+            }
+        }, 1000);
+
     }
 
     private void startUp() {

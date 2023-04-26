@@ -92,7 +92,7 @@ public class EventPreferences extends OrganizationBaseClass {
             String websiteLink = "";
 
             //if the org already has website in their database, use it for the event
-            String tempWeb = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+            String tempWeb = ((String) ((HashMap<String, Object>) task.getResult().getValue()).get("website")).trim();
             if (!tempWeb.equals("")){
                 websiteLink = tempWeb;
             }
@@ -100,7 +100,7 @@ public class EventPreferences extends OrganizationBaseClass {
             String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
             if(!eventWebUrl.equals("")) {
                 if(!(Patterns.WEB_URL.matcher(websiteLink).matches())) {
-                    showToast("Invalid Website URL");
+                    showToast("Invalid Website URL. Must Start With 'https://'");
                     return;
                 }else{
                     websiteLink = eventWebUrl;

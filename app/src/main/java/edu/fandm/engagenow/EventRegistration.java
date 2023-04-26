@@ -97,7 +97,6 @@ public class EventRegistration extends OrganizationBaseClass {
         dbr.get().addOnCompleteListener(task -> {
             if (!task.getResult().exists()) {
                 addEvent();
-                showToast("Event Created");
             }
             else {
                 showToast("An event with this name already exists");
@@ -116,7 +115,7 @@ public class EventRegistration extends OrganizationBaseClass {
             String websiteLink = "";
 
             //if the org provided a website link, we set it to the website link
-            String tempWeb = (String) ((HashMap<String, Object>) task.getResult().getValue()).get("website");
+            String tempWeb = ((String) ((HashMap<String, Object>) task.getResult().getValue()).get("website")).trim();
             if (!tempWeb.equals("")){
                 websiteLink = tempWeb;
             }
@@ -125,7 +124,7 @@ public class EventRegistration extends OrganizationBaseClass {
             String eventWebUrl = ((EditText) findViewById(R.id.website_et)).getText().toString().trim();
             if(!eventWebUrl.equals("")) {
                 if(!(Patterns.WEB_URL.matcher(websiteLink).matches())) {
-                    showToast("Invalid Website URL");
+                    showToast("Invalid Website URL. Must Start With 'https://'");
                     return;
                 }else{
                     websiteLink = eventWebUrl;
