@@ -6,9 +6,9 @@ Welcome to Engage Now, an app designed to help connect volunteers with local org
 To use Engage Now, simply create a profile and indicate your interests and availability. From there, you can start swiping through different volunteer opportunities and connect with the ones that align with your values and schedule.
 
 ### Features for volunteers:
-* Create a profile and indicate your interests and availability
-* Swipe through various volunteer opportunities and quickly match with the ones that interest you
-* Connect with local organizations and causes in need in real time with in-app chat
+* Create a profile and indicate your interests and availability 📄
+* Swipe through various volunteer opportunities and quickly match with the ones that interest you 👆
+* Connect with local organizations and causes in need in real time with in-app chat 🤝
 
 ### Features for organizations:
 * Create new volunteering events
@@ -45,5 +45,5 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 We welcome contributions from anyone who is interested in helping make Volunteer Match even better! If you'd like to contribute, please fork the repository and submit a pull request.
 
 ### Credits 
-Engage Now was developed by Noah Fox 🦊, Omar Khater, Wei-Chi Chou 🦍, and Brennan Allen.
+Engage Now was developed by Noah Fox 🦊, Omar Khater ⚽️, Wei-Chi Chou 🦍, and Brennan Allen 🇩🇪.
 
