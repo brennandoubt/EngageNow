@@ -24,7 +24,7 @@ To use Engage Now, simply create a profile and indicate your interests and avail
   <img src="images/customize.png" width="150">
   <p>Customize your profile</p>
 
-  <img src="images/events_list.png" width="150">
+  <img src="images/events_list_sc.png" width="150">
   <p>As an organization, see all your active events</p>
   
   <img src="images/login_sc.png" width="150">
