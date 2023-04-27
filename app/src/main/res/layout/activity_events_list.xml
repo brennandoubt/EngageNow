@@ -18,7 +18,8 @@
             android:padding="10dp"
             android:textSize="17dp"
             android:text="Click on an organization to see their events"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            />
 
         <ExpandableListView
             android:id="@+id/events_list_elv"

@@ -53,40 +53,51 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         StringBuilder sb = new StringBuilder();
 
         sb.append("Description: " + eventInfo.get("description") + "\n");
-
         sb.append("Location/Start Time: " + eventInfo.get("location_start_time") + "\n");
-
         sb.append("Start Date: " + eventInfo.get("start_date") + "\n");
-
         sb.append("Time Commitment: " + eventInfo.get("time_commitment") + "\n");
-
         sb.append("Age Group: " + eventInfo.get("age_group") + "\n");
-
         sb.append("Availability: " + eventInfo.get("availability") + "\n");
 
-        sb.append("Fbi Clearance: " + eventInfo.get("fbi_clearance") + "\n");
+        if (String.valueOf(eventInfo.get("fbi_clearance")).equals("true")) {
+            sb.append("Requires FBI Clearance\n");
+        }
+        if (String.valueOf(eventInfo.get("child_clearance")).equals("true")) {
+            sb.append("Requires Child Clearance\n");
+        }
+        if (String.valueOf(eventInfo.get("criminal_history")).equals("true")) {
+            sb.append("Criminal History Checked\n");
+        }
+        if (String.valueOf(eventInfo.get("labor_skill")).equals("true")) {
+            sb.append("Requires Labor\n");
+        }
+        if (String.valueOf(eventInfo.get("care_taking_skill")).equals("true")) {
+            sb.append("Requires Care-taking\n");
+        }
+        if (String.valueOf(eventInfo.get("food_service_skill")).equals("true")) {
+            sb.append("Can do Food Service\n");
+        }
 
-        sb.append("Child Clearance: " + eventInfo.get("child_clearance") + "\n");
+        if (String.valueOf(eventInfo.get("english")).equals("true")) {
+            sb.append("Must speak English\n");
+        }
+        if (String.valueOf(eventInfo.get("spanish")).equals("true")) {
+            sb.append("Must speak Spanish\n");
+        }
+        if (String.valueOf(eventInfo.get("chinese")).equals("true")) {
+            sb.append("Must speak Chinese\n");
+        }
+        if (String.valueOf(eventInfo.get("german")).equals("true")) {
+            sb.append("Must speak German\n");
+        }
 
-        sb.append("Criminal History: " + eventInfo.get("criminal_history") + "\n");
+        if (String.valueOf(eventInfo.get("vehicle")).equals("true")) {
+            sb.append("Need a Vehicle\n");
+        }
 
-        sb.append("Labor Skill: " + eventInfo.get("labor_skill") + "\n");
-
-        sb.append("Care Taking Skill: " + eventInfo.get("care_taking_skill") + "\n");
-
-        sb.append("Food Service Skill: " + eventInfo.get("food_service_skill") + "\n");
-
-        sb.append("English: " + eventInfo.get("english") + "\n");
-
-        sb.append("Spanish: " + eventInfo.get("spanish") + "\n");
-
-        sb.append("Chinese: " + eventInfo.get("chinese") + "\n");
-
-        sb.append("German: " + eventInfo.get("german") + "\n");
-
-        sb.append("Vehicle: " + eventInfo.get("vehicle") + "\n");
-
-        sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+        if (!String.valueOf(eventInfo.get("other_info")).equals("")) {
+            sb.append("Other Info: " + eventInfo.get("other_info") + "\n");
+        }
 
         return sb.toString();
     }
@@ -128,6 +139,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
                 info.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 info.setPadding(60, 5, 5, 5);
                 dialog.setView(info);
+
                 String website = (String) spot.m.get("website");
                 if (website!= null) {
                     Log.d(TAG, website);

@@ -66,31 +66,34 @@ public class SignIn extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
-                FirebaseUser user = auth.getCurrentUser();
-
-                //access data from database https://www.youtube.com/watch?v=E9drbKeVG7Y
-                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
-                dbr.child(user.getUid()).get().addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
-                        if (task1.getResult().exists()) {
-                            String accountType = String.valueOf(task1.getResult().getValue());
-
-                            if (accountType.equals("volunteer_account")) {
-                                Intent i = new Intent(getApplicationContext(), VolunteerSwiping.class);
-                                startActivity(i);
-                                finish();
-                            }
-                            else {
-                                Intent i = new Intent(getApplicationContext(), EventDashboard.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }
-                    }
-                    else {
-                        Toast.makeText(SignIn.this, "Could Not Sign In", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                FirebaseUser user = auth.getCurrentUser();
+//
+//                //access data from database https://www.youtube.com/watch?v=E9drbKeVG7Y
+//                DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
+//                dbr.child(user.getUid()).get().addOnCompleteListener(task1 -> {
+//                    if (task1.isSuccessful()) {
+//                        if (task1.getResult().exists()) {
+//                            String accountType = String.valueOf(task1.getResult().getValue());
+//
+//                            if (accountType.equals("volunteer_account")) {
+//                                Intent i = new Intent(getApplicationContext(), VolunteerSwiping.class);
+//                                startActivity(i);
+//                                finish();
+//                            }
+//                            else {
+//                                Intent i = new Intent(getApplicationContext(), EventDashboard.class);
+//                                startActivity(i);
+//                                finish();
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        Toast.makeText(SignIn.this, "Could Not Sign In", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+                finish();
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w(TAG, "signInWithEmail:failure", task.getException());

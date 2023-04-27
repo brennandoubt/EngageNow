@@ -65,7 +65,7 @@
                 android:layout_margin ="15dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Link 'https://www.' (optional)"
+                android:hint="Link 'https://' (optional)"
                 android:maxLength="200"
                 />
 

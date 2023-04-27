@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.webkit.HttpAuthHandler;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     final String TAG = "Main activity";
@@ -47,7 +50,14 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 
-        startUp();
+        Handler n = new Handler();
+        n.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startUp();
+            }
+        }, 1000);
+
     }
 
     private void startUp() {
@@ -62,18 +72,21 @@ public class MainActivity extends AppCompatActivity {
     private void logIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            Log.d(TAG, "SUCCESS");
+//            Log.d(TAG, "SUCCESS");
             // User is signed in
 //                          access data from database https://www.youtube.com/watch?v=E9drbKeVG7Y
-            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot().child("account_type");
-            dbr.child(user.getUid()).get().addOnCompleteListener(task -> {
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference().getRoot();
+            dbr.get().addOnCompleteListener(task -> {
+
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
+                        HashMap<String, HashMap<String, Object>> dbMap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
+                        Log.d(TAG, dbMap.toString());
                         String accountType = String.valueOf(task.getResult().getValue());
                         Log.d(TAG, accountType);
 
                         Intent i;
-                        if (accountType.equals("volunteer_account")) {
+                        if (dbMap.get("volunteer_accounts").containsKey(user.getUid())) {
                             i = new Intent(getApplicationContext(), VolunteerSwiping.class);
                         } else {
                             i = new Intent(getApplicationContext(), EventDashboard.class);
@@ -90,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             // User is signed out
             Intent i = new Intent(getApplicationContext(), SignIn.class);
             startActivity(i);
-            Log.d(TAG, "FAILURE");
+//            Log.d(TAG, "FAILURE");
             Toast.makeText(MainActivity.this, "Please sign in", Toast.LENGTH_SHORT).show();
             finish();
         }

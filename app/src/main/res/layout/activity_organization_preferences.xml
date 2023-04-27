@@ -54,7 +54,7 @@
                 android:layout_margin ="15dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Link must begin with 'https://www.'"
+                android:hint="Link must begin with 'https://'"
                 android:maxLength="200"
                 />
 
