@@ -108,6 +108,8 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
         }
         unsortedIdx = sorted.size();
+        Toast.makeText(this.getApplicationContext(),"You matched with " + Integer.toString(unsortedIdx) + " events!", Toast.LENGTH_SHORT).show();
+
         //Log.d("CPS", String.valueOf(unsortedIdx));
         sorted.addAll(unsortedList);
         orgs = sorted;
