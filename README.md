@@ -32,7 +32,7 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 
 </div>
 
-### Features for organization:
+### Features for organizations:
 * Create new volunteering events
 * Accept volunteers who like your events
 * Connect with volunteers in realtime with the in-app chat
