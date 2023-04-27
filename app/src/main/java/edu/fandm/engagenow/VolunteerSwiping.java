@@ -2,7 +2,6 @@ package edu.fandm.engagenow;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -77,28 +76,39 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     public void  onPositiveButtonClicked(HashMap<String, Object> choices){
         ArrayList<Org> unsortedList = new ArrayList<>();
         ArrayList<Org> sorted = new ArrayList<>();
-
+        ArrayList<String> langs = new ArrayList<String>(){{add("english"); add("spanish"); add("german"); add("chinese");}};
+        ArrayList<String> clearances = new ArrayList<String>(){{add("child_clearance"); add("fbi_clearance"); add("criminal_history");}};
         for(Org o : orgs){
-            boolean match = true;
+            boolean match = false;
             HashMap<String, Object> eventInfo = o.m;
-            for(Map.Entry<String, Object> entry: choices.entrySet()){
-                if(choices.get(entry.getKey()).equals("Select Time Commitment") || choices.get(entry.getKey()).equals("Select Age")
-                || choices.get(entry.getKey()).equals("Select Availability")){
+            for(Map.Entry<String, Object> entry: choices.entrySet()) {
+                if (choices.get(entry.getKey()).equals("Select Time Commitment") || choices.get(entry.getKey()).equals("Select Age")
+                        || choices.get(entry.getKey()).equals("Select Availability")) {
                     continue;
                 }
-                if(!choices.get(entry.getKey()).equals(eventInfo.get(entry.getKey()))){
-                    match = false;
-                    break;
+                if(langs.contains(entry.getKey()) && choices.get(entry.getKey()).equals(true)
+                        && choices.get(entry.getKey()).equals(eventInfo.get(entry.getKey())) && !sorted.contains(o)){
+                    sorted.add(o);
+                    match = true;
+                }
+                if(clearances.contains(entry.getKey()) && choices.get(entry.getKey()).equals(true)
+                        && choices.get(entry.getKey()).equals(eventInfo.get(entry.getKey())) && !sorted.contains(o)){
+                    sorted.add(o);
+                    match = true;
+                }
+                if (!langs.contains(entry.getKey()) && !clearances.contains(entry.getKey()) &&
+                        choices.get(entry.getKey()).equals(eventInfo.get(entry.getKey())) && !sorted.contains(o)) {
+                    sorted.add(o);
+                    match = true;
                 }
             }
-            if(!match){
+            if(!match && !unsortedList.contains(o)){
                 unsortedList.add(o);
             }
-            else{
-                sorted.add(o);
-            }
+
         }
         unsortedIdx = sorted.size();
+        //Log.d("CPS", String.valueOf(unsortedIdx));
         sorted.addAll(unsortedList);
         orgs = sorted;
         CardStackCreator();
@@ -109,7 +119,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardDragging(Direction direction, float ratio) {
-        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
+       // Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
     }
 
     @Override
@@ -118,7 +128,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             addToDatabase(manager.getTopPosition() - 1);
         }
 
-        Log.d("CardStackView", "onCardSwiped: p = " + manager.getTopPosition() + ", d = " + direction);
+      //  Log.d("CardStackView", "onCardSwiped: p = " + manager.getTopPosition() + ", d = " + direction);
         if (manager.getTopPosition() == adapter.getItemCount() - 5) {
             paginate();
         }
@@ -132,13 +142,13 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     @Override
     public void onCardRewound() {
         deleteFromDatabase(manager.getTopPosition());
-        Log.d("CardStackView", "onCardRewound: " + manager.getTopPosition());
+       // Log.d("CardStackView", "onCardRewound: " + manager.getTopPosition());
 
     }
 
     @Override
     public void onCardCanceled() {
-        Log.d("CardStackView", "onCardCanceled:" + manager.getTopPosition());
+     //   Log.d("CardStackView", "onCardCanceled:" + manager.getTopPosition());
     }
 
     @Override
@@ -147,17 +157,19 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             Toast.makeText(this.getApplicationContext(),"It seems like there are no more events matching your preferences!", Toast.LENGTH_SHORT).show();
             unsortedIdx= -1;
         }
-        else{
-            go_back = false;
-        }
         TextView textView = view.findViewById(R.id.item_name);
-        Log.d("CardStackView", "onCardAppeared: (" + position + ") " + textView.getText());
+      //  Log.d("CardStackView", "onCardAppeared: (" + position + ") " + textView.getText());
     }
 
     @Override
     public void onCardDisappeared(View view, int position) {
-        TextView textView = view.findViewById(R.id.item_name);
-        Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
+        if(position == orgs.size() - 1 && !go_back) {
+            Toast.makeText(this.getApplicationContext(), "It seems like there are no more events matching your preferences!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            go_back = false;
+        }
+      //  Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
     }
 
 
@@ -228,7 +240,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                 Iterator i = snapshot.getChildren().iterator();
                 while (i.hasNext()) {
                     DataSnapshot OrgId = (DataSnapshot) i.next();
-                    Log.d("CPS", OrgId.toString());
+                  //  Log.d("CPS", OrgId.toString());
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                    String userID = auth.getCurrentUser().getUid();
                    //dbr = root -> potentialMatches -> Org_id -> volunteer_id
@@ -242,7 +254,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                                 for (Map.Entry<String, HashMap<String, Object>> entry : events.entrySet()) {
                                     //root -> potentialMatches -> Org_id -> volunteer_id -> event_name doesn't exist == has not swiped before
                                     if(!snapshot.hasChild(entry.getKey())) {
-                                        Log.d("CPS", "images/" + OrgId.getKey());
+                                      //  Log.d("CPS", "images/" + OrgId.getKey());
 
                                         orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "images/" + OrgId.getKey(), OrgId.getKey(),
                                                 events.get(entry.getKey()), entry.getKey()));
