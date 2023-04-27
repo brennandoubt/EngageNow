@@ -99,7 +99,6 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             }
         }
         unsortedIdx = sorted.size();
-        Log.d("UNSORTED IDX", String.valueOf(unsortedIdx));
         sorted.addAll(unsortedList);
         orgs = sorted;
         CardStackCreator();
@@ -144,6 +143,13 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardAppeared(View view, int position) {
+        if(unsortedIdx != -1 && unsortedIdx == position && !go_back){
+            Toast.makeText(this.getApplicationContext(),"It seems like there are no more events matching your preferences!", Toast.LENGTH_SHORT).show();
+            unsortedIdx= -1;
+        }
+        else{
+            go_back = false;
+        }
         TextView textView = view.findViewById(R.id.item_name);
         Log.d("CardStackView", "onCardAppeared: (" + position + ") " + textView.getText());
     }
@@ -151,12 +157,6 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     @Override
     public void onCardDisappeared(View view, int position) {
         TextView textView = view.findViewById(R.id.item_name);
-        if(position == orgs.size() - 1 && !go_back){
-            Toast.makeText(this.getApplicationContext(),"It seems like there are no more events matching your preferences!", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            go_back = false;
-        }
         Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
     }
 
