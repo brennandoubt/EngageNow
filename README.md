@@ -12,14 +12,23 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 
 
 <div style="display:flex; flex-wrap:wrap; flex-direction:row">
-  <img src="images/swiping.png" width="150">
+  <img src="images/Volunteer_swiping_sc.png" width="150">
   <p>Swipe on events that interests you! </p>
 
+  <img src="images/chat_sc.png" width="150">
+  <p>Chat with organizations looking for volunteers</p>
+  
+  <img src="images/chat_list_sc.png" width="150">
+  <p>New messages are shown in your chat screen</p>
+  
   <img src="images/customize.png" width="150">
   <p>Customize your profile</p>
 
-  <img src="images/chat.png" width="150">
-  <p>Chat with organizations looking for volunteers</p>
+  <img src="images/events_list.png" width="150">
+  <p>As an organization, see all your active events</p>
+  
+  <img src="images/login_sc.png" width="150">
+  <p>Login any time</p>
 
 </div>
 
