@@ -73,13 +73,13 @@ public class EventDashboard extends OrganizationBaseClass {
                 eventsMap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
                 arrayAdapter.clear();
                 if (eventsMap != null) {
-                    Log.d(TAG, eventsMap.toString());
+//                    Log.d(TAG, eventsMap.toString());
                     Set<String> eventNames = new HashSet<>();
                     for (String key : eventsMap.keySet()) {
-                        Log.d(TAG, eventsMap.get(key).toString());
+//                        Log.d(TAG, eventsMap.get(key).toString());
                         eventNames.add(key);
                     }
-                    Log.d(TAG, eventNames.toString());
+//                    Log.d(TAG, eventNames.toString());
                     arrayAdapter.addAll(eventNames);
                     TextView instructions = findViewById(R.id.description);
                     instructions.setText("These are your events. Tap to view. Long click to delete.");

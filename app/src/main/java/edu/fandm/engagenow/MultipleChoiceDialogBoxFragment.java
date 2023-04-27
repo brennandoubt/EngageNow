@@ -65,7 +65,7 @@ public class MultipleChoiceDialogBoxFragment extends DialogFragment {
                 choices.put("spanish", spanish);
                 choices.put("german", german);
                 choices.put("chinese", chinese);
-                Log.d("CPS", choices.toString());
+//                Log.d("CPS", choices.toString());
                 mListener.onPositiveButtonClicked(choices);
             }
         });

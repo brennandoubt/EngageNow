@@ -109,7 +109,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
 
     @Override
     public void onCardDragging(Direction direction, float ratio) {
-        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
+//        Log.d("CardStackView", "onCardDragging: d = " + direction.name() + ", r = " + ratio);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             addToDatabase(manager.getTopPosition() - 1);
         }
 
-        Log.d("CardStackView", "onCardSwiped: p = " + manager.getTopPosition() + ", d = " + direction);
+//        Log.d("CardStackView", "onCardSwiped: p = " + manager.getTopPosition() + ", d = " + direction);
         if (manager.getTopPosition() == adapter.getItemCount() - 5) {
             paginate();
         }
@@ -132,13 +132,13 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
     @Override
     public void onCardRewound() {
         deleteFromDatabase(manager.getTopPosition());
-        Log.d("CardStackView", "onCardRewound: " + manager.getTopPosition());
+//        Log.d("CardStackView", "onCardRewound: " + manager.getTopPosition());
 
     }
 
     @Override
     public void onCardCanceled() {
-        Log.d("CardStackView", "onCardCanceled:" + manager.getTopPosition());
+//        Log.d("CardStackView", "onCardCanceled:" + manager.getTopPosition());
     }
 
     @Override
@@ -151,13 +151,13 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
             go_back = false;
         }
         TextView textView = view.findViewById(R.id.item_name);
-        Log.d("CardStackView", "onCardAppeared: (" + position + ") " + textView.getText());
+//        Log.d("CardStackView", "onCardAppeared: (" + position + ") " + textView.getText());
     }
 
     @Override
     public void onCardDisappeared(View view, int position) {
         TextView textView = view.findViewById(R.id.item_name);
-        Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
+//        Log.d("CardStackView", "onCardDisappeared: (" + position + ") " + textView.getText());
     }
 
 
@@ -228,7 +228,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                 Iterator i = snapshot.getChildren().iterator();
                 while (i.hasNext()) {
                     DataSnapshot OrgId = (DataSnapshot) i.next();
-                    Log.d("CPS", OrgId.toString());
+//                    Log.d("CPS", OrgId.toString());
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                    String userID = auth.getCurrentUser().getUid();
                    //dbr = root -> potentialMatches -> Org_id -> volunteer_id
@@ -242,7 +242,7 @@ public class VolunteerSwiping extends VolunteerBaseClass implements CardStackLis
                                 for (Map.Entry<String, HashMap<String, Object>> entry : events.entrySet()) {
                                     //root -> potentialMatches -> Org_id -> volunteer_id -> event_name doesn't exist == has not swiped before
                                     if(!snapshot.hasChild(entry.getKey())) {
-                                        Log.d("CPS", "images/" + OrgId.getKey());
+//                                        Log.d("CPS", "images/" + OrgId.getKey());
 
                                         orgs.add(new Org(map.get("name") + " - " + entry.getKey(), events.get(entry.getKey()).get("description").toString(), "images/" + OrgId.getKey(), OrgId.getKey(),
                                                 events.get(entry.getKey()), entry.getKey()));

@@ -151,7 +151,7 @@ public class EventRegistration extends OrganizationBaseClass {
                 return;
             }
 
-            Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.start_date)).getMonth()) + ((DatePicker) findViewById(R.id.start_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.start_date)).getYear());
+//            Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.start_date)).getMonth()) + ((DatePicker) findViewById(R.id.start_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.start_date)).getYear());
 
             DatePicker datePicker = ((DatePicker) findViewById(R.id.start_date));
             String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();

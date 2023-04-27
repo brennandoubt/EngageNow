@@ -125,7 +125,7 @@ public class EventPreferences extends OrganizationBaseClass {
                 return;
             }
 
-            Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.pstart_date)).getMonth()) + ((DatePicker) findViewById(R.id.pstart_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.pstart_date)).getYear());
+//            Log.d(TAG, Integer.toString(((DatePicker) findViewById(R.id.pstart_date)).getMonth()) + ((DatePicker) findViewById(R.id.pstart_date)).getDayOfMonth() + ((DatePicker) findViewById(R.id.pstart_date)).getYear());
 
             DatePicker datePicker = ((DatePicker) findViewById(R.id.pstart_date));
             String date = datePicker.getMonth() + "/" + datePicker.getDayOfMonth() + "/" + datePicker.getYear();
@@ -187,7 +187,7 @@ public class EventPreferences extends OrganizationBaseClass {
 
         Intent i = getIntent();
         String event_name = i.getStringExtra("event_name");
-        Log.d(TAG, "Retrieved event: " + event_name);
+//        Log.d(TAG, "Retrieved event: " + event_name);
 
         // initialize firebase app
         FirebaseApp.initializeApp(this);

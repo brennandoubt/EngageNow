@@ -88,10 +88,10 @@ public class EventsList extends VolunteerBaseClass {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
                 //Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems.get(i), Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Group Name Is: " + groupItems.get(i));
+//                Log.d(TAG, "Group Name Is: " + groupItems.get(i));
                 curr_org_id_clicked = all_org_ids.get(i);
 
-                Log.d(TAG, "Group ID is: " + curr_org_id_clicked);
+//                Log.d(TAG, "Group ID is: " + curr_org_id_clicked);
                 //curr_org_id_clicked = groupItems.get(i);
                 return false;
             }

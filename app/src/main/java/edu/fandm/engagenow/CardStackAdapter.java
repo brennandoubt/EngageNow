@@ -112,7 +112,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
             storageRef.getFile(local).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d("CPS", "SUCCESS");
+//                    Log.d("CPS", "SUCCESS");
                     Bitmap bitmap = BitmapFactory.decodeFile(local.getAbsolutePath());
                     holder.image.setImageBitmap(bitmap);
                 }
@@ -142,7 +142,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
                 String website = (String) spot.m.get("website");
                 if (website!= null) {
-                    Log.d(TAG, website);
+//                    Log.d(TAG, website);
                 }
                 dialog.setPositiveButton(website, new DialogInterface.OnClickListener() {
                     @Override

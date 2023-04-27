@@ -81,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
                         HashMap<String, HashMap<String, Object>> dbMap = (HashMap<String, HashMap<String, Object>>) task.getResult().getValue();
-                        Log.d(TAG, dbMap.toString());
+//                        Log.d(TAG, dbMap.toString());
                         String accountType = String.valueOf(task.getResult().getValue());
-                        Log.d(TAG, accountType);
+//                        Log.d(TAG, accountType);
 
                         Intent i;
                         if (dbMap.get("volunteer_accounts").containsKey(user.getUid())) {
