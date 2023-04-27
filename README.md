@@ -8,7 +8,7 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 ### Features for volunteers:
 * Create a profile and indicate your interests and availability
 * Swipe through various volunteer opportunities and quickly match with the ones that interest you
-* Connect with local organizations and causes in need with in-app chat
+* Connect with local organizations and causes in need in real time with in-app chat
 
 
 <div style="display:flex; flex-wrap:wrap; flex-direction:row">
@@ -32,8 +32,10 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 
 </div>
 
-
-
+### Features for organization:
+* Create new volunteering events
+* Accept volunteers who like your events
+* Connect with volunteers in realtime with the in-app chat
 
 ### Technologies Stack: 
 * Front-end: Android Studio, Java.
