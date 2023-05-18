@@ -45,5 +45,5 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 We welcome contributions from anyone who is interested in helping make Volunteer Match even better! If you'd like to contribute, please fork the repository and submit a pull request.
 
 ### Credits 
-Engage Now was developed by Noah Fox 🦊, Omar Khater ⚽️, Wei-Chi Chou 🦍, and Brennan Allen 🇩🇪.
+Engage Now was developed by Noah Fox 🦊, Omar Khater ⚽️, Wei-Chi Chou 🦍, and Brennan Allen 🐻‍❄️.
 
