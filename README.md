@@ -47,7 +47,6 @@ We welcome contributions from anyone who is interested in helping make Volunteer
 
 ### Credits 
 Engage Now was developed by Noah Fox 🦊, Omar Khater ⚽️, Wei-Chi Chou 🦍, and Brennan Allen 🐻‍❄️.
-
-Please find the application here: https://play.google.com/store/apps/details?id=edu.fandm.engagenow
+\nPlease find the application here: https://play.google.com/store/apps/details?id=edu.fandm.engagenow
 
 
