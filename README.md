@@ -37,6 +37,8 @@ To use Engage Now, simply create a profile and indicate your interests and avail
 
 </div>
 
+Please find the application here: https://play.google.com/store/apps/details?id=edu.fandm.engagenow
+
 ### Technologies Stack: 
 * Front-end: Android Studio, Java.
 * Back-end: Firebase: Authentication, Realtime Database, Storage, Cloud Messaging.
